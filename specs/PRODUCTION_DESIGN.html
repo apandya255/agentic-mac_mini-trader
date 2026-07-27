@@ -1,0 +1,2379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI Trading System — Production Design</title>
+    <style>
+        :root {
+            --navy: #0a1628;
+            --navy-light: #1a2a4a;
+            --navy-mid: #0f1f3d;
+            --gold: #c9a84c;
+            --gold-light: #e2c97e;
+            --gold-dim: #8a7033;
+            --white: #f4f4f4;
+            --gray: #b0b8c4;
+            --gray-dark: #6b7a8d;
+            --green: #4caf7c;
+            --red: #cf6679;
+            --blue-accent: #5b8def;
+            --code-bg: rgba(10, 22, 40, 0.8);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--navy);
+            color: var(--white);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        /* NAV */
+        .nav {
+            position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
+            background: var(--navy-mid); border-right: 1px solid rgba(201,168,76,0.2);
+            padding: 1.5rem 1.2rem; overflow-y: auto; z-index: 100;
+        }
+        .nav-logo { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+        .nav-title { font-size: 13px; color: var(--gray); margin-bottom: 2rem; font-style: italic; }
+        .nav-section { margin-bottom: 1.2rem; }
+        .nav-section-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.4rem; }
+        .nav a { display: block; color: var(--gray); text-decoration: none; font-size: 12px; padding: 0.25rem 0; transition: color 0.2s; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        .nav a:hover { color: var(--gold-light); }
+        .nav a.active { color: var(--gold); }
+        /* MAIN */
+        .main { margin-left: 280px; padding: 3rem 4rem; max-width: 980px; }
+        /* COVER */
+        .cover { text-align: center; padding: 3rem 0 2.5rem; border-bottom: 1px solid rgba(201,168,76,0.3); margin-bottom: 3rem; }
+        .cover-label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+        .cover h1 { font-size: 2rem; font-weight: 400; color: var(--white); margin-bottom: 0.4rem; letter-spacing: -0.5px; }
+        .cover-subtitle { font-size: 1rem; color: var(--gray); font-style: italic; margin-bottom: 1.5rem; }
+        .cover-meta { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; color: var(--gray-dark); letter-spacing: 1px; }
+        /* SECTIONS */
+        .section { margin-bottom: 3.5rem; padding-top: 1.5rem; }
+        .section-divider { width: 50px; height: 1px; background: var(--gold); margin-bottom: 1.5rem; }
+        .section-number { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.3rem; }
+        h2 { font-size: 1.5rem; font-weight: 400; color: var(--white); margin-bottom: 1.2rem; letter-spacing: -0.3px; }
+        h3 { font-size: 1.1rem; font-weight: 600; color: var(--gold-light); margin-top: 1.8rem; margin-bottom: 0.7rem; }
+        h4 { font-size: 0.95rem; font-weight: 600; color: var(--white); margin-top: 1.3rem; margin-bottom: 0.4rem; }
+        p { margin-bottom: 0.9rem; color: var(--gray); }
+        strong { color: var(--white); font-weight: 600; }
+        em { color: var(--gray); }
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 13px; }
+        thead { border-bottom: 2px solid var(--gold-dim); }
+        th { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); text-align: left; padding: 0.6rem 0.8rem; font-weight: 500; }
+        td { padding: 0.55rem 0.8rem; color: var(--gray); border-bottom: 1px solid rgba(255,255,255,0.04); }
+        tr:hover td { background: rgba(201,168,76,0.02); }
+        /* CODE */
+        pre { background: var(--code-bg); border: 1px solid rgba(201,168,76,0.12); border-radius: 4px; padding: 1.2rem 1.5rem; margin: 1.2rem 0; font-family: 'SF Mono','Fira Code',monospace; font-size: 12.5px; line-height: 1.7; color: var(--gray); overflow-x: auto; white-space: pre; }
+        code { font-family: 'SF Mono','Fira Code',monospace; font-size: 12.5px; color: var(--gold-light); background: rgba(201,168,76,0.08); padding: 0.1rem 0.4rem; border-radius: 3px; }
+        pre code { background: none; padding: 0; color: var(--gray); }
+        .code-label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.3rem; margin-top: 1rem; }
+        /* LISTS */
+        ul, ol { margin: 0.8rem 0 0.8rem 1.4rem; color: var(--gray); }
+        li { margin-bottom: 0.4rem; padding-left: 0.2rem; }
+        /* METRICS */
+        .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.8rem; margin: 1.2rem 0; }
+        .metric-card { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.15); border-radius: 4px; padding: 1rem; text-align: center; }
+        .metric-value { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 1.3rem; color: var(--gold); font-weight: 300; }
+        .metric-label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-dark); margin-top: 0.2rem; }
+        /* BADGES */
+        .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 3px; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; letter-spacing: 0.5px; font-weight: 600; }
+        .badge-green { background: rgba(76,175,124,0.15); color: var(--green); border: 1px solid rgba(76,175,124,0.3); }
+        .badge-gold { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+        .badge-red { background: rgba(207,102,121,0.15); color: var(--red); border: 1px solid rgba(207,102,121,0.3); }
+        .badge-blue { background: rgba(91,141,239,0.15); color: var(--blue-accent); border: 1px solid rgba(91,141,239,0.3); }
+        /* DIAGRAM BOX */
+        .diagram { background: var(--code-bg); border: 1px solid rgba(201,168,76,0.12); border-radius: 4px; padding: 1.5rem 2rem; margin: 1.2rem 0; font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; line-height: 1.6; color: var(--gray); overflow-x: auto; white-space: pre; }
+        .diagram .hl { color: var(--gold); }
+        /* PHASE CARDS */
+        .phase-card { background: rgba(91,141,239,0.04); border: 1px solid rgba(91,141,239,0.15); border-radius: 5px; padding: 1.2rem 1.5rem; margin: 1rem 0; }
+        .phase-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 700; color: var(--blue-accent); margin-bottom: 0.5rem; }
+        .phase-card ul { margin: 0.3rem 0 0 1.2rem; }
+        .phase-card li { font-size: 13px; margin-bottom: 0.3rem; }
+        /* YAML-LIKE DISPLAY */
+        .config-block { background: rgba(201,168,76,0.03); border: 1px solid rgba(201,168,76,0.1); border-radius: 4px; padding: 1rem 1.5rem; margin: 1rem 0; }
+        .config-block p { margin-bottom: 0.3rem; font-size: 13px; }
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--navy); }
+        ::-webkit-scrollbar-thumb { background: var(--navy-light); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+        /* RESPONSIVE */
+        @media (max-width: 960px) { .nav { display: none; } .main { margin-left: 0; padding: 2rem 1.5rem; } }
+        @media print { .nav { display: none; } .main { margin-left: 0; } body { background: #fff; color: #1a1a1a; } pre, .diagram { background: #f5f5f5; color: #333; border-color: #ccc; } }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+    <div class="nav-logo">Production Design</div>
+    <div class="nav-title">Agentic AI Trading System v1.0</div>
+    <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="#summary">Executive Summary</a>
+        <a href="#objectives">Objectives &amp; Constraints</a>
+        <a href="#universe">Universe Specification</a>
+    </div>
+    <div class="nav-section">
+        <div class="nav-section-title">Agents</div>
+        <a href="#architecture">Agent Architecture</a>
+        <a href="#fundamental">Fundamental (&#215;11)</a>
+        <a href="#macro">Macro (&#215;6)</a>
+        <a href="#technical">Technical (&#215;2)</a>
+        <a href="#risk-agent">Risk Management</a>
+        <a href="#pm-agent">Portfolio Management</a>
+    </div>
+    <div class="nav-section">
+        <div class="nav-section-title">Process</div>
+        <a href="#debate">Debate Protocol</a>
+        <a href="#hedging">Hedging Framework</a>
+        <a href="#risk-framework">Risk Framework</a>
+    </div>
+    <div class="nav-section">
+        <div class="nav-section-title">Infrastructure</div>
+        <a href="#data">Data Architecture</a>
+        <a href="#state">State Management</a>
+        <a href="#orchestration">Orchestration</a>
+        <a href="#delivery">Delivery Layer</a>
+        <a href="#infra">Deployment</a>
+        <a href="#security">Security</a>
+    </div>
+    <div class="nav-section">
+        <div class="nav-section-title">Operations</div>
+        <a href="#monitoring">Monitoring</a>
+        <a href="#performance">Performance</a>
+        <a href="#failure">Failure &amp; Recovery</a>
+        <a href="#cost">Cost Model</a>
+        <a href="#phases">Dev Phases</a>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main">
+
+<!-- Cover -->
+<div class="cover">
+    <div class="cover-label">Internal &middot; Confidential</div>
+    <h1>Production Design Document</h1>
+    <div class="cover-subtitle">Agentic AI Trading System &mdash; Full Architecture Specification</div>
+    <div class="cover-meta">Version 1.0 &nbsp;&middot;&nbsp; July 26, 2026 &nbsp;&middot;&nbsp; Multi-Agent Long/Short Equity, Macro &amp; Commodity System</div>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 1: EXECUTIVE SUMMARY                       -->
+<!-- ================================================== -->
+<div class="section" id="summary">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 01</div>
+    <h2>Executive Summary</h2>
+    <p>This document specifies the production architecture for a multi-agent AI trading system that continuously screens equities, sector ETFs, country ETFs, and commodities to generate hedged long/short trade recommendations. The system employs <strong>21 specialized agents</strong> &mdash; 11 fundamental sector analysts, 6 macro regional/product analysts, 2 technical analysts, 1 risk manager, and 1 portfolio manager &mdash; operating within a structured debate and approval pipeline.</p>
+    <p>All recommendations are delivered for <strong>discretionary human evaluation</strong>; the system does not auto-execute. The system runs on a personal device outside of any firm ecosystem and provides a secure interface for interaction during market hours.</p>
+
+    <div class="metrics-row">
+        <div class="metric-card">
+            <div class="metric-value">21</div>
+            <div class="metric-label">Specialized Agents</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">11</div>
+            <div class="metric-label">Fundamental Analysts</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">6</div>
+            <div class="metric-label">Macro Analysts</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">2</div>
+            <div class="metric-label">Technical Analysts</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">1</div>
+            <div class="metric-label">Risk Manager</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">1</div>
+            <div class="metric-label">Portfolio Manager</div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 2: OBJECTIVES & CONSTRAINTS                -->
+<!-- ================================================== -->
+<div class="section" id="objectives">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 02</div>
+    <h2>System Objectives &amp; Constraints</h2>
+
+    <h3>Performance Targets</h3>
+    <div class="metrics-row">
+        <div class="metric-card">
+            <div class="metric-value">12&ndash;15%+</div>
+            <div class="metric-label">Annualized Return</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">&le;6%</div>
+            <div class="metric-label">Downside Volatility</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">2&ndash;3%</div>
+            <div class="metric-label">Position Stop-Loss</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">5%</div>
+            <div class="metric-label">Position Gain Target</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">&ge;2.0</div>
+            <div class="metric-label">Sharpe Ratio</div>
+        </div>
+    </div>
+
+    <h3>Structural Constraints</h3>
+    <ul>
+        <li>Every position must be hedged &mdash; no naked directional exposure</li>
+        <li>Combined book factor beta: &le; &plusmn;0.6 to any single factor</li>
+        <li>Factors tracked: <code>DXY</code>, <code>SPX</code>, <code>USGG10Yr</code>, <code>VIX</code>, <code>Growth/Value</code>, <code>CL1</code>, <code>Large/Small</code>, <code>CDX HY 5Y</code>, <code>XAU</code></li>
+        <li>Dynamic leverage: increases when P&amp;L positive and correlation low; decreases in drawdowns or crowding</li>
+        <li>Agents may hold cash (no forced investment)</li>
+    </ul>
+
+    <h3>Operational Constraints</h3>
+    <ul>
+        <li>Runs on personal hardware (Mac Studio / high-end laptop)</li>
+        <li>Accessible (read-only interaction) from work desk via <span class="badge badge-blue">Tailscale</span></li>
+        <li>No auto-execution &mdash; all trades are discretionary</li>
+        <li>Full audit trail for every recommendation</li>
+    </ul>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 3: UNIVERSE SPECIFICATION                  -->
+<!-- ================================================== -->
+<div class="section" id="universe">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 03</div>
+    <h2>Universe Specification</h2>
+
+    <h3>3.1 Equities &mdash; S&amp;P 500 (~503 names)</h3>
+    <p>All constituents grouped by GICS sector:</p>
+    <table>
+        <thead>
+            <tr><th>GICS Sector</th><th># Names</th><th>Sector ETF</th><th>EW Hedge ETF</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Energy</td><td>~23</td><td>XLE</td><td>RSPG</td></tr>
+            <tr><td>Materials</td><td>~28</td><td>XLB</td><td>RSPM</td></tr>
+            <tr><td>Industrials</td><td>~78</td><td>XLI</td><td>RSPI</td></tr>
+            <tr><td>Consumer Discretionary</td><td>~53</td><td>XLY</td><td>RSPD</td></tr>
+            <tr><td>Consumer Staples</td><td>~38</td><td>XLP</td><td>RSPS</td></tr>
+            <tr><td>Health Care</td><td>~64</td><td>XLV</td><td>RSPH</td></tr>
+            <tr><td>Financials</td><td>~72</td><td>XLF</td><td>RSPF</td></tr>
+            <tr><td>Information Technology</td><td>~68</td><td>XLK</td><td>RSPT</td></tr>
+            <tr><td>Communication Services</td><td>~22</td><td>XLC</td><td>RSPC</td></tr>
+            <tr><td>Utilities</td><td>~31</td><td>XLU</td><td>RSPU</td></tr>
+            <tr><td>Real Estate</td><td>~31</td><td>XLRE</td><td>RSPR</td></tr>
+        </tbody>
+    </table>
+
+    <h3>3.2 Country ETFs (20 Predefined MSCI)</h3>
+    <h4>Developed Markets (13)</h4>
+    <p><code>EWJ</code> (Japan), <code>EWG</code> (Germany), <code>EWU</code> (UK), <code>EWA</code> (Australia), <code>EWC</code> (Canada), <code>EWH</code> (Hong Kong), <code>EWS</code> (Singapore), <code>EWL</code> (Switzerland), <code>EWD</code> (Sweden), <code>EWN</code> (Netherlands), <code>EWI</code> (Italy), <code>EWP</code> (Spain), <code>EWQ</code> (France)</p>
+
+    <h4>Emerging Markets (7)</h4>
+    <p><code>EWZ</code> (Brazil), <code>FXI</code> (China), <code>EWY</code> (South Korea), <code>EWT</code> (Taiwan), <code>EWW</code> (Mexico), <code>EWM</code> (Malaysia), <code>INDA</code> (India)</p>
+
+    <h4>Hedge Instruments</h4>
+    <ul>
+        <li>DM ideas &rarr; short/long <code>EFA</code> (MSCI EAFE) or <code>ACWI</code></li>
+        <li>EM ideas &rarr; short/long <code>EEM</code> or <code>ACWI</code></li>
+    </ul>
+
+    <h3>3.3 Commodities &amp; Miners</h3>
+    <table>
+        <thead>
+            <tr><th>Asset</th><th>Primary Vehicle</th><th>Miner/Producer ETF</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Gold</td><td>GLD</td><td>GDX</td></tr>
+            <tr><td>Silver</td><td>SLV</td><td>SIL</td></tr>
+            <tr><td>Copper</td><td>COPX</td><td>COPX</td></tr>
+            <tr><td>Aluminum</td><td>AA (Alcoa proxy)</td><td>&mdash;</td></tr>
+            <tr><td>Oil &amp; Gas</td><td>USO / CL1 proxy</td><td>XOP</td></tr>
+        </tbody>
+    </table>
+
+    <h3>3.4 Broad Hedge Instruments</h3>
+    <ul>
+        <li><code>RSP</code> (equal-weight S&amp;P 500) &mdash; hedge for sector ETF level trades</li>
+        <li><code>EFA</code> / <code>EEM</code> / <code>ACWI</code> &mdash; hedges for country ETF trades</li>
+        <li>Sector equal-weight ETFs &mdash; hedges for single-name trades</li>
+    </ul>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 4: AGENT ARCHITECTURE                      -->
+<!-- ================================================== -->
+<div class="section" id="architecture">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 04</div>
+    <h2>Agent Architecture</h2>
+
+    <h3>4.1 High-Level Topology</h3>
+    <div class="diagram">                    ┌──────────────────────────────┐
+                    │        <span class="hl">ORCHESTRATOR</span>           │
+                    │  (Scheduler + Pipeline Mgr)   │
+                    └──────────────┬───────────────┘
+                                   │
+              ┌────────────────────┼────────────────────┐
+              │                    │                    │
+    ┌─────────▼─────────┐  ┌──────▼──────┐  ┌────────▼────────┐
+    │   <span class="hl">MESSAGE BUS</span>      │  │ <span class="hl">STATE STORE</span> │  │  <span class="hl">DATA PLATFORM</span>  │
+    │ (Redis Streams)    │  │ (Postgres)  │  │  (Market Data)  │
+    └─────────┬─────────┘  └─────────────┘  └────────┬────────┘
+              │                                       │
+    ┌─────────┼───────────────────────────────────────┼──────┐
+    │         │         <span class="hl">AGENT POOL</span>                    │      │
+    │  ┌──────┴──────────────────────────────────┐   │      │
+    │  │  FUNDAMENTAL AGENTS (×11)               │   │      │
+    │  │  [Energy][Materials][Industrials]...     │◄──┤      │
+    │  └─────────────────────────────────────────┘   │      │
+    │  ┌─────────────────────────────────────────┐   │      │
+    │  │  MACRO AGENTS (×6)                      │   │      │
+    │  │  [LatAm][CEEMEA][Asia][NAm][WEur][Cmdty]│◄──┤      │
+    │  └─────────────────────────────────────────┘   │      │
+    │  ┌─────────────────────────────────────────┐   │      │
+    │  │  TECHNICAL AGENTS (×2)                  │   │      │
+    │  │  [Equity/ETF Technical][Commodity Tech] │◄──┤      │
+    │  └─────────────────────────────────────────┘   │      │
+    │  ┌─────────────────────────────────────────┐   │      │
+    │  │  RISK MANAGEMENT AGENT (×1)             │◄──┤      │
+    │  └─────────────────────────────────────────┘   │      │
+    │  ┌─────────────────────────────────────────┐   │      │
+    │  │  PORTFOLIO MANAGEMENT AGENT (×1)        │◄──┘      │
+    │  └─────────────────────────────────────────┘          │
+    └───────────────────────────────────────────────────────┘</div>
+
+    <h3>4.2 Agent Base Architecture</h3>
+    <p>Every agent shares a common runtime shell:</p>
+    <div class="code-label">AgentRuntime &mdash; Python Base Class</div>
+    <pre><code>class AgentRuntime:
+    """Base runtime for all trading agents."""
+    
+    # Identity
+    agent_id: str
+    agent_type: AgentType  # fundamental | macro | technical | risk | pm
+    specialization: str    # e.g., "energy", "latam", "equity_technical"
+    
+    # LLM Configuration
+    model: str             # e.g., "claude-sonnet-4-20250514"
+    temperature: float     # 0.3 for analytical, 0.5 for creative ideation
+    max_tokens: int
+    
+    # Context Assembly
+    system_prompt: str                    # Role-specific persona and rules
+    long_term_memory: MemoryStore         # Persisted beliefs, past trades, lessons
+    short_term_context: ContextWindow     # Current cycle data
+    
+    # Tool Access
+    tools: list[Tool]                     # DataService, StateStore, MessageBus, Calculator
+    
+    # Output
+    output_schema: type[BaseModel]        # Pydantic model for structured output
+    validator: OutputValidator            # Schema + business rule validation
+    
+    # Execution
+    async def run_cycle(self, trigger: CycleTrigger) -&gt; AgentOutput: ...
+    async def participate_in_debate(self, proposal: TradeProposal) -&gt; DebateMessage: ...
+    async def respond_to_query(self, query: str) -&gt; str: ...</code></pre>
+
+    <h3>4.3 Memory Architecture</h3>
+    <div class="diagram">┌─────────────────────────────────────────┐
+│            <span class="hl">AGENT MEMORY</span>                  │
+├─────────────────────────────────────────┤
+│                                         │
+│  <span class="hl">WORKING MEMORY</span> (per-cycle)             │
+│  - Current market data snapshot         │
+│  - Active proposals under debate        │
+│  - This cycle's observations            │
+│                                         │
+│  <span class="hl">EPISODIC MEMORY</span> (persistent)           │
+│  - Past trade outcomes (win/loss/why)   │
+│  - Debate transcripts (summarized)      │
+│  - Lessons learned / belief updates     │
+│                                         │
+│  <span class="hl">SEMANTIC MEMORY</span> (reference)            │
+│  - Sector/region knowledge base         │
+│  - Model templates and frameworks       │
+│  - Historical analogs                   │
+│                                         │
+│  <span class="hl">BELIEFS</span> (evolving)                     │
+│  - Current macro/sector thesis          │
+│  - Active watchlist with triggers       │
+│  - Conviction levels per name           │
+│                                         │
+└─────────────────────────────────────────┘</div>
+    <p>Each agent maintains a belief state that persists across cycles and evolves as new data arrives. This prevents the system from &ldquo;forgetting&rdquo; a developing thesis between runs.</p>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 5: FUNDAMENTAL AGENTS                      -->
+<!-- ================================================== -->
+<div class="section" id="fundamental">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 05</div>
+    <h2>Fundamental Agents (&times;11)</h2>
+
+    <h3>5.1 Agent Roster</h3>
+    <table>
+        <thead>
+            <tr><th>Agent ID</th><th>Sector</th><th>Coverage</th><th>Key Vehicles</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>fund_energy</td><td>Energy</td><td>~23 names</td><td>XLE / RSPG</td></tr>
+            <tr><td>fund_materials</td><td>Materials</td><td>~28 names</td><td>XLB / RSPM</td></tr>
+            <tr><td>fund_industrials</td><td>Industrials</td><td>~78 names</td><td>XLI / RSPI</td></tr>
+            <tr><td>fund_cons_disc</td><td>Consumer Discretionary</td><td>~53 names</td><td>XLY / RSPD</td></tr>
+            <tr><td>fund_cons_staples</td><td>Consumer Staples</td><td>~38 names</td><td>XLP / RSPS</td></tr>
+            <tr><td>fund_healthcare</td><td>Health Care</td><td>~64 names</td><td>XLV / RSPH</td></tr>
+            <tr><td>fund_financials</td><td>Financials</td><td>~72 names</td><td>XLF / RSPF</td></tr>
+            <tr><td>fund_technology</td><td>Information Technology</td><td>~68 names</td><td>XLK / RSPT</td></tr>
+            <tr><td>fund_comm_svcs</td><td>Communication Services</td><td>~22 names</td><td>XLC / RSPC</td></tr>
+            <tr><td>fund_utilities</td><td>Utilities</td><td>~31 names</td><td>XLU / RSPU</td></tr>
+            <tr><td>fund_real_estate</td><td>Real Estate</td><td>~31 names</td><td>XLRE / RSPR</td></tr>
+        </tbody>
+    </table>
+
+    <h3>5.2 Analytical Framework</h3>
+    <p>Each fundamental agent operates as a long/short equity analyst with sector expertise:</p>
+    <h4>Core Process</h4>
+    <ol>
+        <li><strong>Model Building</strong> &mdash; Revenue drivers, margin structure, FCF generation, balance sheet/leverage</li>
+        <li><strong>Valuation</strong> &mdash; Sector-appropriate multiples (EV/EBITDA, P/E, P/FCF, P/B) + DCF where relevant, benchmarked vs. peers and own history</li>
+        <li><strong>Variant Perception</strong> &mdash; Where do our estimates diverge from consensus? What&rsquo;s the market missing?</li>
+        <li><strong>Catalyst Identification</strong> &mdash; What unlocks value? Earnings, M&amp;A, restructuring, regulatory, cyclical turn</li>
+        <li><strong>Position Construction</strong> &mdash; Long or short with appropriate hedge</li>
+    </ol>
+
+    <h4>Long Candidates</h4>
+    <p>Mispriced quality, underappreciated catalysts, positive estimate revision trajectory, structural growth at reasonable price.</p>
+
+    <h4>Short Candidates</h4>
+    <p>Stretched valuations relative to fundamentals, deteriorating margins/cash flow, structural decline, negative estimate revision cycle, accounting red flags.</p>
+
+    <h3>5.3 Sector-Specific KPIs</h3>
+    <pre><code>energy:
+  kpis: [production_growth, reserve_life, breakeven_price, rig_count_trend,
+         refining_margins, capex_discipline, shareholder_return_yield]
+  drivers: [oil_price, gas_price, opec_policy, us_shale_activity, energy_transition]
+
+financials:
+  kpis: [NIM, credit_quality_NCOs, CET1_ratio, loan_growth, fee_income_mix,
+         efficiency_ratio, tangible_book_value_growth, deposit_beta]
+  drivers: [yield_curve, credit_cycle, regulatory_environment, loan_demand]
+
+technology:
+  kpis: [ARR_growth, net_revenue_retention, rule_of_40, R&amp;D_intensity,
+         gross_margin_trend, FCF_conversion, TAM_penetration]
+  drivers: [enterprise_spend_cycle, AI_adoption, cloud_migration, valuation_regime]
+
+healthcare:
+  kpis: [pipeline_value, patent_cliff_exposure, pricing_power,
+         organic_revenue_growth, M&amp;A_capacity, regulatory_risk]
+  drivers: [drug_approvals, pricing_legislation, demographics, innovation_cycle]
+
+industrials:
+  kpis: [backlog, book_to_bill, capacity_utilization, pricing_power,
+         margin_expansion_runway, aftermarket_mix]
+  drivers: [capex_cycle, infrastructure_spend, reshoring, supply_chain]
+
+consumer_discretionary:
+  kpis: [same_store_sales, market_share_trend, inventory_health,
+         digital_penetration, brand_strength, consumer_confidence_sensitivity]
+  drivers: [consumer_spending, employment, housing, discretionary_wallet_share]
+
+consumer_staples:
+  kpis: [organic_growth, volume_vs_price_mix, private_label_share_threat,
+         input_cost_exposure, dividend_sustainability]
+  drivers: [inflation, consumer_trade_down, commodity_input_costs]
+
+materials:
+  kpis: [volume_growth, pricing_power, cost_curve_position,
+         capacity_additions, inventory_cycle_position]
+  drivers: [global_PMI, china_construction, commodity_prices, trade_flows]
+
+communication_services:
+  kpis: [subscriber_growth, ARPU, content_ROI, advertising_revenue_growth,
+         churn_rate, engagement_metrics]
+  drivers: [ad_spend_cycle, streaming_competition, regulatory, AI_impact]
+
+utilities:
+  kpis: [rate_base_growth, allowed_ROE, regulatory_relationship,
+         renewable_transition_capex, dividend_coverage, wildfire_liability]
+  drivers: [interest_rates, regulation, energy_transition, electrification]
+
+real_estate:
+  kpis: [FFO_growth, occupancy, lease_spreads, cap_rate_environment,
+         development_pipeline, balance_sheet_leverage, NAV_discount]
+  drivers: [interest_rates, remote_work, supply_pipeline, cap_rate_cycle]</code></pre>
+
+    <h3>5.4 Data Inputs per Agent Cycle</h3>
+    <ul>
+        <li>Earnings estimates (consensus + revisions) for all coverage names</li>
+        <li>Recent 10-Q/10-K filings (parsed key metrics)</li>
+        <li>Price action (1D, 5D, 1M, 3M, 6M, 1Y returns)</li>
+        <li>Peer group relative valuation matrix</li>
+        <li>Sector news feed (last 48 hours)</li>
+        <li>Management commentary / transcript highlights</li>
+        <li>Short interest and institutional ownership changes</li>
+        <li>Options activity (unusual volume, skew shifts)</li>
+    </ul>
+
+    <h3>5.5 Output: FundamentalTradeProposal</h3>
+    <pre><code>class FundamentalTradeProposal(BaseModel):
+    proposal_id: str
+    agent_id: str
+    timestamp: datetime
+
+    # Position
+    ticker: str
+    direction: Literal["long", "short"]
+    hedge_ticker: str  # Equal-weight sector ETF
+    hedge_direction: Literal["long", "short"]
+
+    # Thesis
+    thesis_summary: str  # 2-3 sentences
+    thesis_detail: str   # Full write-up (500-1000 words)
+    variant_perception: str  # Where we differ from consensus
+    catalyst: str
+    catalyst_timeline: str  # e.g., "2-4 weeks (earnings)"
+
+    # Valuation
+    current_price: float
+    target_price: float
+    downside_price: float  # bear case
+    implied_upside_pct: float
+    primary_valuation_method: str
+    valuation_detail: dict  # method-specific
+
+    # Conviction &amp; Risk
+    conviction: int  # 1-10
+    confidence_interval: str  # "high", "medium", "low"
+    key_risks: list[str]
+    stop_loss_level: float
+
+    # Context
+    sector_view: str  # bullish/bearish/neutral
+    relevant_peers: list[str]
+    earnings_date: Optional[date]</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 6: MACRO AGENTS                            -->
+<!-- ================================================== -->
+<div class="section" id="macro">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 06</div>
+    <h2>Macro Agents (&times;6)</h2>
+
+    <h3>6.1 Agent Roster</h3>
+    <table>
+        <thead>
+            <tr><th>Agent ID</th><th>Region/Product</th><th>Coverage</th><th>Key Vehicles</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>macro_latam</td><td>Latin America</td><td>Brazil, Mexico, Chile, Colombia, Peru</td><td>EWZ, EWW</td></tr>
+            <tr><td>macro_ceemea</td><td>CEEMEA</td><td>Turkey, South Africa, Poland, Saudi, UAE, Egypt</td><td>Regional ETFs</td></tr>
+            <tr><td>macro_asia</td><td>Asia</td><td>China, Japan, Korea, Taiwan, India, ASEAN</td><td>FXI, EWJ, EWY, EWT, INDA</td></tr>
+            <tr><td>macro_north_america</td><td>North America</td><td>US, Canada</td><td>EWC, SPY/RSP</td></tr>
+            <tr><td>macro_western_europe</td><td>Western Europe</td><td>Eurozone, UK, Nordics, Switzerland</td><td>EWG, EWU, EWQ, EWI, EWP, EWL, EWD, EWN</td></tr>
+            <tr><td>macro_commodities</td><td>Commodities</td><td>Gold, Silver, Copper, Aluminum, Oil &amp; Gas</td><td>GLD, SLV, COPX, AA, USO, GDX, SIL, XOP</td></tr>
+        </tbody>
+    </table>
+
+    <h3>6.2 Analytical Framework</h3>
+    <p>Each macro agent operates as a top-down macro analyst with regional/product expertise:</p>
+    <h4>Core Process</h4>
+    <ol>
+        <li><strong>Growth &amp; Activity</strong> &mdash; GDP trajectory, PMIs, labor market, leading indicators</li>
+        <li><strong>Inflation &amp; Policy</strong> &mdash; CPI/PPI path, central bank reaction function, rate expectations</li>
+        <li><strong>Fiscal &amp; Debt</strong> &mdash; Budget balance, debt sustainability, fiscal impulse, political will</li>
+        <li><strong>External Accounts</strong> &mdash; Current account, BoP, reserves, capital flows, terms of trade</li>
+        <li><strong>Valuation &amp; Flows</strong> &mdash; FX valuation (REER), equity risk premium, foreign positioning</li>
+        <li><strong>Political &amp; Geopolitical Risk</strong> &mdash; Election cycles, policy uncertainty, conflict, sanctions</li>
+        <li><strong>Expression Selection</strong> &mdash; Map the view into the cleanest tradeable instrument</li>
+    </ol>
+
+    <h3>6.3 Region-Specific Frameworks</h3>
+    <pre><code>latam:
+  key_drivers:
+    - commodity_terms_of_trade
+    - fiscal_slippage_and_reform
+    - central_bank_credibility
+    - political_cycle_and_populism
+    - USD_strength_sensitivity
+    - China_demand_channel
+  primary_expressions: [EWZ, EWW]
+  hedge_instruments: [EEM, ACWI]
+
+ceemea:
+  key_drivers:
+    - energy_dependence_and_pricing
+    - geopolitical_risk (Russia/Ukraine, Middle East)
+    - EU_convergence_trade
+    - current_account_vulnerability
+    - central_bank_independence
+    - sanctions_and_capital_controls
+  primary_expressions: [regional ETFs, frontier access vehicles]
+  hedge_instruments: [EEM, ACWI]
+
+asia:
+  key_drivers:
+    - china_credit_impulse_and_property
+    - global_trade_cycle_and_tariffs
+    - semiconductor_cycle
+    - JPY_and_BOJ_policy
+    - india_structural_growth
+    - ASEAN_supply_chain_shift
+  primary_expressions: [FXI, EWJ, EWY, EWT, INDA]
+  hedge_instruments: [EEM (for EM Asia), EFA (for Japan), ACWI]
+
+north_america:
+  key_drivers:
+    - fed_policy_and_terminal_rate
+    - us_fiscal_trajectory
+    - labor_market_rebalancing
+    - ai_productivity_impulse
+    - canada_housing_and_resources
+    - us_political_cycle
+  primary_expressions: [EWC, sector_rotation_via_RSP]
+  hedge_instruments: [ACWI, EFA]
+
+western_europe:
+  key_drivers:
+    - ecb_policy_divergence
+    - european_energy_security
+    - fiscal_rules_and_reform
+    - china_export_exposure
+    - defense_spending_ramp
+    - uk_post_brexit_trajectory
+  primary_expressions: [EWG, EWU, EWQ, EWI, EWP, EWL, EWD, EWN]
+  hedge_instruments: [EFA, ACWI]
+
+commodities:
+  key_drivers:
+    - supply_demand_balance_per_commodity
+    - inventory_levels_and_trends
+    - cost_curve_and_marginal_producer
+    - futures_curve_shape (contango_vs_backwardation)
+    - USD_correlation
+    - china_demand_impulse
+    - energy_transition_demand_shift
+    - geopolitical_supply_risk
+  primary_expressions: [GLD, SLV, GDX, SIL, COPX, AA, USO, XOP]
+  hedge_instruments: [ACWI, broad commodity index, or PM discretion]</code></pre>
+
+    <h3>6.4 Output: MacroTradeProposal</h3>
+    <pre><code>class MacroTradeProposal(BaseModel):
+    proposal_id: str
+    agent_id: str
+    timestamp: datetime
+
+    # Position
+    ticker: str  # Country ETF or commodity vehicle
+    direction: Literal["long", "short"]
+    hedge_ticker: str
+    hedge_direction: Literal["long", "short"]
+
+    # Thesis
+    macro_regime: str  # e.g., "late cycle reflation", "EM divergence"
+    thesis_summary: str
+    thesis_detail: str
+    key_data_points: list[str]  # Specific numbers/indicators
+
+    # Scenario Analysis
+    base_case: str
+    base_case_probability: float
+    bull_case: str
+    bull_case_probability: float
+    bear_case: str
+    bear_case_probability: float
+
+    # Positioning
+    target_return_pct: float
+    stop_loss_pct: float
+    conviction: int  # 1-10
+    time_horizon: str  # "tactical" | "medium-term" | "structural"
+
+    # Risk Factors
+    key_risks: list[str]
+    risk_events_calendar: list[dict]  # {"date":..., "event":..., "impact":...}
+    correlation_to_existing_book: str</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 7: TECHNICAL AGENTS                        -->
+<!-- ================================================== -->
+<div class="section" id="technical">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 07</div>
+    <h2>Technical Agents (&times;2)</h2>
+
+    <h3>7.1 Agent Roster</h3>
+    <table>
+        <thead>
+            <tr><th>Agent ID</th><th>Specialization</th><th>Coverage</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>tech_equity</td><td>Equities &amp; ETFs</td><td>All S&amp;P 500 names, sector ETFs, country ETFs</td></tr>
+            <tr><td>tech_commodity</td><td>Commodities</td><td>Gold, silver, copper, aluminum, oil &amp; gas + miner ETFs</td></tr>
+        </tbody>
+    </table>
+
+    <h3>7.2 Signal Categories</h3>
+    <pre><code>trend_following:
+  - moving_averages: [20, 50, 100, 200 day SMA/EMA]
+  - MA_crossovers: [golden_cross, death_cross, intermediate]
+  - ADX_trend_strength: threshold &gt; 25 for trending
+  - price_channels: [Donchian, Keltner]
+
+momentum:
+  - RSI: [overbought &gt; 70, oversold &lt; 30, divergences]
+  - MACD: [signal_crossover, histogram_momentum, divergences]
+  - KST: [Know Sure Thing signal and crossovers]
+  - rate_of_change: [12-period, 24-period]
+  - relative_strength_vs_sector_and_market
+
+mean_reversion:
+  - bollinger_bands: [squeeze, expansion, band_touch]
+  - z_score_from_moving_averages
+  - RSI_extremes_with_reversal_confirmation
+  - put_call_ratio_extremes
+  - VIX_term_structure_extremes
+
+volume_analysis:
+  - OBV_trend
+  - volume_price_confirmation
+  - accumulation_distribution
+  - unusual_volume_detection
+  - dark_pool_prints (if available)
+
+options_signals:
+  - implied_vol_vs_realized_vol
+  - skew_changes: [put_skew_steepening, call_skew]
+  - unusual_options_activity
+  - gamma_exposure_levels
+  - max_pain_and_open_interest_clusters
+
+flow_analysis:
+  - CTA_positioning_and_trigger_levels
+  - systematic_flow_estimates
+  - ETF_creation_redemption
+  - short_interest_changes
+  - margin_debt_levels
+
+key_levels:
+  - fibonacci_retracements: [38.2%, 50%, 61.8%]
+  - fibonacci_extensions: [127.2%, 161.8%]
+  - pivot_points: [daily, weekly, monthly]
+  - historical_support_resistance
+  - volume_profile_POC (point of control)
+  - VWAP_anchored</code></pre>
+
+    <h3>7.3 Output: TechnicalScore</h3>
+    <pre><code>class TechnicalScore(BaseModel):
+    proposal_id: str
+    agent_id: str
+    timestamp: datetime
+
+    # Overall Assessment
+    technical_score: int  # 1-10 (10 = strongest technical setup)
+    trend_alignment: Literal["aligned", "neutral", "against"]
+    momentum_regime: Literal["strong_trend", "weakening", "mean_reverting", "consolidating"]
+
+    # Key Levels
+    support_levels: list[float]  # ordered nearest to farthest
+    resistance_levels: list[float]
+    fibonacci_levels: dict[str, float]  # "38.2%": 145.50, etc.
+
+    # Trade Management
+    suggested_entry: float
+    suggested_stop_loss: float  # technical stop
+    suggested_take_profit: float
+    trailing_stop_method: str  # e.g., "ATR-based 2x", "below 20-day MA"
+
+    # Signals
+    active_signals: list[dict]  # {"signal": "golden_cross", "strength": "strong", ...}
+    warning_signals: list[dict]  # conflicting or cautionary signals
+
+    # Flow &amp; Positioning
+    cta_levels: dict  # {"buy_trigger":..., "sell_trigger":..., "current_position_estimate":...}
+    options_context: str
+    volume_confirmation: bool
+
+    # Timing
+    timing_recommendation: Literal["now", "wait_for_pullback", "wait_for_breakout", "avoid"]
+    timing_rationale: str</code></pre>
+
+    <h3>7.4 Technical Agent-Originated Ideas</h3>
+    <p>When technical agents identify purely technical setups (breakouts, major divergences, extreme mean-reversion), they publish a <code>TechnicalTradeProposal</code> that must enter the debate pipeline:</p>
+    <pre><code>class TechnicalTradeProposal(BaseModel):
+    """Technical-originated idea — requires fundamental/macro debate before PM review."""
+    proposal_id: str
+    agent_id: str
+    ticker: str
+    direction: Literal["long", "short"]
+    hedge_ticker: str
+    hedge_direction: Literal["long", "short"]
+
+    technical_thesis: str
+    setup_type: str  # "breakout", "mean_reversion", "divergence", "flow_driven"
+    technical_score: int
+    key_levels: dict
+
+    # Must be filled after debate
+    fundamental_endorsement: Optional[bool]
+    macro_endorsement: Optional[bool]
+    debate_summary: Optional[str]</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 8: RISK MANAGEMENT AGENT                   -->
+<!-- ================================================== -->
+<div class="section" id="risk-agent">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 08</div>
+    <h2>Risk Management Agent</h2>
+
+    <h3>8.1 Role &amp; Authority</h3>
+    <p>The Risk Management Agent is the system&rsquo;s <strong>gatekeeper</strong>. No trade enters the book without its approval. It operates as a risk manager at an elite macro hedge fund &mdash; disciplined, quantitative, and empowered to reject or modify any proposal regardless of originating agent conviction.</p>
+
+    <h3>8.2 Risk Framework</h3>
+    <pre><code>position_level:
+  max_position_size: 5% NAV (single name), 8% NAV (ETF)
+  stop_loss: 2-3% of position notional
+  gain_target: 5% of position notional
+  max_sector_concentration: 25% gross (long + short per sector)
+  max_single_name_concentration: 5% NAV
+  correlation_limit: avoid &gt;0.7 correlation between active positions
+
+portfolio_level:
+  factor_beta_limit: &plusmn;0.6 per factor
+  factors:
+    - DXY (US Dollar Index)
+    - SPX (S&amp;P 500)
+    - USGG10Yr (US Generic Govt 10-Year Yield)
+    - VIX (CBOE Volatility Index)
+    - Growth_Value (Growth vs Value factor)
+    - CL1 (Crude Oil front-month)
+    - Large_Small (Large Cap vs Small Cap factor)
+    - CDX_HY_5Y (High Yield Credit Spread)
+    - XAU (Gold)
+
+  max_gross_leverage: 3.0x (absolute ceiling)
+  target_net_exposure: &plusmn;0.3 (near market neutral)
+  max_drawdown_before_deleverage: 4% from peak
+  max_downside_volatility: 6% annualized
+  max_correlation_concentration: no more than 40% of risk in correlated cluster
+
+leverage_management:
+  regime_positive_low_corr:  # making money, positions uncorrelated
+    leverage_range: 1.5x - 2.5x
+  regime_positive_high_corr:  # making money but crowded
+    leverage_range: 1.0x - 1.5x
+  regime_negative_low_corr:  # losing but diversified
+    leverage_range: 0.8x - 1.2x
+  regime_negative_high_corr:  # losing and crowded — maximum caution
+    leverage_range: 0.3x - 0.8x</code></pre>
+
+    <h3>8.3 Pre-Trade Risk Check</h3>
+    <pre><code>class RiskAssessment(BaseModel):
+    proposal_id: str
+    timestamp: datetime
+
+    # Decision
+    decision: Literal["approved", "rejected", "approved_with_modifications"]
+    rationale: str
+
+    # Position-Level Checks
+    position_size_ok: bool
+    stop_loss_adequate: bool
+    hedge_present_and_valid: bool
+    sector_concentration_ok: bool
+    correlation_to_existing_positions: float
+
+    # Portfolio-Level Impact
+    projected_factor_betas: dict[str, float]  # after adding this position
+    factor_breach: bool  # would any factor exceed &plusmn;0.6?
+    projected_gross_leverage: float
+    projected_net_exposure: float
+    projected_downside_vol: float
+
+    # Modifications (if approved_with_modifications)
+    max_allowed_size_pct: Optional[float]
+    required_stop_loss: Optional[float]
+    additional_hedge_required: Optional[str]
+    timing_constraint: Optional[str]
+
+    # Warnings
+    risk_warnings: list[str]  # non-blocking concerns for PM awareness</code></pre>
+
+    <h3>8.4 Ongoing Position Monitoring</h3>
+    <p>The risk agent also runs a monitoring cycle (separate from new-trade approval):</p>
+    <ul>
+        <li><strong>Stop-loss proximity alerts</strong> &mdash; flag positions within 50bps of stop</li>
+        <li><strong>Factor drift detection</strong> &mdash; if book beta to any factor approaches &plusmn;0.5, alert PM</li>
+        <li><strong>Correlation regime change</strong> &mdash; if inter-position correlations spike, recommend deleveraging</li>
+        <li><strong>Drawdown monitoring</strong> &mdash; progressive deleverage triggers at 2%, 3%, 4% drawdown from peak</li>
+        <li><strong>Liquidity monitoring</strong> &mdash; flag positions where ADV suggests exit would take &gt;2 days</li>
+    </ul>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 9: PM AGENT                                -->
+<!-- ================================================== -->
+<div class="section" id="pm-agent">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 09</div>
+    <h2>Portfolio Management Agent</h2>
+
+    <h3>9.1 Role &amp; Authority</h3>
+    <p>The PM agent is the <strong>final decision-maker</strong>. It receives risk-approved proposals and determines:</p>
+    <ol>
+        <li>Whether to execute the trade</li>
+        <li>Position sizing (within risk-approved limits)</li>
+        <li>Entry timing and execution approach</li>
+        <li>Stop-loss and take-profit calibration</li>
+        <li>Portfolio-level construction (how this trade fits the book)</li>
+    </ol>
+    <p>It operates like a macro portfolio manager at an elite hedge fund &mdash; synthesizing fundamental, macro, technical, and risk inputs into a cohesive portfolio.</p>
+
+    <h3>9.2 Decision Framework</h3>
+    <pre><code>pm_decision_criteria:
+  conviction_threshold: 6  # minimum post-debate conviction to consider
+  technical_score_threshold: 5  # minimum to proceed
+
+  sizing_model:
+    base_size: 2% NAV  # starting point
+    conviction_scalar: [0.5x at 6, 0.75x at 7, 1.0x at 8, 1.25x at 9, 1.5x at 10]
+    technical_adjustment: [0.7x if tech_score &lt; 6, 1.0x if 6-8, 1.2x if &gt; 8]
+    regime_adjustment: [0.5x in risk-off, 1.0x neutral, 1.3x risk-on]
+    correlation_penalty: reduce by 20% for each existing position with &gt;0.5 correlation
+
+  portfolio_construction:
+    max_ideas_per_cycle: 3  # don't add more than 3 new positions per day
+    review_existing_first: true  # before adding new, check if existing need adjustment
+    rebalance_frequency: weekly  # full book review
+
+  exit_framework:
+    stop_loss_hit: immediate exit
+    target_reached: take 50% profit, trail remainder
+    thesis_invalidated: exit regardless of P&amp;L
+    time_decay: review positions approaching catalyst deadline without move
+    better_opportunity: may exit lower-conviction position to fund higher</code></pre>
+
+    <h3>9.3 Output: TradeOrder</h3>
+    <pre><code>class TradeOrder(BaseModel):
+    order_id: str
+    proposal_id: str
+    timestamp: datetime
+
+    # Decision
+    execute: bool
+    pm_rationale: str  # Why yes/no, how it fits the book
+
+    # Primary Leg
+    ticker: str
+    direction: Literal["long", "short"]
+    size_pct_nav: float
+    entry_approach: str  # "market", "limit at X", "scale in over 2 days"
+    entry_price_limit: Optional[float]
+    stop_loss: float
+    take_profit: float
+    trailing_stop: Optional[str]
+
+    # Hedge Leg
+    hedge_ticker: str
+    hedge_direction: Literal["long", "short"]
+    hedge_size_pct_nav: float
+    hedge_entry_approach: str
+
+    # Portfolio Context
+    portfolio_thesis: str  # how this trade fits the overall book narrative
+    expected_holding_period: str
+    review_date: date  # when to reassess if no movement
+
+    # Delivery
+    priority: Literal["urgent", "normal", "opportunistic"]
+    notification_method: str  # "email", "dashboard", "sms"</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 10: DEBATE PROTOCOL                        -->
+<!-- ================================================== -->
+<div class="section" id="debate">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 10</div>
+    <h2>Investment Process &amp; Debate Protocol</h2>
+
+    <h3>10.1 Idea Generation Modes</h3>
+    <h4>Mode 1: Continuous Screening (Daily)</h4>
+    <p>All fundamental and macro agents scan their universe &rarr; generate watchlist updates (evolving beliefs) &rarr; surface new proposals when conviction threshold crossed.</p>
+    <h4>Mode 2: Event-Driven (Real-time)</h4>
+    <p>Data event triggers agent activation:</p>
+    <ul>
+        <li>Earnings release &rarr; relevant fundamental agent</li>
+        <li>Central bank decision &rarr; relevant macro agent</li>
+        <li>Technical breakout &rarr; technical agent</li>
+        <li>Geopolitical event &rarr; relevant macro agent(s)</li>
+    </ul>
+    <h4>Mode 3: Scheduled Deep Dive (Weekly)</h4>
+    <p>Full portfolio review cycle: every agent reassesses active positions, PM runs portfolio-level optimization, Risk runs comprehensive factor/correlation check.</p>
+
+    <h3>10.2 Debate Protocol &mdash; Detailed Flow</h3>
+    <div class="diagram">┌─────────────────────────────────────────────────────────────────────┐
+│                     <span class="hl">DEBATE PROTOCOL</span>                                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  <span class="hl">PHASE 1: PROPOSAL</span> (originating agent)                               │
+│  ├── Publish TradeProposal with full thesis                          │
+│  └── Tag relevant counter-parties for debate                         │
+│                                                                       │
+│  <span class="hl">PHASE 2: ADVERSARIAL REVIEW</span> (2-3 rounds, max 48hr window)          │
+│  ├── Round 1: Initial reactions from tagged agents                   │
+│  │   ├── Sector peers challenge single-name thesis                   │
+│  │   ├── Macro challenges sector/country timing                      │
+│  │   └── Each response: support / challenge / neutral + evidence     │
+│  ├── Round 2: Originator responds to challenges                      │
+│  │   ├── Address each challenge with data/logic                      │
+│  │   ├── Revise conviction if warranted                              │
+│  │   └── May withdraw if challenges are fatal                        │
+│  └── Round 3 (if needed): Final rebuttals                            │
+│      ├── Challengers respond to originator's defense                 │
+│      └── Final conviction assessment                                  │
+│                                                                       │
+│  <span class="hl">PHASE 3: CONVICTION CHECK</span>                                           │
+│  ├── If conviction &lt; 5 after debate → auto-withdraw                 │
+│  ├── If conviction 5-6 → proceeds but flagged as lower priority     │
+│  └── If conviction ≥ 7 → proceeds to technical scoring              │
+│                                                                       │
+│  <span class="hl">PHASE 4: TECHNICAL SCORING</span>                                          │
+│  ├── Technical agent scores the setup (1-10)                         │
+│  ├── Provides key levels, stops, targets                             │
+│  └── If technical_score &lt; 4 AND conviction &lt; 8 → parked             │
+│                                                                       │
+│  <span class="hl">PHASE 5: RISK GATE</span>                                                  │
+│  ├── Risk agent evaluates against full framework                     │
+│  ├── Approved → proceeds to PM                                       │
+│  ├── Modified → proceeds with constraints                            │
+│  └── Rejected → logged with rationale, dead                          │
+│                                                                       │
+│  <span class="hl">PHASE 6: PM DECISION</span>                                                │
+│  ├── PM sizes the trade within risk-approved limits                  │
+│  ├── Sets final entry/stop/target parameters                         │
+│  ├── Decides whether to execute now or wait                          │
+│  └── Publishes TradeOrder → delivery channel                         │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘</div>
+
+    <h3>10.3 Debate Rules (Enforced by Orchestrator)</h3>
+    <ol>
+        <li><strong>Evidence requirement</strong> &mdash; Every challenge or support must cite specific data points, not vague assertions</li>
+        <li><strong>Time boxing</strong> &mdash; Each round has a 4-hour window; agents that don&rsquo;t respond are counted as &ldquo;neutral&rdquo;</li>
+        <li><strong>Conflict of interest</strong> &mdash; An agent cannot debate its own proposal (it can only respond to challenges)</li>
+        <li><strong>Escalation</strong> &mdash; If fundamental and macro agents deadlock, PM agent has tie-breaking authority</li>
+        <li><strong>Fast-track</strong> &mdash; Proposals with conviction &ge; 9 from a senior agent (positive track record) can skip to Phase 3</li>
+        <li><strong>Kill switch</strong> &mdash; Any agent can flag &ldquo;thesis-breaking event&rdquo; to immediately halt a proposal</li>
+    </ol>
+
+    <h3>10.4 Technical Agent-Originated Ideas (Modified Flow)</h3>
+    <p>When a technical agent surfaces an idea:</p>
+    <ol>
+        <li>Technical agent publishes <code>TechnicalTradeProposal</code></li>
+        <li><strong>Debate happens BEFORE technical scoring</strong> (since the originator IS the technical agent)</li>
+        <li>Relevant fundamental agent must provide fundamental context (even if neutral)</li>
+        <li>Relevant macro agent must confirm no macro headwind</li>
+        <li>Both must endorse (or at least not reject) for the idea to proceed</li>
+        <li>Risk gate and PM decision proceed as normal</li>
+    </ol>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 11: HEDGING FRAMEWORK                      -->
+<!-- ================================================== -->
+<div class="section" id="hedging">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 11</div>
+    <h2>Hedging Framework</h2>
+
+    <h3>11.1 Mandatory Hedge Rules</h3>
+    <p>Every position in the book must have an opposite-direction hedge leg. <strong>No exceptions.</strong></p>
+    <div class="diagram">┌─────────────────────────────────────────────────────────────────┐
+│                   <span class="hl">HEDGING DECISION TREE</span>                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  Is the trade a <span class="hl">SINGLE NAME</span> in a GICS sector?                    │
+│  ├── YES → Hedge with EQUAL-WEIGHT sector ETF                   │
+│  │         Long AAPL → Short RSPT                                │
+│  │         Short XOM → Long RSPG                                 │
+│  │                                                                │
+│  Is the trade a <span class="hl">SECTOR ETF</span>?                                      │
+│  ├── YES → Hedge with RSP (equal-weight S&amp;P 500)                │
+│  │         Long XLE → Short RSP                                  │
+│  │         Short XLF → Long RSP                                  │
+│  │                                                                │
+│  Is the trade a <span class="hl">DEVELOPED MARKET</span> country ETF?                    │
+│  ├── YES → Hedge with EFA or ACWI (agent/PM discretion)         │
+│  │         Long EWJ → Short EFA                                  │
+│  │         Short EWG → Long ACWI                                 │
+│  │                                                                │
+│  Is the trade an <span class="hl">EMERGING MARKET</span> country ETF?                    │
+│  ├── YES → Hedge with EEM or ACWI                               │
+│  │         Long EWZ → Short EEM                                  │
+│  │         Short FXI → Long ACWI                                 │
+│  │                                                                │
+│  Is the trade a <span class="hl">COMMODITY or MINER</span>?                              │
+│  └── YES → Hedge determined by PM (typically broad market or    │
+│            inverse commodity, or cross-commodity pair)            │
+│            Long GLD → Short ACWI (or as PM sees fit)             │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘</div>
+
+    <h3>11.2 Hedge Sizing</h3>
+    <p>The default is <strong>dollar-neutral</strong> (equal notional on both legs). The PM agent may adjust the hedge ratio based on:</p>
+    <ul>
+        <li>Beta of the primary leg vs. the hedge instrument</li>
+        <li>Volatility differential</li>
+        <li>Desired residual exposure (e.g., 90% hedged if intentionally keeping some sector beta)</li>
+    </ul>
+    <p>The risk agent validates that any non-dollar-neutral hedge ratio still keeps factor betas within limits.</p>
+
+    <h3>11.3 Equal-Weight Sector ETF Mapping</h3>
+    <table>
+        <thead>
+            <tr><th>GICS Sector</th><th>Cap-Weight ETF</th><th>EW Hedge ETF</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Energy</td><td>XLE</td><td>RSPG</td></tr>
+            <tr><td>Materials</td><td>XLB</td><td>RSPM</td></tr>
+            <tr><td>Industrials</td><td>XLI</td><td>RSPI</td></tr>
+            <tr><td>Consumer Discretionary</td><td>XLY</td><td>RSPD</td></tr>
+            <tr><td>Consumer Staples</td><td>XLP</td><td>RSPS</td></tr>
+            <tr><td>Health Care</td><td>XLV</td><td>RSPH</td></tr>
+            <tr><td>Financials</td><td>XLF</td><td>RSPF</td></tr>
+            <tr><td>Information Technology</td><td>XLK</td><td>RSPT</td></tr>
+            <tr><td>Communication Services</td><td>XLC</td><td>EWCO (or custom)</td></tr>
+            <tr><td>Utilities</td><td>XLU</td><td>RSPU</td></tr>
+            <tr><td>Real Estate</td><td>XLRE</td><td>EWRE (or custom)</td></tr>
+        </tbody>
+    </table>
+    <p><em>Note: Where an official equal-weight ETF doesn&rsquo;t exist (e.g., Comm Services, Real Estate), the system uses the closest available equal-weight product or a custom-constructed basket.</em></p>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 12: RISK MANAGEMENT FRAMEWORK              -->
+<!-- ================================================== -->
+<div class="section" id="risk-framework">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 12</div>
+    <h2>Risk Management Framework</h2>
+
+    <h3>12.1 Factor Beta Monitoring</h3>
+    <p>The system computes rolling 12-month factor betas for the entire book against each tracked factor:</p>
+    <pre><code>TRACKED_FACTORS = {
+    "DXY": "US Dollar Index",
+    "SPX": "S&amp;P 500 Total Return",
+    "USGG10Yr": "US Generic Govt 10-Year Yield",
+    "VIX": "CBOE Volatility Index",
+    "Growth_Value": "Russell 1000 Growth / Value ratio",
+    "CL1": "WTI Crude Oil Front Month",
+    "Large_Small": "Russell 1000 / Russell 2000 ratio",
+    "CDX_HY_5Y": "CDX North America High Yield 5-Year",
+    "XAU": "Gold Spot Price"
+}
+
+# Computation: rolling 12-month OLS regression of daily book returns
+# vs. each factor's daily returns
+# Beta = slope coefficient
+# Hard limit: |beta| ≤ 0.6 for EACH factor independently</code></pre>
+
+    <h3>12.2 Drawdown Management</h3>
+    <table>
+        <thead>
+            <tr><th>Drawdown from Peak</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><span class="badge badge-green">0% &ndash; 2%</span></td><td>Normal operations</td></tr>
+            <tr><td><span class="badge badge-gold">2% &ndash; 3%</span></td><td>Review lowest-conviction positions; reduce sizing 20%</td></tr>
+            <tr><td><span class="badge badge-red">3% &ndash; 4%</span></td><td>Mandatory deleverage to 50% of current gross; halt new additions</td></tr>
+            <tr><td><span class="badge badge-red">4%+</span></td><td>Emergency deleverage to 30% of current gross; PM + Risk joint review. Only re-lever after 5 consecutive positive days</td></tr>
+        </tbody>
+    </table>
+
+    <h3>12.3 Position-Level Risk</h3>
+    <pre><code>per_position:
+  hard_stop_loss: 3% (absolute max — no exceptions)
+  soft_stop_loss: 2% (triggers review — PM may override with documented rationale)
+  gain_target: 5% (triggers partial profit-taking)
+  max_holding_period_without_catalyst: 60 days (forces reassessment)
+
+  concentration:
+    max_single_position: 5% NAV (including hedge leg notional)
+    max_sector_gross: 25% NAV
+    max_country_gross: 15% NAV
+    max_commodity_gross: 10% NAV</code></pre>
+
+    <h3>12.4 Correlation &amp; Crowding</h3>
+    <ul>
+        <li>Compute pairwise correlations of all active positions (rolling 60-day)</li>
+        <li>If any cluster of 3+ positions shows average pairwise correlation &gt; 0.6, flag as &ldquo;crowded&rdquo;</li>
+        <li>Crowded clusters subject to aggregate size limit of 15% NAV gross</li>
+        <li>If overall book average pairwise correlation &gt; 0.4, trigger deleverage alert</li>
+    </ul>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 13: DATA ARCHITECTURE                      -->
+<!-- ================================================== -->
+<div class="section" id="data">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 13</div>
+    <h2>Data Architecture</h2>
+
+    <h3>13.1 Data Platform Overview</h3>
+    <div class="diagram">┌─────────────────────────────────────────────────────────────────────┐
+│                        <span class="hl">DATA PLATFORM</span>                                  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────┐            │
+│  │ <span class="hl">MARKET DATA</span> │  │ <span class="hl">FUNDAMENTAL</span>  │  │  <span class="hl">MACRO / ECON</span>   │            │
+│  │             │  │    DATA      │  │     DATA        │            │
+│  ├─────────────┤  ├──────────────┤  ├─────────────────┤            │
+│  │ Prices (EOD │  │ Financials   │  │ GDP, PMIs       │            │
+│  │ + intraday) │  │ Estimates    │  │ CPI, Employment │            │
+│  │ Volume      │  │ Revisions    │  │ Central Bank    │            │
+│  │ Options     │  │ Filings      │  │ Fiscal Data     │            │
+│  │ Short Int.  │  │ Transcripts  │  │ BoP, Reserves   │            │
+│  │ Inst. Own.  │  │ M&amp;A / Corp   │  │ PMI Components  │            │
+│  └──────┬──────┘  └──────┬───────┘  └────────┬────────┘            │
+│         │                │                    │                       │
+│  ┌──────▼────────────────▼────────────────────▼────────┐            │
+│  │              <span class="hl">UNIFIED DATA SERVICE API</span>                 │            │
+│  │  (Normalizes, caches, versions, serves to agents)    │            │
+│  └──────────────────────┬───────────────────────────────┘            │
+│                         │                                             │
+│  ┌──────────────────────▼───────────────────────────────┐            │
+│  │              <span class="hl">ALTERNATIVE DATA</span>                          │            │
+│  ├────────────────────────────────────────────────────────┤            │
+│  │ News feeds (Reuters, Bloomberg, industry)              │            │
+│  │ Earnings call transcripts (parsed + summarized)        │            │
+│  │ Sell-side research summaries                           │            │
+│  │ Social sentiment (Twitter/X, Reddit, StockTwits)       │            │
+│  │ Satellite / web traffic / app download data            │            │
+│  │ Government filings (13F, insider transactions)         │            │
+│  └────────────────────────────────────────────────────────┘            │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘</div>
+
+    <h3>13.2 Data Sources &mdash; Production</h3>
+    <table>
+        <thead>
+            <tr><th>Category</th><th>Provider(s)</th><th>Frequency</th><th>Use</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Prices &amp; Volume</td><td>Bloomberg / Polygon / Alpaca</td><td>EOD + 15-min delayed</td><td>All agents</td></tr>
+            <tr><td>Options</td><td>CBOE / Polygon Options</td><td>EOD + intraday</td><td>Technical agent</td></tr>
+            <tr><td>Fundamentals</td><td>FactSet / S&amp;P Capital IQ / SimFin</td><td>Quarterly + event-driven</td><td>Fundamental agents</td></tr>
+            <tr><td>Estimates &amp; Revisions</td><td>FactSet / IBES</td><td>Daily</td><td>Fundamental agents</td></tr>
+            <tr><td>Filings (10-K/Q)</td><td>SEC EDGAR (parsed)</td><td>Event-driven</td><td>Fundamental agents</td></tr>
+            <tr><td>Transcripts</td><td>FactSet / Seeking Alpha</td><td>Event-driven</td><td>Fundamental agents</td></tr>
+            <tr><td>Macro Indicators</td><td>FRED / IMF / World Bank / BIS</td><td>Mixed (daily to quarterly)</td><td>Macro agents</td></tr>
+            <tr><td>Central Bank</td><td>Central bank APIs + scraping</td><td>Event-driven</td><td>Macro agents</td></tr>
+            <tr><td>News</td><td>NewsAPI / Reuters / Bloomberg</td><td>Real-time</td><td>All agents</td></tr>
+            <tr><td>Short Interest</td><td>S3 Partners / Ortex</td><td>Bi-weekly</td><td>Fundamental + Technical</td></tr>
+            <tr><td>Institutional Ownership</td><td>13F filings (SEC)</td><td>Quarterly + event</td><td>Fundamental agents</td></tr>
+            <tr><td>CTA Positioning</td><td>Derived from CFTC COT + models</td><td>Weekly</td><td>Technical agent</td></tr>
+            <tr><td>Factor Returns</td><td>Computed in-house from indices</td><td>Daily</td><td>Risk agent</td></tr>
+            <tr><td>Correlation Matrix</td><td>Computed from price data</td><td>Daily (rolling 60d)</td><td>Risk agent</td></tr>
+        </tbody>
+    </table>
+
+    <h3>13.3 Data Service Interfaces</h3>
+    <pre><code>class MarketDataService(Protocol):
+    """Price, volume, and derivatives data."""
+    async def get_ohlcv(self, ticker: str, start: date, end: date, interval: str) -&gt; pd.DataFrame: ...
+    async def get_realtime_price(self, ticker: str) -&gt; float: ...
+    async def get_options_chain(self, ticker: str, expiry: Optional[date]) -&gt; pd.DataFrame: ...
+    async def get_short_interest(self, ticker: str) -&gt; dict: ...
+    async def get_institutional_ownership(self, ticker: str) -&gt; dict: ...
+
+class FundamentalDataService(Protocol):
+    """Company financials, estimates, filings."""
+    async def get_financials(self, ticker: str, periods: int) -&gt; dict: ...
+    async def get_estimates(self, ticker: str) -&gt; dict: ...
+    async def get_filing_summary(self, ticker: str, filing_type: str) -&gt; str: ...
+    async def get_transcript_summary(self, ticker: str, quarter: str) -&gt; str: ...
+    async def get_peer_valuation(self, ticker: str) -&gt; pd.DataFrame: ...
+
+class MacroDataService(Protocol):
+    """Economic indicators and macro data."""
+    async def get_indicator(self, indicator: str, country: str, lookback: int) -&gt; pd.Series: ...
+    async def get_central_bank_rate(self, country: str) -&gt; dict: ...
+    async def get_fiscal_data(self, country: str) -&gt; dict: ...
+    async def get_bop_data(self, country: str) -&gt; dict: ...
+    async def get_commodity_fundamentals(self, commodity: str) -&gt; dict: ...
+
+class AlternativeDataService(Protocol):
+    """News, sentiment, flows."""
+    async def get_news(self, query: str, hours: int) -&gt; list[dict]: ...
+    async def get_sentiment(self, ticker: str) -&gt; dict: ...
+    async def get_cta_positioning(self, asset_class: str) -&gt; dict: ...
+    async def get_etf_flows(self, ticker: str, days: int) -&gt; pd.Series: ...
+
+class RiskDataService(Protocol):
+    """Factor returns, correlations, portfolio analytics."""
+    async def get_factor_returns(self, factor: str, lookback: int) -&gt; pd.Series: ...
+    async def compute_rolling_beta(self, returns: pd.Series, factor: str, window: int) -&gt; pd.Series: ...
+    async def compute_correlation_matrix(self, tickers: list[str], window: int) -&gt; pd.DataFrame: ...
+    async def compute_var(self, portfolio: dict, confidence: float) -&gt; float: ...</code></pre>
+
+    <h3>13.4 Data Freshness &amp; Caching</h3>
+    <pre><code>caching_strategy:
+  prices_eod: refresh daily at 17:00 ET
+  prices_intraday: 15-minute cache TTL
+  fundamentals: refresh on earnings/filing events, otherwise weekly
+  estimates: refresh daily (revision-sensitive)
+  macro_indicators: refresh on release schedule (varies by indicator)
+  news: no cache (always fetch fresh within rate limits)
+  factor_returns: compute daily after market close
+  correlations: recompute daily using trailing 60-day window
+
+  storage:
+    hot_cache: Redis (sub-second access for active queries)
+    warm_store: PostgreSQL (structured queries, joins)
+    cold_store: Parquet files on local SSD (historical backtesting)</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 14: STATE MANAGEMENT                       -->
+<!-- ================================================== -->
+<div class="section" id="state">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 14</div>
+    <h2>State Management &amp; Persistence</h2>
+
+    <h3>14.1 Database Schema (PostgreSQL)</h3>
+    <pre><code>-- Core book state
+CREATE TABLE positions (
+    position_id UUID PRIMARY KEY,
+    proposal_id UUID REFERENCES trade_proposals(proposal_id),
+    ticker VARCHAR(10) NOT NULL,
+    direction VARCHAR(5) NOT NULL,  -- 'long' or 'short'
+    size_pct_nav DECIMAL(6,4),
+    entry_price DECIMAL(12,4),
+    current_price DECIMAL(12,4),
+    stop_loss DECIMAL(12,4),
+    take_profit DECIMAL(12,4),
+    hedge_ticker VARCHAR(10),
+    hedge_direction VARCHAR(5),
+    hedge_size_pct_nav DECIMAL(6,4),
+    hedge_entry_price DECIMAL(12,4),
+    entry_date DATE NOT NULL,
+    originating_agent VARCHAR(50),
+    status VARCHAR(20) DEFAULT 'active',
+    closed_date DATE,
+    realized_pnl DECIMAL(12,4),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Trade pipeline
+CREATE TABLE trade_proposals (
+    proposal_id UUID PRIMARY KEY,
+    agent_id VARCHAR(50) NOT NULL,
+    proposal_type VARCHAR(20),  -- 'fundamental', 'macro', 'technical'
+    ticker VARCHAR(10),
+    direction VARCHAR(5),
+    hedge_ticker VARCHAR(10),
+    conviction INTEGER,
+    thesis_summary TEXT,
+    thesis_detail TEXT,
+    target_price DECIMAL(12,4),
+    stop_loss_pct DECIMAL(4,3),
+    status VARCHAR(20),  -- 'proposed','debating','scored','risk_review',
+                         -- 'approved','rejected','executed','withdrawn'
+    created_at TIMESTAMP DEFAULT NOW(),
+    resolved_at TIMESTAMP
+);
+
+CREATE TABLE debate_messages (
+    message_id UUID PRIMARY KEY,
+    proposal_id UUID REFERENCES trade_proposals(proposal_id),
+    agent_id VARCHAR(50) NOT NULL,
+    round INTEGER NOT NULL,
+    stance VARCHAR(10),  -- 'support', 'challenge', 'neutral'
+    argument TEXT NOT NULL,
+    evidence TEXT,
+    revised_conviction INTEGER,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE technical_scores (
+    score_id UUID PRIMARY KEY,
+    proposal_id UUID REFERENCES trade_proposals(proposal_id),
+    agent_id VARCHAR(50),
+    technical_score INTEGER,
+    trend_alignment VARCHAR(10),
+    support_levels JSONB,
+    resistance_levels JSONB,
+    suggested_stop DECIMAL(12,4),
+    suggested_target DECIMAL(12,4),
+    active_signals JSONB,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE risk_decisions (
+    decision_id UUID PRIMARY KEY,
+    proposal_id UUID REFERENCES trade_proposals(proposal_id),
+    decision VARCHAR(30),  -- 'approved','rejected','approved_with_modifications'
+    rationale TEXT,
+    projected_factor_betas JSONB,
+    max_allowed_size DECIMAL(6,4),
+    modifications JSONB,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE trade_orders (
+    order_id UUID PRIMARY KEY,
+    proposal_id UUID REFERENCES trade_proposals(proposal_id),
+    execute BOOLEAN,
+    ticker VARCHAR(10),
+    direction VARCHAR(5),
+    size_pct_nav DECIMAL(6,4),
+    entry_price DECIMAL(12,4),
+    stop_loss DECIMAL(12,4),
+    take_profit DECIMAL(12,4),
+    hedge_ticker VARCHAR(10),
+    hedge_size_pct_nav DECIMAL(6,4),
+    pm_rationale TEXT,
+    priority VARCHAR(20),
+    delivered BOOLEAN DEFAULT FALSE,
+    delivered_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Portfolio analytics (computed daily)
+CREATE TABLE daily_portfolio_snapshot (
+    snapshot_date DATE PRIMARY KEY,
+    nav DECIMAL(14,2),
+    daily_return DECIMAL(8,6),
+    gross_leverage DECIMAL(6,4),
+    net_exposure DECIMAL(6,4),
+    factor_betas JSONB,  -- {"DXY": 0.12, "SPX": -0.05, ...}
+    position_count INTEGER,
+    realized_pnl_ytd DECIMAL(14,2),
+    unrealized_pnl DECIMAL(14,2),
+    max_drawdown_from_peak DECIMAL(6,4),
+    correlation_matrix_hash VARCHAR(64),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Agent memory
+CREATE TABLE agent_beliefs (
+    belief_id UUID PRIMARY KEY,
+    agent_id VARCHAR(50) NOT NULL,
+    belief_type VARCHAR(30),  -- 'thesis','watchlist','lesson','sector_view'
+    content TEXT NOT NULL,
+    conviction INTEGER,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    expires_at TIMESTAMP,  -- optional TTL
+    active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE agent_performance (
+    agent_id VARCHAR(50) NOT NULL,
+    period_start DATE NOT NULL,
+    period_end DATE NOT NULL,
+    proposals_made INTEGER,
+    proposals_approved INTEGER,
+    trades_executed INTEGER,
+    win_rate DECIMAL(4,3),
+    avg_return DECIMAL(6,4),
+    avg_holding_period INTEGER,  -- days
+    PRIMARY KEY (agent_id, period_start)
+);</code></pre>
+
+    <h3>14.2 Time-Series Store (TimescaleDB)</h3>
+    <pre><code>-- High-frequency price data for technical analysis
+CREATE TABLE price_history (
+    ticker VARCHAR(10),
+    timestamp TIMESTAMPTZ NOT NULL,
+    open DECIMAL(12,4),
+    high DECIMAL(12,4),
+    low DECIMAL(12,4),
+    close DECIMAL(12,4),
+    volume BIGINT,
+    PRIMARY KEY (ticker, timestamp)
+);
+
+-- Factor return series
+CREATE TABLE factor_returns (
+    factor VARCHAR(20),
+    date DATE NOT NULL,
+    daily_return DECIMAL(10,8),
+    PRIMARY KEY (factor, date)
+);</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 15: ORCHESTRATION                          -->
+<!-- ================================================== -->
+<div class="section" id="orchestration">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 15</div>
+    <h2>Orchestration &amp; Scheduling</h2>
+
+    <h3>15.1 Scheduler Design</h3>
+    <div class="diagram">┌───────────────────────────────────────────────────────────────┐
+│                    <span class="hl">ORCHESTRATOR</span>                                 │
+├───────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  <span class="hl">CLOCK-DRIVEN TRIGGERS</span>                                         │
+│  ├── 06:00 ET — Pre-market data refresh + overnight news scan  │
+│  ├── 07:00 ET — Macro agents process overnight releases        │
+│  ├── 08:00 ET — Fundamental agents scan pre-market movers      │
+│  ├── 09:45 ET — Post-open technical scan (15-min settle)       │
+│  ├── 12:00 ET — Midday debate resolution window                │
+│  ├── 16:30 ET — Post-close data refresh + EOD analytics        │
+│  ├── 17:00 ET — Daily risk report + factor beta computation    │
+│  ├── 18:00 ET — PM agent daily book review                     │
+│  └── Sunday 18:00 ET — Weekly deep-dive cycle (all agents)     │
+│                                                                 │
+│  <span class="hl">EVENT-DRIVEN TRIGGERS</span>                                         │
+│  ├── Earnings release detected → activate relevant fund agent  │
+│  ├── Central bank decision → activate relevant macro agent     │
+│  ├── Stop-loss hit → alert PM + Risk                           │
+│  ├── Target hit → alert PM for partial profit decision         │
+│  ├── Factor beta breach approaching → alert Risk               │
+│  ├── Major geopolitical event (news spike) → activate macro    │
+│  └── Technical breakout/breakdown detected → alert Technical   │
+│                                                                 │
+│  <span class="hl">PIPELINE MANAGEMENT</span>                                           │
+│  ├── Track all active proposals through debate stages          │
+│  ├── Enforce time limits on debate rounds                      │
+│  ├── Route messages between agents                             │
+│  ├── Ensure sequential processing where required               │
+│  └── Handle agent failures gracefully (retry, skip, alert)     │
+│                                                                 │
+└───────────────────────────────────────────────────────────────┘</div>
+
+    <h3>15.2 Concurrency Model</h3>
+    <pre><code>class Orchestrator:
+    """Manages agent lifecycle, scheduling, and pipeline coordination."""
+
+    # Agents can run in parallel for screening/research
+    # But pipeline stages are sequential per-proposal
+
+    async def run_daily_cycle(self):
+        # Phase 1: Parallel screening (all agents scan independently)
+        screening_tasks = [
+            agent.run_cycle(CycleTrigger.DAILY_SCAN)
+            for agent in self.all_research_agents
+        ]
+        proposals = await asyncio.gather(*screening_tasks)
+
+        # Phase 2: Sequential pipeline per proposal
+        for proposal in self.prioritize(proposals):
+            await self.run_pipeline(proposal)
+
+    async def run_pipeline(self, proposal: TradeProposal):
+        # Debate (may involve multiple agents, but managed sequentially)
+        debate_result = await self.debate_engine.run_debate(proposal)
+        if debate_result.withdrawn:
+            return
+
+        # Technical scoring
+        tech_score = await self.technical_agent.score(proposal)
+
+        # Risk gate
+        risk_decision = await self.risk_agent.evaluate(proposal, tech_score)
+        if risk_decision.decision == "rejected":
+            return
+
+        # PM decision
+        order = await self.pm_agent.decide(proposal, tech_score, risk_decision)
+        if order.execute:
+            await self.deliver(order)</code></pre>
+
+    <h3>15.3 Agent Priority &amp; Rate Limiting</h3>
+    <pre><code>agent_priority:
+  # When multiple agents want to run, priority determines order
+  risk_agent: 1       # Always runs first (monitoring)
+  pm_agent: 2         # Book management
+  technical_agents: 3 # Real-time signals
+  fundamental_agents: 4
+  macro_agents: 5
+
+rate_limits:
+  llm_calls_per_minute: 60  # Shared across all agents
+  llm_calls_per_agent_per_hour: 20
+  data_api_calls_per_minute: 120
+  proposals_per_agent_per_day: 3  # Prevent spam
+  max_concurrent_debates: 5</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 16: DELIVERY & INTERACTION                 -->
+<!-- ================================================== -->
+<div class="section" id="delivery">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 16</div>
+    <h2>Delivery &amp; Interaction Layer</h2>
+
+    <h3>16.1 Output Channels</h3>
+    <div class="diagram">┌─────────────────────────────────────────────────────┐
+│              <span class="hl">DELIVERY LAYER</span>                           │
+├─────────────────────────────────────────────────────┤
+│                                                       │
+│  <span class="hl">PRIMARY: Email Digest</span>                               │
+│  ├── Morning brief (pre-market): overnight events,   │
+│  │   active proposals, book status                   │
+│  ├── Trade alerts: immediate on new TradeOrder       │
+│  ├── Risk alerts: factor breach / stop proximity     │
+│  └── EOD summary: daily P&amp;L, book state, activity    │
+│                                                       │
+│  <span class="hl">SECONDARY: Web Dashboard</span> (local network)            │
+│  ├── Real-time book view (positions, P&amp;L)            │
+│  ├── Active pipeline (proposals in flight)           │
+│  ├── Agent activity log                              │
+│  ├── Debate transcripts (expandable)                 │
+│  ├── Performance analytics (by agent, by sector)     │
+│  └── Risk dashboard (factor betas, correlations)     │
+│                                                       │
+│  <span class="hl">TERTIARY: Mobile Push</span> (optional)                    │
+│  ├── Critical alerts only (stop hit, risk breach)    │
+│  └── Via Pushover / Telegram bot                     │
+│                                                       │
+└─────────────────────────────────────────────────────┘</div>
+
+    <h3>16.2 Interaction Model</h3>
+    <p>The system is <strong>advisory-only</strong> &mdash; no auto-execution. The human operator:</p>
+    <ul>
+        <li>Receives recommendations via email/dashboard</li>
+        <li>Reviews at their discretion</li>
+        <li>Manually executes trades they agree with</li>
+        <li>Can query any agent for deeper analysis (&ldquo;why did you short XOM?&rdquo;)</li>
+        <li>Can override (veto a trade, force a position review, adjust stops)</li>
+        <li>Can inject views (&ldquo;I think oil is going to $90, factor that in&rdquo;)</li>
+    </ul>
+
+    <h3>16.3 Secure Access from Desk</h3>
+    <pre><code>access_model:
+  # System runs on personal device (home server / always-on laptop)
+  # Accessible via:
+
+  option_a_vpn:
+    method: WireGuard VPN from phone/tablet
+    dashboard: accessible via local IP over VPN
+    security: encrypted tunnel, device auth
+
+  option_b_tunnel:
+    method: Cloudflare Tunnel / Tailscale
+    dashboard: accessible via private URL
+    security: zero-trust access, SSO optional
+
+  option_c_email_only:
+    method: System sends to personal email
+    interaction: reply-to-email commands (limited)
+    security: email encryption (PGP optional)
+
+  recommended: option_b_tunnel
+    # Tailscale mesh network — zero config, encrypted,
+    # accessible from any device with Tailscale installed,
+    # no port forwarding, no public exposure</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 17: INFRASTRUCTURE & DEPLOYMENT            -->
+<!-- ================================================== -->
+<div class="section" id="infra">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 17</div>
+    <h2>Infrastructure &amp; Deployment</h2>
+
+    <h3>17.1 Hardware Requirements</h3>
+    <pre><code>personal_server:
+  # Mac Studio or equivalent always-on machine
+  compute:
+    cpu: Apple M-series (M2 Pro/Max or later) or AMD Ryzen 9
+    ram: 64GB minimum (agent context windows + data caching)
+    storage: 2TB NVMe SSD (price history, models, databases)
+    gpu: not required (LLM inference is API-based)
+
+  network:
+    uplink: stable broadband (50+ Mbps)
+    always_on: true
+    ups: recommended (graceful shutdown on power loss)
+
+alternative_cloud:
+  # If personal device is impractical
+  provider: Hetzner / DigitalOcean / AWS Lightsail
+  spec: 8 vCPU, 32GB RAM, 500GB SSD
+  cost: ~$80-150/month
+  advantage: always-on without home hardware concerns
+  disadvantage: data leaves your machine</code></pre>
+
+    <h3>17.2 Software Stack</h3>
+    <pre><code>runtime:
+  language: Python 3.12+
+  async_framework: asyncio + uvloop
+  task_scheduler: APScheduler (clock-driven) + custom event dispatcher
+
+llm:
+  primary: Anthropic Claude (Sonnet for routine, Opus for complex analysis)
+  fallback: OpenAI GPT-4o (if Anthropic rate-limited)
+  interface: direct SDK calls with structured output (no framework abstraction)
+
+data_layer:
+  database: PostgreSQL 16 + TimescaleDB extension
+  cache: Redis 7 (hot data, pub/sub for message bus)
+  file_storage: local filesystem (Parquet for historical data)
+
+message_bus:
+  implementation: Redis Streams
+  # Durable, ordered, supports consumer groups
+  # Each agent type is a consumer group
+  # Messages persist for audit trail
+
+web_dashboard:
+  framework: FastAPI (backend) + HTMX or React (frontend)
+  auth: single-user (API key or Tailscale identity)
+  hosting: local (same machine as orchestrator)
+
+email:
+  provider: SendGrid or AWS SES
+  templates: HTML digest format
+
+monitoring:
+  logging: structlog → JSON → local files + optional Loki
+  metrics: Prometheus (agent latency, LLM costs, data freshness)
+  alerting: Pushover / Telegram for critical alerts</code></pre>
+
+    <h3>17.3 Deployment Architecture</h3>
+    <div class="diagram">┌─────────────────────────────────────────────────────────────┐
+│                    <span class="hl">PERSONAL SERVER</span>                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│  │ PostgreSQL  │  │    Redis    │  │  Orchestr.  │         │
+│  │ + Timescale │  │  (cache +   │  │  (Python    │         │
+│  │             │  │   pub/sub)  │  │   asyncio)  │         │
+│  └─────────────┘  └─────────────┘  └─────────────┘         │
+│                                                               │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│  │  Dashboard  │  │    Data     │  │   Agent     │         │
+│  │  (FastAPI)  │  │   Ingest    │  │   Workers   │         │
+│  │             │  │  (scheduled)│  │   (×21)     │         │
+│  └─────────────┘  └─────────────┘  └─────────────┘         │
+│                                                               │
+│  ┌─────────────────────────────────────────────────┐         │
+│  │              <span class="hl">Tailscale Mesh Network</span>              │         │
+│  │  (secure access from phone/laptop at desk)      │         │
+│  └─────────────────────────────────────────────────┘         │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+   ┌──────────┐      ┌──────────────┐     ┌────────────┐
+   │ Anthropic│      │ Data APIs    │     │ Email/Push │
+   │ / OpenAI │      │ (market data)│     │  Services  │
+   │   API    │      │              │     │            │
+   └──────────┘      └──────────────┘     └────────────┘</div>
+
+    <h3>17.4 Process Management</h3>
+    <pre><code>process_supervisor: systemd (Linux) or launchd (macOS)
+
+services:
+  - name: agentic-orchestrator
+    type: long-running
+    restart: always
+    depends_on: [postgresql, redis]
+
+  - name: agentic-data-ingest
+    type: long-running (with internal scheduler)
+    restart: always
+    depends_on: [postgresql, redis]
+
+  - name: agentic-dashboard
+    type: long-running
+    restart: always
+    depends_on: [postgresql]
+    port: 8080
+
+  - name: postgresql
+    type: system service
+
+  - name: redis
+    type: system service</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 18: SECURITY                               -->
+<!-- ================================================== -->
+<div class="section" id="security">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 18</div>
+    <h2>Security &amp; Access</h2>
+
+    <h3>18.1 Threat Model</h3>
+    <table>
+        <thead>
+            <tr><th>Threat</th><th>Mitigation</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Unauthorized access to trade recommendations</td><td>Tailscale zero-trust networking; no public ports</td></tr>
+            <tr><td>API key exposure (LLM, data providers)</td><td>Environment variables; never in code; encrypted at rest</td></tr>
+            <tr><td>Data exfiltration of positions/strategy</td><td>All data local; no cloud storage; encrypted disk</td></tr>
+            <tr><td>LLM prompt injection via news/data</td><td>Input sanitization; agents have limited tool access; output validation</td></tr>
+            <tr><td>System compromise leading to false recommendations</td><td>All outputs are advisory; human executes manually; audit trail</td></tr>
+        </tbody>
+    </table>
+
+    <h3>18.2 Security Controls</h3>
+    <h4>Network</h4>
+    <ul>
+        <li>No public ports exposed</li>
+        <li>Tailscale-only access</li>
+        <li>API keys stored in environment variables</li>
+        <li>Disk encryption: FileVault (macOS) or LUKS (Linux)</li>
+    </ul>
+    <h4>Application</h4>
+    <ul>
+        <li>Structured output validation &mdash; all agent outputs validated against schemas</li>
+        <li>Input sanitization &mdash; news/data inputs stripped of prompt-injection patterns</li>
+        <li>Rate limiting &mdash; per-agent and global LLM call limits</li>
+        <li>Audit logging &mdash; every agent action, every message, every decision</li>
+    </ul>
+    <h4>Operational</h4>
+    <ul>
+        <li>No auto-execution &mdash; human reviews and manually trades</li>
+        <li>Daily integrity check &mdash; verify book state consistency</li>
+        <li>Backup &mdash; daily encrypted backup of PostgreSQL + agent memory</li>
+    </ul>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 19: MONITORING                             -->
+<!-- ================================================== -->
+<div class="section" id="monitoring">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 19</div>
+    <h2>Monitoring &amp; Observability</h2>
+
+    <h3>19.1 System Health Metrics</h3>
+    <pre><code>infrastructure:
+  - cpu_usage_per_service
+  - memory_usage_per_service
+  - disk_usage_and_growth_rate
+  - network_latency_to_apis
+  - database_connection_pool_utilization
+  - redis_memory_and_hit_rate
+
+agent_operations:
+  - llm_call_latency_p50_p95_p99
+  - llm_call_success_rate
+  - llm_token_usage_per_agent_per_day
+  - agent_cycle_duration
+  - proposals_generated_per_day
+  - debate_rounds_per_proposal (avg)
+  - pipeline_throughput (proposals resolved per day)
+  - agent_error_rate
+
+data_freshness:
+  - last_price_update_timestamp
+  - last_fundamental_refresh_per_ticker
+  - last_macro_indicator_update_per_series
+  - stale_data_alerts (&gt;24hr for daily data)
+
+trading_performance:
+  - daily_pnl (realized + unrealized)
+  - drawdown_from_peak
+  - factor_betas_current
+  - gross_and_net_leverage
+  - win_rate_rolling_30d
+  - average_holding_period
+  - stop_loss_hit_rate
+  - target_hit_rate</code></pre>
+
+    <h3>19.2 Alerting Rules</h3>
+    <h4><span class="badge badge-red">Critical Alerts</span> &mdash; Immediate Push Notification</h4>
+    <ul>
+        <li><strong>Factor beta breach:</strong> Any factor beta exceeds &plusmn;0.55 (approaching limit)</li>
+        <li><strong>Drawdown threshold:</strong> Drawdown from peak exceeds 2%</li>
+        <li><strong>Stop-loss hit:</strong> Position hit stop-loss level</li>
+        <li><strong>System down:</strong> Orchestrator or database unresponsive &gt;5 min</li>
+        <li><strong>Data stale:</strong> No price update in &gt;2 hours during market hours</li>
+    </ul>
+    <h4><span class="badge badge-gold">Warning Alerts</span> &mdash; Email / Dashboard</h4>
+    <ul>
+        <li><strong>High correlation:</strong> Book average pairwise correlation &gt;0.35</li>
+        <li><strong>Concentrated position:</strong> Single position approaching 5% NAV</li>
+        <li><strong>Agent underperformance:</strong> Agent win rate &lt;30% over trailing 20 trades</li>
+        <li><strong>LLM cost spike:</strong> Daily LLM spend &gt;$50 (unusual activity)</li>
+        <li><strong>Proposal rejection rate:</strong> &gt;80% of proposals rejected by risk in a week</li>
+    </ul>
+    <h4><span class="badge badge-blue">Informational</span> &mdash; Dashboard Only</h4>
+    <ul>
+        <li>New trade order generated</li>
+        <li>Debate concluded</li>
+        <li>Weekly performance summary</li>
+        <li>Agent belief update</li>
+    </ul>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 20: PERFORMANCE                            -->
+<!-- ================================================== -->
+<div class="section" id="performance">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 20</div>
+    <h2>Performance &amp; Scaling</h2>
+
+    <h3>20.1 Bottleneck Analysis</h3>
+    <h4>Primary Bottleneck: LLM API Latency &amp; Rate Limits</h4>
+    <ul>
+        <li>Each agent cycle: 1&ndash;3 LLM calls (context assembly, reasoning, output)</li>
+        <li>Debate round: 2&ndash;4 LLM calls per participating agent</li>
+        <li>Full pipeline (proposal &rarr; order): 10&ndash;20 LLM calls total</li>
+        <li>At 2&ndash;3 seconds per call: 20&ndash;60 seconds per pipeline run</li>
+    </ul>
+    <p><strong>Mitigation:</strong></p>
+    <ul>
+        <li>Parallel screening (all 17 research agents scan simultaneously)</li>
+        <li>Sequential pipeline only where required (debate &rarr; score &rarr; risk &rarr; PM)</li>
+        <li>Pre-compute and cache context windows (reduce token usage)</li>
+        <li>Use smaller/faster models for routine tasks (screening, data parsing)</li>
+        <li>Reserve large models for complex reasoning (debate, PM decisions)</li>
+    </ul>
+
+    <h4>Secondary Bottleneck: Data API Rate Limits</h4>
+    <p><strong>Mitigation:</strong></p>
+    <ul>
+        <li>Aggressive caching with smart invalidation</li>
+        <li>Batch requests where APIs support it</li>
+        <li>Stagger agent cycles to spread load</li>
+        <li>Pre-fetch predictable data needs (scheduled refreshes)</li>
+    </ul>
+
+    <h3>20.2 Scaling Strategy</h3>
+    <h4>Vertical Scaling (First Approach)</h4>
+    <ul>
+        <li>More RAM for larger context windows</li>
+        <li>Faster SSD for database performance</li>
+        <li>Better CPU for data processing</li>
+    </ul>
+    <h4>Horizontal Scaling (If Needed)</h4>
+    <ul>
+        <li>Split agents across multiple processes (already async)</li>
+        <li>Database on dedicated machine</li>
+        <li>Redis cluster for message bus</li>
+        <li>Multiple LLM API keys for higher rate limits</li>
+    </ul>
+    <p><em>Unlikely to be needed for 21 agents on daily cycle. Only relevant if moving to intraday/real-time operation.</em></p>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 21: FAILURE MODES                          -->
+<!-- ================================================== -->
+<div class="section" id="failure">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 21</div>
+    <h2>Failure Modes &amp; Recovery</h2>
+
+    <h3>21.1 Failure Scenarios</h3>
+    <table>
+        <thead>
+            <tr><th>Scenario</th><th>Impact</th><th>Detection</th><th>Response</th><th>Recovery</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>LLM API Outage</strong></td>
+                <td>Agents cannot reason or generate proposals</td>
+                <td>API call failure rate &gt;50% in 5-min window</td>
+                <td>Failover to secondary provider; if both down: pause proposals, maintain positions; risk monitoring continues (rule-based)</td>
+                <td>Resume normal cycle when API restored</td>
+            </tr>
+            <tr>
+                <td><strong>Data Feed Failure</strong></td>
+                <td>Agents working with stale data</td>
+                <td>Data freshness alerts trigger</td>
+                <td>Flag proposals as &ldquo;stale_data&rdquo;; risk applies wider margins (50% max size); technical disables intraday signals</td>
+                <td>Full data refresh + re-run screening cycle</td>
+            </tr>
+            <tr>
+                <td><strong>Database Corruption</strong></td>
+                <td>Book state unreliable</td>
+                <td>Integrity check failure</td>
+                <td>Halt all proposals; alert operator immediately; restore from backup; reconcile positions</td>
+                <td>Operator confirms book state before resuming</td>
+            </tr>
+            <tr>
+                <td><strong>Agent Hallucination</strong></td>
+                <td>Nonsensical proposals or decisions</td>
+                <td>Output validation failures; invalid tickers; impossible prices</td>
+                <td>Reject invalid output; retry with fresh context; 3 consecutive failures: disable agent, alert</td>
+                <td>Prompt revision; context window audit</td>
+            </tr>
+            <tr>
+                <td><strong>Orchestrator Crash</strong></td>
+                <td>No agent cycles running</td>
+                <td>Heartbeat failure (no log entry in 10 min)</td>
+                <td>systemd/launchd auto-restart; check in-flight proposals; alert if restart fails twice</td>
+                <td>Automatic in most cases; manual for data consistency</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>21.2 Data Integrity Guarantees</h3>
+    <h4>Consistency</h4>
+    <ul>
+        <li>All state changes are transactional (PostgreSQL ACID)</li>
+        <li>Message bus uses Redis Streams with acknowledgment (at-least-once delivery)</li>
+        <li>Agent outputs validated before persisting</li>
+        <li>Book state reconciliation runs daily (positions match trade log)</li>
+    </ul>
+    <h4>Durability</h4>
+    <ul>
+        <li>PostgreSQL WAL + daily full backup</li>
+        <li>Redis AOF persistence (append-only file)</li>
+        <li>Backup to encrypted external drive (weekly)</li>
+        <li>Agent memory exportable as JSON (for migration/recovery)</li>
+    </ul>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 22: COST MODEL                             -->
+<!-- ================================================== -->
+<div class="section" id="cost">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 22</div>
+    <h2>Cost Model</h2>
+
+    <h3>22.1 Ongoing Monthly Costs</h3>
+    <table>
+        <thead>
+            <tr><th>Category</th><th>Details</th><th>Estimated Monthly</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>LLM API</strong></td>
+                <td>~12,000 calls/month (80% Sonnet ~$0.015/call, 20% Opus ~$0.08/call)</td>
+                <td>$350 &ndash; $500</td>
+            </tr>
+            <tr>
+                <td><strong>Data APIs</strong></td>
+                <td>Polygon ($200) or Alpaca ($99), NewsAPI ($50), FRED (free), SEC (free)</td>
+                <td>$100 &ndash; $300</td>
+            </tr>
+            <tr>
+                <td><strong>Infrastructure</strong></td>
+                <td>Electricity (~$20) + internet (existing); or cloud ($80-150)</td>
+                <td>$20 &ndash; $150</td>
+            </tr>
+            <tr>
+                <td><strong>Email Delivery</strong></td>
+                <td>SendGrid free tier (100 emails/day)</td>
+                <td>$0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="metrics-row">
+        <div class="metric-card">
+            <div class="metric-value">~$750</div>
+            <div class="metric-label">Recommended Monthly Budget</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">$470&ndash;$1,050</div>
+            <div class="metric-label">Total Estimated Range</div>
+        </div>
+    </div>
+
+    <h3>22.2 One-Time Setup Costs</h3>
+    <table>
+        <thead>
+            <tr><th>Category</th><th>Item</th><th>Cost</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Hardware</td><td>Mac Studio M2 Max</td><td>$3,000 &ndash; $4,000</td></tr>
+            <tr><td>Hardware</td><td>UPS battery backup</td><td>$150</td></tr>
+            <tr><td>Hardware</td><td>External backup drive</td><td>$100</td></tr>
+            <tr><td>Development</td><td>Time investment (self-built)</td><td>200&ndash;400 hours</td></tr>
+            <tr><td>Data</td><td>Historical fundamentals (SimFin premium)</td><td>$0 &ndash; $500</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ================================================== -->
+<!-- SECTION 23: DEVELOPMENT PHASES                     -->
+<!-- ================================================== -->
+<div class="section" id="phases">
+    <div class="section-divider"></div>
+    <div class="section-number">Section 23</div>
+    <h2>Development Phases</h2>
+
+    <div class="phase-card">
+        <div class="phase-title">Phase 1: Foundation (Weeks 1&ndash;4)</div>
+        <ul>
+            <li>Data service implementation (market data + fundamentals + macro)</li>
+            <li>Database schema + state management</li>
+            <li>Message bus (Redis Streams)</li>
+            <li>Agent base class with LLM integration</li>
+            <li>Basic orchestrator (manual trigger)</li>
+            <li><em>Output: Data flows, agents can be invoked, messages persist</em></li>
+        </ul>
+    </div>
+
+    <div class="phase-card">
+        <div class="phase-title">Phase 2: Agent Development (Weeks 5&ndash;10)</div>
+        <ul>
+            <li>System prompts for all 21 agents (sector/region specific)</li>
+            <li>Structured output schemas + validation</li>
+            <li>Agent memory system (beliefs, episodic, semantic)</li>
+            <li>1 fundamental agent (Energy) fully operational</li>
+            <li>1 macro agent (Commodities) fully operational</li>
+            <li>Technical agent fully operational</li>
+            <li>Risk agent fully operational</li>
+            <li>PM agent fully operational</li>
+            <li><em>Output: Full pipeline works for Energy/Commodities subset</em></li>
+        </ul>
+    </div>
+
+    <div class="phase-card">
+        <div class="phase-title">Phase 3: Debate &amp; Pipeline (Weeks 11&ndash;14)</div>
+        <ul>
+            <li>Debate engine (multi-round, conviction tracking, evidence requirement)</li>
+            <li>Full pipeline orchestration (proposal &rarr; debate &rarr; score &rarr; risk &rarr; PM)</li>
+            <li>Time-boxing and priority management</li>
+            <li>Audit trail and logging</li>
+            <li><em>Output: End-to-end pipeline producing trade orders</em></li>
+        </ul>
+    </div>
+
+    <div class="phase-card">
+        <div class="phase-title">Phase 4: Scale to Full Universe (Weeks 15&ndash;20)</div>
+        <ul>
+            <li>Remaining 10 fundamental agents (prompts + sector KPIs)</li>
+            <li>Remaining 5 macro agents (prompts + regional frameworks)</li>
+            <li>Second technical agent (commodity-specific)</li>
+            <li>Cross-agent debate routing (sector challenges macro, etc.)</li>
+            <li>Performance tracking per agent</li>
+            <li><em>Output: All 21 agents operational, full universe coverage</em></li>
+        </ul>
+    </div>
+
+    <div class="phase-card">
+        <div class="phase-title">Phase 5: Delivery &amp; Interaction (Weeks 21&ndash;24)</div>
+        <ul>
+            <li>Email digest system (morning brief, trade alerts, EOD summary)</li>
+            <li>Web dashboard (positions, pipeline, debates, performance)</li>
+            <li>Tailscale networking setup</li>
+            <li>Mobile push notifications (critical alerts)</li>
+            <li>Query interface (ask agents questions on-demand)</li>
+            <li><em>Output: Full interaction layer, accessible from desk</em></li>
+        </ul>
+    </div>
+
+    <div class="phase-card">
+        <div class="phase-title">Phase 6: Hardening &amp; Optimization (Weeks 25&ndash;30)</div>
+        <ul>
+            <li>Failure recovery testing</li>
+            <li>Data integrity validation</li>
+            <li>LLM cost optimization (prompt compression, model routing)</li>
+            <li>Agent prompt tuning based on early results</li>
+            <li>Backtesting framework (replay historical data through pipeline)</li>
+            <li>Performance attribution (which agents generate alpha)</li>
+            <li><em>Output: Production-ready system</em></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ================================================== -->
+<!-- APPENDIX A: SYSTEM PROMPT TEMPLATE                 -->
+<!-- ================================================== -->
+<div class="section" id="appendix-a">
+    <div class="section-divider"></div>
+    <div class="section-number">Appendix A</div>
+    <h2>Agent System Prompt Structure</h2>
+    <p>Each agent&rsquo;s system prompt follows this template:</p>
+    <pre><code>IDENTITY: You are [role] at [firm type]. Your specialty is [domain].
+
+MANDATE: Your job is to [primary objective]. You [can/cannot] [specific authorities].
+
+ANALYTICAL FRAMEWORK: When analyzing [domain], you evaluate:
+1. [Framework element 1]
+2. [Framework element 2]
+...
+
+SECTOR/REGION SPECIFIC: In your domain, the key drivers are:
+- [Driver 1]: [why it matters]
+- [Driver 2]: [why it matters]
+...
+
+RISK AWARENESS: You always consider:
+- [Risk constraint 1]
+- [Risk constraint 2]
+
+OUTPUT FORMAT: You must produce [structured output type] with the following fields:
+[schema description]
+
+DEBATE PROTOCOL: When debating:
+- Support claims with specific data points
+- Challenge weak logic, not just disagree
+- Revise conviction honestly when evidence warrants
+- Never argue from authority; argue from data
+
+CONSTRAINTS:
+- [Hard constraint 1]
+- [Hard constraint 2]
+- [Hedge requirement]
+- [Position limits]</code></pre>
+</div>
+
+<!-- ================================================== -->
+<!-- APPENDIX B: DAILY CYCLE TIMELINE                   -->
+<!-- ================================================== -->
+<div class="section" id="appendix-b">
+    <div class="section-divider"></div>
+    <div class="section-number">Appendix B</div>
+    <h2>Sample Daily Cycle Timeline</h2>
+    <table>
+        <thead>
+            <tr><th>Time (ET)</th><th>Activity</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>06:00</td><td>Data ingest: overnight prices, news, macro releases</td></tr>
+            <tr><td>06:30</td><td>Macro agents process: LatAm, CEEMEA, Asia overnight events</td></tr>
+            <tr><td>07:00</td><td>Fundamental agents: pre-market scan (earnings, news, upgrades/downgrades)</td></tr>
+            <tr><td>07:30</td><td>Technical agents: gap analysis, overnight levels</td></tr>
+            <tr><td>08:00</td><td>Proposals published (if any high-conviction ideas emerged)</td></tr>
+            <tr><td>08:00&ndash;12:00</td><td>Debate window (asynchronous rounds)</td></tr>
+            <tr><td>09:45</td><td>Post-open technical update (confirm/deny overnight setups)</td></tr>
+            <tr><td>12:00</td><td>Debate resolution deadline</td></tr>
+            <tr><td>12:30</td><td>Technical scoring of surviving proposals</td></tr>
+            <tr><td>13:00</td><td>Risk evaluation</td></tr>
+            <tr><td>13:30</td><td>PM decision + trade order generation</td></tr>
+            <tr><td>14:00</td><td>Trade orders delivered to operator</td></tr>
+            <tr><td>16:30</td><td>EOD data refresh</td></tr>
+            <tr><td>17:00</td><td>Risk report: factor betas, correlation check, drawdown status</td></tr>
+            <tr><td>17:30</td><td>Position monitoring: stop proximity, target proximity</td></tr>
+            <tr><td>18:00</td><td>PM daily review: any adjustments needed?</td></tr>
+            <tr><td>18:30</td><td>EOD digest email sent to operator</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ================================================== -->
+<!-- APPENDIX C: FACTOR BETA CALCULATION                -->
+<!-- ================================================== -->
+<div class="section" id="appendix-c">
+    <div class="section-divider"></div>
+    <div class="section-number">Appendix C</div>
+    <h2>Factor Beta Calculation Methodology</h2>
+    <pre><code>def compute_factor_betas(
+    book_returns: pd.Series,
+    factor_returns: pd.DataFrame,
+    window: int = 252
+) -&gt; dict:
+    """
+    Compute rolling 12-month (252 trading day) factor betas for the book.
+
+    Method: Univariate OLS regression of book daily returns against
+    each factor's daily returns.
+
+    For each factor f:
+        beta_f = Cov(R_book, R_f) / Var(R_f)
+
+    Using the trailing 252 trading days of data.
+
+    Returns: {"DXY": 0.15, "SPX": -0.08, ...}
+    """
+    betas = {}
+    book_window = book_returns.iloc[-window:]
+
+    for factor_name in TRACKED_FACTORS:
+        factor_window = factor_returns[factor_name].iloc[-window:]
+
+        # OLS: R_book = alpha + beta * R_factor + epsilon
+        cov = book_window.cov(factor_window)
+        var = factor_window.var()
+        betas[factor_name] = cov / var if var &gt; 0 else 0.0
+
+    return betas
+
+
+def check_factor_limits(betas: dict) -&gt; list[str]:
+    """Enforce hard factor beta constraints."""
+    violations = []
+    for factor, beta in betas.items():
+        if abs(beta) &gt; 0.6:
+            violations.append(
+                f"BREACH: {factor} beta = {beta:.3f} (limit &plusmn;0.6)"
+            )
+        elif abs(beta) &gt; 0.5:
+            violations.append(
+                f"WARNING: {factor} beta = {beta:.3f} (approaching limit)"
+            )
+    return violations</code></pre>
+</div>
+
+<!-- Footer -->
+<div style="text-align: center; padding: 3rem 0; border-top: 1px solid rgba(201, 168, 76, 0.15); margin-top: 4rem;">
+    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-dim);">
+        Agentic AI Trading System &middot; Production Design v1.0 &middot; Confidential &middot; July 2026
+    </div>
+</div>
+
+</div><!-- end .main -->
+
+<!-- Smooth scroll + active nav highlighting -->
+<script>
+    // Smooth scroll for nav links
+    document.querySelectorAll('.nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
+    });
+
+    // Highlight active nav link on scroll
+    const sections = document.querySelectorAll('.section[id]');
+    const navLinks = document.querySelectorAll('.nav a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= 150) {
+                current = section.getAttribute('id');
+            }
+        });
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+</body>
+</html>
