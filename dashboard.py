@@ -698,6 +698,10 @@ function renderPositions() {{
     }}
 
     let html = '';
+
+    // Portfolio P&L chart (aggregates all position histories)
+    html += renderPortfolioChart(positions);
+
     if (positions.length) {{
         html += '<div class="section-title">Active Positions</div><table class="data-table"><thead><tr><th>Ticker</th><th>Dir</th><th>Hedge</th><th>Entry</th><th>Current</th><th>Today</th><th>Total P&L</th><th>Sparkline</th><th>Size</th><th>Days</th><th></th></tr></thead><tbody>';
         for (const p of positions) {{
@@ -983,6 +987,110 @@ function renderSparkline(history) {{
 
     return `<svg viewBox="0 0 ${{W}} ${{H}}" style="width:90px;height:28px;"><path d="${{d}}" fill="none" stroke="${{color}}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }}
+
+function renderPortfolioChart(positions) {{
+    // Build a combined daily P&L series from all position histories
+    const dateMap = {{}};  // date -> {{ totalPnl, dailyChange }}
+
+    for (const p of positions) {{
+        const hist = p.price_history || [];
+        const size = p.size_pct_nav || 0;
+        for (const h of hist) {{
+            if (!dateMap[h.date]) dateMap[h.date] = {{ pnl: 0, daily: 0 }};
+            dateMap[h.date].pnl += (h.combined_pnl_pct || 0) * size;
+            dateMap[h.date].daily += (h.daily_change_pct || 0) * size;
+        }}
+    }}
+
+    const dates = Object.keys(dateMap).sort();
+    if (dates.length < 1) return '';
+
+    const pnlSeries = dates.map(d => dateMap[d].pnl);
+    const dailySeries = dates.map(d => dateMap[d].daily);
+
+    const W = 700, H = 200, PAD_L = 55, PAD_R = 20, PAD_T = 20, PAD_B = 40;
+    const chartW = W - PAD_L - PAD_R;
+    const chartH = H - PAD_T - PAD_B;
+
+    // For the line chart: cumulative P&L
+    const minPnl = Math.min(0, ...pnlSeries);
+    const maxPnl = Math.max(0, ...pnlSeries);
+    const rangePnl = (maxPnl - minPnl) || 0.001;
+
+    const scaleX = (i) => PAD_L + (i / Math.max(dates.length - 1, 1)) * chartW;
+    const scaleY = (v) => PAD_T + chartH - ((v - minPnl) / rangePnl) * chartH;
+
+    // Zero line
+    const zeroY = scaleY(0);
+
+    // Line path
+    let linePath = `M ${{scaleX(0)}} ${{scaleY(pnlSeries[0])}}`;
+    for (let i = 1; i < pnlSeries.length; i++) {{
+        linePath += ` L ${{scaleX(i)}} ${{scaleY(pnlSeries[i])}}`;
+    }}
+
+    // Area fill under line
+    const areaPath = linePath + ` L ${{scaleX(pnlSeries.length-1)}} ${{zeroY}} L ${{scaleX(0)}} ${{zeroY}} Z`;
+
+    // Daily change bars
+    const barWidth = Math.max(4, chartW / dates.length - 2);
+    let barsHtml = '';
+    for (let i = 0; i < dailySeries.length; i++) {{
+        const val = dailySeries[i];
+        if (val === 0) continue;
+        const x = scaleX(i) - barWidth / 2;
+        const barH = Math.abs(val / rangePnl) * chartH;
+        const y = val >= 0 ? zeroY - barH : zeroY;
+        const color = val >= 0 ? 'var(--positive)' : 'var(--negative)';
+        barsHtml += `<rect x="${{x}}" y="${{y}}" width="${{barWidth}}" height="${{Math.max(barH, 1)}}" fill="${{color}}" opacity="0.25" rx="1"/>`;
+    }}
+
+    // Determine line color
+    const lastPnl = pnlSeries[pnlSeries.length - 1];
+    const lineColor = lastPnl >= 0 ? 'var(--positive)' : 'var(--negative)';
+    const fillColor = lastPnl >= 0 ? 'rgba(0,200,83,0.06)' : 'rgba(255,23,68,0.06)';
+
+    // X-axis labels (show first, middle, last)
+    let xLabels = '';
+    if (dates.length >= 1) xLabels += `<text x="${{PAD_L}}" y="${{H - 8}}" fill="var(--text-muted)" font-size="10">${{dates[0]}}</text>`;
+    if (dates.length >= 3) {{
+        const mid = Math.floor(dates.length / 2);
+        xLabels += `<text x="${{scaleX(mid)}}" y="${{H - 8}}" fill="var(--text-muted)" font-size="10" text-anchor="middle">${{dates[mid]}}</text>`;
+    }}
+    if (dates.length >= 2) xLabels += `<text x="${{W - PAD_R}}" y="${{H - 8}}" fill="var(--text-muted)" font-size="10" text-anchor="end">${{dates[dates.length-1]}}</text>`;
+
+    // Y-axis labels
+    const yLabels = `
+        <text x="${{PAD_L - 6}}" y="${{scaleY(maxPnl) + 4}}" fill="var(--text-muted)" font-size="10" text-anchor="end">${{(maxPnl*100).toFixed(2)}}%</text>
+        <text x="${{PAD_L - 6}}" y="${{zeroY + 4}}" fill="var(--text-muted)" font-size="10" text-anchor="end">0%</text>
+        <text x="${{PAD_L - 6}}" y="${{scaleY(minPnl) + 4}}" fill="var(--text-muted)" font-size="10" text-anchor="end">${{(minPnl*100).toFixed(2)}}%</text>
+    `;
+
+    // Current value label
+    const currentLabel = `<text x="${{scaleX(pnlSeries.length-1) + 6}}" y="${{scaleY(lastPnl) + 4}}" fill="${{lineColor}}" font-size="11" font-weight="700">${{(lastPnl*100).toFixed(2)}}%</text>`;
+
+    return `
+    <div class="section-title">Portfolio P&L</div>
+    <div class="equity-chart" style="margin-bottom:24px;">
+        <svg viewBox="0 0 ${{W}} ${{H}}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:200px;">
+            <!-- Zero line -->
+            <line x1="${{PAD_L}}" y1="${{zeroY}}" x2="${{W-PAD_R}}" y2="${{zeroY}}" stroke="var(--border)" stroke-width="1" stroke-dasharray="4,3"/>
+            <!-- Daily bars -->
+            ${{barsHtml}}
+            <!-- Area fill -->
+            <path d="${{areaPath}}" fill="${{fillColor}}" />
+            <!-- P&L line -->
+            <path d="${{linePath}}" fill="none" stroke="${{lineColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Dot at latest -->
+            <circle cx="${{scaleX(pnlSeries.length-1)}}" cy="${{scaleY(lastPnl)}}" r="4" fill="${{lineColor}}"/>
+            <!-- Labels -->
+            ${{yLabels}}
+            ${{xLabels}}
+            ${{currentLabel}}
+        </svg>
+    </div>`;
+}}
+
 function escapeHtml(s) {{ if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }}
 
 function updatePendingBadge() {{
