@@ -2037,6 +2037,7 @@ let positionSortCol = 'ticker';
 let positionSortDir = 'asc';
 let positionTickerFilter = '';
 let expandedPositions = new Set();
+let expandedJournalEntries = new Set();
 let positionTableLoading = false;
 
 function sortPositions(col) {{
@@ -2061,6 +2062,15 @@ function togglePositionDetail(ticker) {{
         expandedPositions.add(ticker);
     }}
     renderPositions();
+}}
+
+function toggleJournalDetail(id) {{
+    if (expandedJournalEntries.has(id)) {{
+        expandedJournalEntries.delete(id);
+    }} else {{
+        expandedJournalEntries.add(id);
+    }}
+    renderJournal();
 }}
 
 function getPositionSortValue(p, col) {{
@@ -2334,7 +2344,7 @@ function renderJournal() {{
         seen.add(id);
         return true;
     }});
-    let html = '<div class="section-title">Trade Journal</div><table class="data-table"><thead><tr><th>Action</th><th>Ticker</th><th>Direction</th><th>Hedge</th><th>Entry</th><th>P&L</th><th>Timestamp</th></tr></thead><tbody>';
+    let html = '<div class="section-title">Trade Journal</div><table class="data-table"><thead><tr><th>Action</th><th>Ticker</th><th>Direction</th><th>Conviction</th><th>Size</th><th>Thesis</th><th>Hedge</th><th>Entry</th><th>P&L</th><th>Timestamp</th></tr></thead><tbody>';
     for (const e of [...journal].reverse()) {{
         const o = e.order || {{}};
         const ticker = o.ticker || e.ticker || '—';
@@ -2343,18 +2353,71 @@ function renderJournal() {{
         const ep = e.entry_price || o.entry_price;
         const pnl = e.realized_pnl_pct;
         const actionClass = e.action === 'open' ? 'badge-positive' : e.action === 'close' ? 'badge-negative' : 'badge-neutral';
-        html += `<tr>
+        const entryId = o.order_id || o.proposal_id || e.timestamp || ticker;
+        const isExpanded = expandedJournalEntries.has(entryId);
+
+        // Extract order fields
+        const conviction = o.conviction != null ? o.conviction : '—';
+        const sizePct = o.size_pct_nav != null ? (o.size_pct_nav * 100).toFixed(1) + '%' : '—';
+        const thesisFull = o.portfolio_thesis || '';
+        const thesisTrunc = thesisFull.length > 40 ? thesisFull.substring(0, 40) + '...' : thesisFull || '—';
+
+        html += `<tr class="position-row" onclick="toggleJournalDetail('${{entryId}}')" aria-expanded="${{isExpanded}}" title="Click to expand details" style="cursor:pointer;">
             <td><span class="badge ${{actionClass}}">${{(e.action||'').toUpperCase()}}</span></td>
             <td style="font-weight:600;">${{ticker}}</td>
             <td>${{dir.toUpperCase()}}</td>
+            <td>${{conviction !== '—' ? conviction + '/10' : '—'}}</td>
+            <td>${{sizePct}}</td>
+            <td style="font-size:0.82em;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${{escapeHtml(thesisFull)}}">${{escapeHtml(thesisTrunc)}}</td>
             <td>${{hedge}}</td>
             <td>${{ep ? '$'+Number(ep).toFixed(2) : '—'}}</td>
             <td class="${{pnlState(pnl)}}">${{pnl != null ? formatPctSigned(pnl) : '—'}}</td>
             <td style="font-size:0.82em;color:var(--text-muted);">${{e.timestamp||'—'}}</td>
         </tr>`;
+
+        // Expandable detail row
+        if (isExpanded) {{
+            html += `<tr class="position-detail-row"><td colspan="10">`;
+            html += renderJournalDetailPanel(o, e);
+            html += `</td></tr>`;
+        }}
     }}
     html += '</tbody></table>';
     panel.innerHTML = html;
+}}
+
+function renderJournalDetailPanel(order, entry) {{
+    const thesis = order.portfolio_thesis || '—';
+    const rationale = order.pm_rationale || '—';
+    const conviction = order.conviction != null ? order.conviction + '/10' : '—';
+    const size = order.size_pct_nav != null ? (order.size_pct_nav * 100).toFixed(1) + '% NAV' : '—';
+    const stopLoss = order.stop_loss_method || '—';
+    const takeProfit = order.take_profit || '—';
+    const holdingPeriod = order.expected_holding_period || '—';
+    const entryApproach = order.entry_approach || '—';
+    const reviewDate = order.review_date || '—';
+
+    let html = `<div class="position-detail-panel">`;
+    html += `<div class="pdp-grid">`;
+
+    // Portfolio Thesis
+    html += `<div class="pdp-section" style="grid-column:1/-1;"><div class="pdp-label">Investment Thesis</div><div class="pdp-value">${{escapeHtml(thesis)}}</div></div>`;
+
+    // PM Rationale
+    html += `<div class="pdp-section" style="grid-column:1/-1;"><div class="pdp-label">PM Rationale</div><div class="pdp-value">${{escapeHtml(rationale)}}</div></div>`;
+
+    // Trade Parameters grid
+    html += `<div class="pdp-section"><div class="pdp-label">Conviction</div><div class="pdp-value">${{conviction}}</div></div>`;
+    html += `<div class="pdp-section"><div class="pdp-label">Position Size</div><div class="pdp-value">${{size}}</div></div>`;
+    html += `<div class="pdp-section"><div class="pdp-label">Stop Loss</div><div class="pdp-value">${{escapeHtml(stopLoss)}}</div></div>`;
+    html += `<div class="pdp-section"><div class="pdp-label">Take Profit</div><div class="pdp-value">${{escapeHtml(takeProfit)}}</div></div>`;
+    html += `<div class="pdp-section"><div class="pdp-label">Holding Period</div><div class="pdp-value">${{escapeHtml(holdingPeriod)}}</div></div>`;
+    html += `<div class="pdp-section"><div class="pdp-label">Entry Approach</div><div class="pdp-value">${{escapeHtml(entryApproach)}}</div></div>`;
+    html += `<div class="pdp-section"><div class="pdp-label">Review Date</div><div class="pdp-value">${{escapeHtml(reviewDate)}}</div></div>`;
+
+    html += `</div>`;  // pdp-grid
+    html += `</div>`;  // position-detail-panel
+    return html;
 }}
 
 function renderDebate() {{
