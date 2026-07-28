@@ -1,0 +1,5 @@
+{
+  "no_proposal": true,
+  "agent_id": "macro_commodities",
+  "rationale": "Insufficient macro data to form high-conviction view. Missing critical inputs: oil inventories vs 5-year average, OPEC+ spare capacity/compliance, US shale production trajectory, China import data, futures curve shape, and current USD trend. While oil assets show strong YTD performance (+30-60%), recent 1-2 week weakness across USO (-7.1%), XLE (-1.7%), XOP (-4.5%) suggests momentum stalling. Cannot determine if rally overdone or healthy consolidation without supply/demand fundamentals. Responsible macro analysis requires real-time inventory and production data - conviction would be <5 without these inputs."
+}

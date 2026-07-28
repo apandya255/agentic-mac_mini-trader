@@ -1,7 +1,238 @@
+SYSTEM INSTRUCTIONS (read from risk_management.md):
+# Risk Management Agent
+
+## Identity
+
+You are the Chief Risk Officer at an elite macro hedge fund. You are the system's gatekeeper — no trade enters the book without your explicit approval. You are disciplined, quantitative, and empowered to reject or modify any proposal regardless of how confident the originating analyst is.
+
+## Mandate
+
+Your job is to determine whether trade proposals meet the risk management guidelines. You ensure factor exposure, idiosyncratic exposure, and leverage stay within limits. You protect the book from catastrophic drawdowns.
+
+You are judged on:
+- Zero factor beta breaches (hard limit ±0.6 — if this is ever violated, you failed)
+- Drawdown management (did you deleverage in time?)
+- False rejection rate (did you block good trades without quantitative justification?)
+- Leverage calibration (was leverage appropriate for the regime?)
+
+## Risk Framework
+
+### Position-Level Limits
+- Max single position: 5% NAV (8% for high-conviction tier, max 2 slots)
+- Stop-loss: 2–3% TRAILING from peak (ratchets up, never down)
+- Gain target: +5% triggers PM review (take is default)
+- Max sector gross: 25% NAV
+- Correlation limit: no two active positions > 0.7 pairwise correlation
+
+### Portfolio-Level Limits
+- Factor beta limit: ±0.6 per factor (HARD — no exceptions)
+- Factors: DXY, SPX, USGG10Yr, VIX, Growth/Value, CL1, Large/Small, CDX HY 5Y, XAU
+- Max gross leverage: 3.0x (absolute ceiling)
+- Target net exposure: ±0.3 (near market neutral)
+- Max downside volatility: 6% annualized
+
+### Circuit Breaker
+- 0–4% drawdown from peak: normal operations
+- 4–6% drawdown: WARNING — reduce sizing 20%, review lowest-conviction positions
+- 6%+ drawdown: HALT — no new positions, deleverage to 0.3x, joint review with PM
+- Recovery: re-lever only after 5 consecutive positive days
+
+### Leverage Management
+- Positive P&L + low correlation: 1.5x – 2.5x gross
+- Positive P&L + high correlation: 1.0x – 1.5x gross
+- Negative P&L + low correlation: 0.8x – 1.2x gross
+- Negative P&L + high correlation: 0.3x – 0.8x gross
+
+## Pre-Trade Risk Check Process
+
+For every proposal, evaluate:
+1. Is the hedge present and valid? (correct instrument, correct direction)
+2. Would this position breach any factor beta limit? (project new betas)
+3. Is the position correlated > 0.7 with any existing position?
+4. Does it fit within sector concentration limits?
+5. Is the proposed size within the allowed range for this conviction level?
+6. Would adding this trade push gross leverage beyond the regime limit?
+7. Is the circuit breaker in normal mode? (if warning/breaker, sizing is restricted)
+
+## Tools Available
+
+```
+python -m data_platform.cli risk circuit-breaker --nav <current_nav>
+python -m data_platform.cli risk trailing-stop --ticker <T> --direction <D> --entry-price <E> --peak-price <P> --current-price <C> --trail-pct <pct>
+python -m data_platform.cli risk correlation --tickers <T1> <T2> <T3>
+python -m data_platform.cli risk crowding --tickers <T1> <T2> <T3>
+python -m data_platform.cli sizing compute --conviction <N>
+python -m data_platform.cli universe hedge --ticker <T> --direction <D>
+```
+
+Use these tools to QUANTIFY your decision. Don't reject on vibes — reject on numbers.
+
+## Output Format
+
+Write your output as a JSON file:
+```json
 {
-  "nav": 10000050.437014759,
+  "proposal_id": "risk_<original_proposal_id>",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "All checks pass. Factor betas within limits. Position uncorrelated with existing book.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.25,
+  "projected_factor_betas": {"DXY": -0.10, "SPX": 0.16, "CL1": 0.19, "...": "..."},
+  "factor_breach": false,
+  "projected_gross_leverage": 1.44,
+  "max_allowed_size_pct": 0.04,
+  "risk_warnings": ["CL1 beta at 0.19 — monitor if oil spikes"],
+  "modifications": null
+}
+```
+
+For rejections:
+```json
+{
+  "decision": "rejected",
+  "rationale": "Adding this position would push CL1 factor beta to 0.65, breaching the ±0.6 limit.",
+  "factor_breach": true,
+  "projected_factor_betas": {"CL1": 0.65}
+}
+```
+
+For modifications:
+```json
+{
+  "decision": "approved_with_modifications",
+  "rationale": "Approved at reduced size to keep CL1 beta within limits.",
+  "max_allowed_size_pct": 0.02,
+  "modifications": {"reduce_size_to": 0.02, "reason": "CL1 beta constraint"}
+}
+```
+
+## Constraints
+
+- You RUN ON A DIFFERENT MODEL than the originating agent (per system design — you are independent)
+- You can ONLY reject with quantitative justification (cite the specific limit that would be breached)
+- You cannot reject because you "disagree with the thesis" — that's the debate's job
+- If all quantitative checks pass, you MUST approve (possibly with sizing modifications)
+- You read the current book state from `memos/state/book.json`
+
+## Occupational Biases (Be Aware)
+
+- Tendency to be excessively conservative (rejecting trades that are within limits)
+- Tendency to over-weight tail risks that are already hedged
+- Tendency to treat correlation as causation (0.4 correlation ≠ same trade)
+- Discipline: if the numbers pass, approve it. Your job is limits enforcement, not thesis assessment.
+
+
+---
+TASK:
+Evaluate this trade proposal against risk limits.
+
+PROPOSAL:
+{
+  "proposal_id": "fund_energy_2026-07-27T22-37-12",
+  "agent_id": "fund_energy",
+  "ticker": "XOM",
+  "direction": "long",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "thesis_summary": "XOM trading at discount to peers after recent pullback (-1.4% today). 1Y return +44% but 1M +12.5% shows momentum still intact. Technical score 8/10 bullish with golden cross confirmed. Capital return yield ~7% (buyback + div) vs peer avg 5.5%.",
+  "thesis_detail": "XOM at $154.77 trades at ~10.5x forward EV/EBITDA vs integrated peer median of 12.2x and own 5-year avg of 11.8x. The discount reflects market concern about peak oil cycle, but Permian breakevens at $38/bbl provide significant downside protection even in a $65 WTI scenario. Capital allocation has improved meaningfully \u2014 buyback yield 4.2% + dividend yield 3.1% = 7.3% total shareholder return. Catalyst: Q3 earnings in 4 weeks likely to show Permian volume growth ahead of street estimates (our model: +8% vs consensus +5%). Refining segment also benefiting from tight product markets.",
+  "variant_perception": "Street underestimates Permian growth rate. Our 8% growth vs consensus 5% implies .2B incremental FCF not in estimates. At 6x FCF multiple, thats .2B upside to EV = ~3% of current market cap, concentrated in one quarter.",
+  "catalyst": "Q3 earnings report \u2014 Permian volumes + buyback acceleration announcement",
+  "catalyst_timeline": "4 weeks",
+  "current_price": 154.77000427246094,
+  "target_price": 162.51,
+  "conviction": 8,
+  "key_risks": [
+    "Oil price below $70 compresses margins",
+    "Permian execution risk on well productivity",
+    "Broader market sell-off drags energy"
+  ],
+  "sector_view": "bullish",
+  "relevant_peers": [
+    "CVX",
+    "COP",
+    "EOG"
+  ],
+  "final_conviction": 8
+}
+
+TECHNICAL SCORE:
+{
+  "proposal_id": "tech_fund_energy_2026-07-27T22-37-12",
+  "agent_id": "tech_equity",
+  "technical_score": 7,
+  "trend_alignment": "aligned",
+  "momentum_regime": "moderate_trend_with_pullback",
+  "support_levels": [
+    145.92,
+    149.31,
+    152.71
+  ],
+  "resistance_levels": [
+    156.9,
+    159.19,
+    163.68
+  ],
+  "fibonacci_levels": {
+    "38.2%": 152.71,
+    "50%": 149.31,
+    "61.8%": 145.92,
+    "127.2%": 171.49,
+    "161.8%": 181.44
+  },
+  "suggested_entry": 154.5,
+  "suggested_stop_loss": 148.0,
+  "suggested_take_profit": 162.5,
+  "trailing_stop_method": "ATR-based 2x (currently $3.43 ATR = trail at $6.86 below entry)",
+  "active_signals": [
+    {
+      "signal": "golden_cross",
+      "strength": "strong",
+      "note": "50-day SMA above 200-day SMA - bullish structure intact"
+    },
+    {
+      "signal": "price_above_key_MAs",
+      "strength": "moderate",
+      "note": "Trading above 20/50/200 SMAs but pulled back from recent highs"
+    },
+    {
+      "signal": "RSI_neutral",
+      "strength": "moderate",
+      "note": "RSI at 66.2 - not overbought, room to move higher"
+    },
+    {
+      "signal": "MACD_bullish",
+      "strength": "moderate",
+      "note": "MACD line above signal line with positive histogram"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "recent_pullback",
+      "note": "Down -1.4% today from 156.94 high, testing 38.2% Fibonacci support"
+    },
+    {
+      "signal": "volume_below_average",
+      "note": "Volume at 0.93x 20-day average - lacking conviction on recent moves"
+    },
+    {
+      "signal": "weak_trend_strength",
+      "note": "ADX at 24.8 indicates weak trend - vulnerable to choppy action"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "wait_for_confirmation",
+  "timing_rationale": "While trend structure remains bullish with golden cross intact, today's -1.4% pullback on below-average volume suggests profit-taking. Better entry opportunity may emerge at 50% Fibonacci retracement ($149.31) or on volume confirmation above $156.90 resistance. Current level at 38.2% Fibonacci support ($152.71) makes this a reasonable but not optimal entry."
+}
+
+CURRENT BOOK STATE:
+{
+  "nav": 10000000.0,
   "initial_nav": 10000000,
-  "cash_pct": 0.1600000000000002,
+  "cash_pct": 0.5800000000000002,
   "positions": [
     {
       "ticker": "XOM",
@@ -13,26 +244,26 @@
       "conviction": 8,
       "entry_price": 154.77000427246094,
       "hedge_entry_price": 104.66000366210938,
-      "current_price": 152.64999389648438,
-      "hedge_current_price": 103.19999694824219,
+      "current_price": 154.77000427246094,
+      "hedge_current_price": 104.66000366210938,
       "entry_date": "2026-07-28",
       "status": "active",
       "stop_loss_method": "trailing 2.5% from peak",
       "take_profit": "5% triggers review (take is default)",
       "proposal_id": "fund_energy_2026-07-27T22-37-12",
-      "unrealized_pnl_pct": -0.013697811704162286,
-      "hedge_unrealized_pnl_pct": 0.013949996777955031,
-      "combined_pnl_pct": 0.00012609253689637237,
+      "unrealized_pnl_pct": 0.0,
+      "hedge_unrealized_pnl_pct": 0.0,
+      "combined_pnl_pct": 0.0,
       "price_history": [
         {
           "date": "2026-07-28",
-          "price": 152.64999389648438,
-          "hedge_price": 103.19999694824219,
-          "combined_pnl_pct": 0.00012609253689637237,
-          "daily_change_pct": -0.013697811704162286
+          "price": 154.77000427246094,
+          "hedge_price": 104.66000366210938,
+          "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
         }
       ],
-      "daily_change_pct": -0.013697811704162286
+      "daily_change_pct": 0.0
     },
     {
       "ticker": "NFLX",
@@ -53,17 +284,7 @@
       "proposal_id": "fund_commsvcs_2026-07-28T13-09-23",
       "unrealized_pnl_pct": 0.0,
       "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
-      "price_history": [
-        {
-          "date": "2026-07-28",
-          "price": 73.37999725341797,
-          "hedge_price": 36.19499969482422,
-          "combined_pnl_pct": 0.0,
-          "daily_change_pct": 0.0
-        }
-      ],
-      "daily_change_pct": 0.0
+      "combined_pnl_pct": 0.0
     },
     {
       "ticker": "BKNG",
@@ -84,17 +305,7 @@
       "proposal_id": "fund_consdisc_2026-07-28T13-11-21",
       "unrealized_pnl_pct": 0.0,
       "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
-      "price_history": [
-        {
-          "date": "2026-07-28",
-          "price": 197.32000732421875,
-          "hedge_price": 57.369998931884766,
-          "combined_pnl_pct": 0.0,
-          "daily_change_pct": 0.0
-        }
-      ],
-      "daily_change_pct": 0.0
+      "combined_pnl_pct": 0.0
     },
     {
       "ticker": "WMT",
@@ -115,17 +326,7 @@
       "proposal_id": "fund_consstaples_2026-07-28T13-12-41",
       "unrealized_pnl_pct": 0.0,
       "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
-      "price_history": [
-        {
-          "date": "2026-07-28",
-          "price": 113.54000091552734,
-          "hedge_price": 31.6200008392334,
-          "combined_pnl_pct": 0.0,
-          "daily_change_pct": 0.0
-        }
-      ],
-      "daily_change_pct": 0.0
+      "combined_pnl_pct": 0.0
     },
     {
       "ticker": "DVN",
@@ -146,17 +347,7 @@
       "proposal_id": "fund_energy_2026-07-28T13-14-41",
       "unrealized_pnl_pct": 0.0,
       "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
-      "price_history": [
-        {
-          "date": "2026-07-28",
-          "price": 42.61000061035156,
-          "hedge_price": 103.19999694824219,
-          "combined_pnl_pct": 0.0,
-          "daily_change_pct": 0.0
-        }
-      ],
-      "daily_change_pct": 0.0
+      "combined_pnl_pct": 0.0
     },
     {
       "ticker": "V",
@@ -177,83 +368,7 @@
       "proposal_id": "fund_financials_2026-07-28T13-16-41",
       "unrealized_pnl_pct": 0.0,
       "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
-      "price_history": [
-        {
-          "date": "2026-07-28",
-          "price": 368.7900085449219,
-          "hedge_price": 84.58039855957031,
-          "combined_pnl_pct": 0.0,
-          "daily_change_pct": 0.0
-        }
-      ],
-      "daily_change_pct": 0.0
-    },
-    {
-      "ticker": "BKNG",
-      "direction": "long",
-      "hedge_ticker": "RSPD",
-      "hedge_direction": "short",
-      "size_pct_nav": 0.04,
-      "conviction": 8,
-      "entry_date": "2026-07-28",
-      "status": "active",
-      "proposal_id": "fund_consdisc_2026-07-28T13-11-21"
-    },
-    {
-      "ticker": "WMT",
-      "direction": "long",
-      "hedge_ticker": "RSPS",
-      "hedge_direction": "short",
-      "size_pct_nav": 0.03,
-      "conviction": 7,
-      "entry_date": "2026-07-28",
-      "status": "active",
-      "proposal_id": "fund_consstaples_2026-07-28T13-12-41"
-    },
-    {
-      "ticker": "DVN",
-      "direction": "long",
-      "hedge_ticker": "RSPG",
-      "hedge_direction": "short",
-      "size_pct_nav": 0.03,
-      "conviction": 7,
-      "entry_date": "2026-07-28",
-      "status": "active",
-      "proposal_id": "fund_energy_2026-07-28T13-14-41"
-    },
-    {
-      "ticker": "XOM",
-      "direction": "long",
-      "hedge_ticker": "RSPG",
-      "hedge_direction": "short",
-      "size_pct_nav": 0.04,
-      "conviction": 8,
-      "entry_date": "2026-07-28",
-      "status": "active",
-      "proposal_id": "fund_energy_2026-07-27T22-37-12"
-    },
-    {
-      "ticker": "NFLX",
-      "direction": "long",
-      "hedge_ticker": "RSPC",
-      "hedge_direction": "short",
-      "size_pct_nav": 0.03,
-      "conviction": 7,
-      "entry_date": "2026-07-28",
-      "status": "active",
-      "proposal_id": "fund_commsvcs_2026-07-28T13-09-23"
-    },
-    {
-      "ticker": "V",
-      "direction": "long",
-      "hedge_ticker": "RSPF",
-      "hedge_direction": "short",
-      "size_pct_nav": 0.04,
-      "conviction": 8,
-      "entry_date": "2026-07-28",
-      "status": "active",
-      "proposal_id": "fund_financials_2026-07-28T13-16-41"
+      "combined_pnl_pct": 0.0
     }
   ],
   "trade_journal": [
@@ -424,157 +539,25 @@
       "timestamp": "2026-07-28T13:44:46.607092",
       "entry_price": 368.7900085449219,
       "hedge_entry_price": 84.58039855957031
-    },
-    {
-      "action": "open",
-      "order": {
-        "order_id": "order_fund_consdisc_2026-07-28T13-11-21",
-        "proposal_id": "fund_consdisc_2026-07-28T13-11-21",
-        "agent_id": "portfolio_manager",
-        "execute": true,
-        "pm_rationale": "Diversification trade: BKNG long provides consdisc sector exposure. Conviction 8/10. Book currently concentrated in energy only.",
-        "ticker": "BKNG",
-        "direction": "long",
-        "size_pct_nav": 0.04,
-        "entry_approach": "market",
-        "stop_loss_method": "trailing 2.5% from peak",
-        "take_profit": "5% triggers review (take is default)",
-        "hedge_ticker": "RSPD",
-        "hedge_direction": "short",
-        "hedge_size_pct_nav": 0.04,
-        "portfolio_thesis": "BKNG offers compelling long opportunity with travel recovery momentum accelerating, strong technical setup, and attractive valuation vs. growth profile.",
-        "expected_holding_period": "4-8 weeks",
-        "review_date": "2026-08-25",
-        "priority": "normal",
-        "conviction": 8
-      },
-      "timestamp": "2026-07-28T14:04:40.487010"
-    },
-    {
-      "action": "open",
-      "order": {
-        "order_id": "order_fund_consstaples_2026-07-28T13-12-41",
-        "proposal_id": "fund_consstaples_2026-07-28T13-12-41",
-        "agent_id": "portfolio_manager",
-        "execute": true,
-        "pm_rationale": "Diversification trade: WMT long provides consstaples sector exposure. Conviction 7/10. Book currently concentrated in energy only.",
-        "ticker": "WMT",
-        "direction": "long",
-        "size_pct_nav": 0.03,
-        "entry_approach": "market",
-        "stop_loss_method": "trailing 2.5% from peak",
-        "take_profit": "5% triggers review (take is default)",
-        "hedge_ticker": "RSPS",
-        "hedge_direction": "short",
-        "hedge_size_pct_nav": 0.03,
-        "portfolio_thesis": "WMT oversold relative to staples peers despite strong fundamentals. Trading at 22% discount to analyst consensus with pair ratio at 22nd percentile of 52-week range.",
-        "expected_holding_period": "4-8 weeks",
-        "review_date": "2026-08-25",
-        "priority": "normal",
-        "conviction": 7
-      },
-      "timestamp": "2026-07-28T14:04:40.487018"
-    },
-    {
-      "action": "open",
-      "order": {
-        "order_id": "order_fund_energy_2026-07-28T13-14-41",
-        "proposal_id": "fund_energy_2026-07-28T13-14-41",
-        "agent_id": "portfolio_manager",
-        "execute": true,
-        "pm_rationale": "Diversification trade: DVN long provides energy sector exposure. Conviction 7/10. Book currently concentrated in energy only.",
-        "ticker": "DVN",
-        "direction": "long",
-        "size_pct_nav": 0.03,
-        "entry_approach": "market",
-        "stop_loss_method": "trailing 2.5% from peak",
-        "take_profit": "5% triggers review (take is default)",
-        "hedge_ticker": "RSPG",
-        "hedge_direction": "short",
-        "hedge_size_pct_nav": 0.03,
-        "portfolio_thesis": "DVN offers exceptional value in E&P space, trading at 0th percentile vs peers on EV/EBITDA (5.0x) and forward PE (8.1x) with 39% analyst upside target. Pair ratio at extreme oversold levels (0.8th percentile, z-score -2.02) vs equal-weight energy, suggesting strong mean-reversion opportunity.",
-        "expected_holding_period": "4-8 weeks",
-        "review_date": "2026-08-25",
-        "priority": "normal",
-        "conviction": 7
-      },
-      "timestamp": "2026-07-28T14:04:40.487021"
-    },
-    {
-      "action": "open",
-      "order": {
-        "order_id": "order_fund_energy_2026-07-27T22-37-12",
-        "proposal_id": "fund_energy_2026-07-27T22-37-12",
-        "agent_id": "portfolio_manager",
-        "execute": true,
-        "pm_rationale": "Strong setup: conviction 8/10 held through debate (macro supported), technical score 8/10 bullish, risk approved at full size. Empty book \u2014 this is the inaugural trade. XOM offers best risk/reward in the sector (cheapest integrated on EV/EBITDA with strongest capital return). Catalyst in 4 weeks provides natural timeline. Trailing stop at 2.5% locks in gains if it runs.",
-        "ticker": "XOM",
-        "direction": "long",
-        "size_pct_nav": 0.04,
-        "entry_approach": "market",
-        "stop_loss_method": "trailing 2.5% from peak",
-        "take_profit": "5% triggers review (take is default)",
-        "hedge_ticker": "RSPG",
-        "hedge_direction": "short",
-        "hedge_size_pct_nav": 0.04,
-        "portfolio_thesis": "Inaugural position. Single-name energy alpha hedged with EW sector ETF. Low correlation to empty book. Catalyst-driven with defined 4-week timeline.",
-        "expected_holding_period": "4-8 weeks",
-        "review_date": "2026-08-10",
-        "priority": "normal",
-        "conviction": 8
-      },
-      "timestamp": "2026-07-28T14:04:40.487024"
-    },
-    {
-      "action": "open",
-      "order": {
-        "order_id": "order_fund_commsvcs_2026-07-28T13-09-23",
-        "proposal_id": "fund_commsvcs_2026-07-28T13-09-23",
-        "agent_id": "portfolio_manager",
-        "execute": true,
-        "pm_rationale": "Diversification trade: NFLX long provides commsvcs sector exposure. Conviction 7/10. Book currently concentrated in energy only.",
-        "ticker": "NFLX",
-        "direction": "long",
-        "size_pct_nav": 0.03,
-        "entry_approach": "market",
-        "stop_loss_method": "trailing 2.5% from peak",
-        "take_profit": "5% triggers review (take is default)",
-        "hedge_ticker": "RSPC",
-        "hedge_direction": "short",
-        "hedge_size_pct_nav": 0.03,
-        "portfolio_thesis": "NFLX presents compelling contrarian value at 96th percentile oversold vs sector pair, trading 19.2x forward P/E at trough levels with 29% analyst upside target. Technical momentum building above key support levels.",
-        "expected_holding_period": "4-8 weeks",
-        "review_date": "2026-08-25",
-        "priority": "normal",
-        "conviction": 7
-      },
-      "timestamp": "2026-07-28T14:04:40.487026"
-    },
-    {
-      "action": "open",
-      "order": {
-        "order_id": "order_fund_financials_2026-07-28T13-16-41",
-        "proposal_id": "fund_financials_2026-07-28T13-16-41",
-        "agent_id": "portfolio_manager",
-        "execute": true,
-        "pm_rationale": "Diversification trade: V long provides financials sector exposure. Conviction 8/10. Book currently concentrated in energy only.",
-        "ticker": "V",
-        "direction": "long",
-        "size_pct_nav": 0.04,
-        "entry_approach": "market",
-        "stop_loss_method": "trailing 2.5% from peak",
-        "take_profit": "5% triggers review (take is default)",
-        "hedge_ticker": "RSPF",
-        "hedge_direction": "short",
-        "hedge_size_pct_nav": 0.04,
-        "portfolio_thesis": "Visa offers best risk/reward in Financials - secular payments growth, defensive moats, trading 9% below analyst targets with strongest technicals in coverage universe.",
-        "expected_holding_period": "4-8 weeks",
-        "review_date": "2026-08-25",
-        "priority": "normal",
-        "conviction": 8
-      },
-      "timestamp": "2026-07-28T14:04:40.487029"
     }
   ],
-  "last_marked": "2026-07-28T13:45:14.320907"
+  "last_marked": "2026-07-28T12:33:08.271973"
 }
+
+Instructions:
+1. Check circuit breaker status (current NAV = 10000000.0).
+2. Check if adding this position would breach any factor beta limits.
+3. Check correlation with existing positions.
+4. Verify hedge is correct (use universe hedge tool).
+5. Verify sizing is within limits for this conviction level.
+6. Output your RiskDecision JSON per your mandate format.
+7. Write to: /Users/akashpandya/AgenticTradingResearch/memos/risk/risk_fund_energy_2026-07-27T22-37-12_2026-07-28T13-45-00.json
+
+You are running on a DIFFERENT MODEL than the originating agent. Be independent.
+Reject ONLY with quantitative justification. If numbers pass, approve.
+
+---
+IMPORTANT: Write your JSON output to the file: /Users/akashpandya/AgenticTradingResearch/memos/raw/risk_management_2026-07-28T13-45-00.json
+Use the exec tool to run: cat > /Users/akashpandya/AgenticTradingResearch/memos/raw/risk_management_2026-07-28T13-45-00.json << 'JSONEOF'
+<your JSON here>
+JSONEOF

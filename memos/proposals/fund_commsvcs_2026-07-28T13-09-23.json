@@ -1,0 +1,26 @@
+{
+  "proposal_id": "fund_commsvcs_2026-07-28T13-09-23",
+  "agent_id": "fund_commsvcs",
+  "ticker": "NFLX",
+  "direction": "long",
+  "hedge_ticker": "RSPC",
+  "hedge_direction": "short",
+  "thesis_summary": "NFLX presents compelling contrarian value at 96th percentile oversold vs sector pair, trading 19.2x forward P/E at trough levels with 29% analyst upside target. Technical momentum building above key support levels.",
+  "thesis_detail": "Netflix is deeply oversold relative to the communication services sector, with the NFLX/RSPC pair ratio at the 4th percentile (2.03 vs 52-week high of 3.36), indicating 96% mean reversion potential. The company trades at 19.2x forward P/E and 20.4x EV/EBITDA, both at multi-year lows despite maintaining 13.4% revenue growth and 33.3% operating margins. FCF yield of 8.3% is attractive for a growth stock. Technically, NFLX just broke above its 20-day SMA at $72.59 with KST showing bullish momentum crossover and RSI neutral at 49.3, suggesting room to run. The stock has carved out a base between $65-$80 over the past quarter. Analyst consensus remains constructive with $94.83 average target (29% upside) and 'Buy' recommendation. The market appears over-discounting password sharing headwinds and under-appreciating the gaming platform buildout and ad-supported tier acceleration. Content spend efficiency is improving as Netflix leverages its global scale, with cost-per-subscriber-hour declining while engagement metrics remain robust. The upcoming Q3 earnings cycle should demonstrate stabilizing subscriber trends and continued margin expansion.",
+  "variant_perception": "The market is pricing in permanent subscriber growth deceleration from password sharing crackdown, but we believe this is a one-time headwind that clears by Q4. Additionally, the gaming platform and live sports optionality (NFL Christmas games) are not being valued by the market. Ad-supported tier penetration is accelerating faster than consensus models, providing upside to ARPU assumptions.",
+  "catalyst": "Q3 earnings in mid-October will likely show stabilizing global subscriber net adds and stronger than expected ad-tier adoption rates. Netflix management should guide Q4 subscriber growth above street expectations, particularly in international markets where password sharing enforcement is driving account conversions rather than churn.",
+  "catalyst_timeline": "4-6 weeks",
+  "current_price": 73.38,
+  "target_price": 85.0,
+  "conviction": 7,
+  "key_risks": [
+    "Continued subscriber churn from password sharing enforcement",
+    "Intensifying streaming competition pressuring content costs",
+    "Macro consumer spending weakness affecting subscription retention"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "DIS",
+    "GOOG"
+  ]
+}

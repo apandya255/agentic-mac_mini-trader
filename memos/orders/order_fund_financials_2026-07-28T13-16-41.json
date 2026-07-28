@@ -1,0 +1,21 @@
+{
+  "order_id": "order_fund_financials_2026-07-28T13-16-41",
+  "proposal_id": "fund_financials_2026-07-28T13-16-41",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "Diversification trade: V long provides financials sector exposure. Conviction 8/10. Book currently concentrated in energy only.",
+  "ticker": "V",
+  "direction": "long",
+  "size_pct_nav": 0.04,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review (take is default)",
+  "hedge_ticker": "RSPF",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.04,
+  "portfolio_thesis": "Visa offers best risk/reward in Financials - secular payments growth, defensive moats, trading 9% below analyst targets with strongest technicals in coverage universe.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-25",
+  "priority": "normal",
+  "conviction": 8
+}

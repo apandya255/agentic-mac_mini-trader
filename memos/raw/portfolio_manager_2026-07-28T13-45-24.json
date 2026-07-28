@@ -1,0 +1,7 @@
+{
+  "order_id": "order_fund_energy_2026-07-27T22-37-12_2026-07-28T13-45-24",
+  "proposal_id": "fund_energy_2026-07-27T22-37-12",
+  "agent_id": "portfolio_manager",
+  "execute": false,
+  "pm_rationale": "Duplicate execution request. This XOM position (proposal_id: fund_energy_2026-07-27T22-37-12) is already active in the book as of 2026-07-28T00:07:23. Current position: 4% NAV long XOM at $154.77 entry, hedged with RSPG short. Position is performing as expected with small positive combined P&L (+0.0001%). No action required - original trade thesis remains intact."
+}
