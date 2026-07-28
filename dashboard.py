@@ -2320,11 +2320,20 @@ function renderPositionTableSkeleton() {{
 
 function renderJournal() {{
     const panel = document.getElementById('panel-journal');
-    const journal = state.book.trade_journal || [];
-    if (!journal.length) {{
+    const rawJournal = state.book.trade_journal || [];
+    if (!rawJournal.length) {{
         panel.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128214;</div><div class="empty-text">No trade history yet.</div></div>';
         return;
     }}
+    // Deduplicate by order_id — keep the first (earliest) occurrence
+    const seen = new Set();
+    const journal = rawJournal.filter(e => {{
+        const o = e.order || {{}};
+        const id = o.order_id || o.proposal_id || e.timestamp;
+        if (seen.has(id)) return false;
+        seen.add(id);
+        return true;
+    }});
     let html = '<div class="section-title">Trade Journal</div><table class="data-table"><thead><tr><th>Action</th><th>Ticker</th><th>Direction</th><th>Hedge</th><th>Entry</th><th>P&L</th><th>Timestamp</th></tr></thead><tbody>';
     for (const e of [...journal].reverse()) {{
         const o = e.order || {{}};
