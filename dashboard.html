@@ -199,7 +199,76 @@ body {
 @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
 /* RESPONSIVE */
-@media(max-width:768px) { .sidebar{display:none} .main{margin-left:0} .metrics-grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:768px) {
+    :root { --sidebar-w:0px; --header-h:56px; }
+    .sidebar { display:none; }
+    .main { margin-left:0; padding-bottom:72px; }
+    .topbar { padding:0 16px; }
+    .topbar-left h2 { font-size:0.95em; }
+    .topbar-right { gap:12px; }
+    .topbar-stat .label { font-size:0.6em; }
+    .topbar-stat .value { font-size:0.88em; }
+    .content { padding:16px; }
+    .metrics-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+    .metric-card { padding:14px; }
+    .metric-value { font-size:1.3em; }
+    .metric-label { font-size:0.68em; }
+    .section-title { font-size:0.72em; }
+    .data-table { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .data-table thead, .data-table tbody, .data-table tr { min-width:600px; }
+    .data-table thead th { padding:10px 12px; font-size:0.68em; white-space:nowrap; }
+    .data-table tbody td { padding:10px 12px; font-size:0.82em; white-space:nowrap; }
+    .pending-card { padding:16px; }
+    .pending-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+    .pending-header h3 { font-size:1.05em; }
+    .pending-actions { flex-direction:column; }
+    .pending-actions .btn { width:100%; text-align:center; }
+    .btn { padding:12px 20px; font-size:0.9em; }
+    .factor-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
+    .factor-item { padding:10px 6px; }
+    .factor-name { font-size:0.62em; }
+    .factor-value { font-size:0.95em; }
+    .signal-list { gap:6px; }
+    .signal-chip { font-size:0.74em; padding:5px 10px; }
+    .debate-entry { padding:14px; }
+    .debate-header { flex-wrap:wrap; gap:6px; }
+    .debate-body { font-size:0.84em; }
+    .equity-chart svg { height:140px; }
+    .timeline { padding-left:22px; }
+    .tl-stats { flex-wrap:wrap; gap:8px; }
+    .rec-grid { grid-template-columns:repeat(2,1fr); }
+    .empty-state { padding:32px 16px; }
+    .empty-icon { font-size:1.8em; }
+    .toast { bottom:80px; right:16px; left:16px; text-align:center; }
+}
+
+/* MOBILE BOTTOM NAV */
+.mobile-nav {
+    display:none;
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--bg-secondary); border-top:1px solid var(--border);
+    z-index:200; padding:6px 0 env(safe-area-inset-bottom, 6px);
+}
+.mobile-nav-inner {
+    display:flex; justify-content:space-around; align-items:center;
+}
+.mobile-nav-item {
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    padding:6px 8px; border-radius:8px; cursor:pointer; transition:var(--ease);
+    color:var(--text-muted); font-size:0.62em; font-weight:600; text-transform:uppercase; letter-spacing:0.3px;
+    position:relative; min-width:52px;
+}
+.mobile-nav-item svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; }
+.mobile-nav-item.active { color:var(--brand-gold); }
+.mobile-nav-item .mob-badge {
+    position:absolute; top:2px; right:4px;
+    background:var(--negative); color:#fff; font-size:9px; font-weight:700;
+    width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+}
+@media(max-width:768px) {
+    .mobile-nav { display:block; }
+}
+
 ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:var(--bg-primary)} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 </style>
 
@@ -252,11 +321,39 @@ body {
         <div class="panel" id="panel-timeline"></div>
     </div>
 </div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+    <div class="mobile-nav-inner">
+        <div class="mobile-nav-item active" data-tab="overview" onclick="switchTab('overview')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            Home
+        </div>
+        <div class="mobile-nav-item" data-tab="pending" onclick="switchTab('pending')">
+            <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Orders
+            <span class="mob-badge" id="mob-pending-count" style="display:none;">0</span>
+        </div>
+        <div class="mobile-nav-item" data-tab="positions" onclick="switchTab('positions')">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Book
+        </div>
+        <div class="mobile-nav-item" data-tab="debate" onclick="switchTab('debate')">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Debate
+        </div>
+        <div class="mobile-nav-item" data-tab="journal" onclick="switchTab('journal')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            History
+        </div>
+    </div>
+</nav>
+
 <div id="toast-container"></div>
 
 <script>
 // Embedded fallback data (used when not served via API)
-const EMBEDDED = {"book": {"nav": 10000000.0, "initial_nav": 10000000, "cash_pct": 0.92, "positions": [{"ticker": "XOM", "direction": "long", "hedge_ticker": "RSPG", "hedge_direction": "short", "pair_ratio": 1.4788, "size_pct_nav": 0.04, "conviction": 8, "entry_price": 154.77000427246094, "hedge_entry_price": 104.66000366210938, "current_price": 154.77000427246094, "hedge_current_price": 104.66000366210938, "entry_date": "2026-07-28", "status": "active", "stop_loss_method": "trailing 2.5% from peak", "take_profit": "5% triggers review (take is default)", "proposal_id": "fund_energy_2026-07-27T22-37-12", "unrealized_pnl_pct": 0.0, "hedge_unrealized_pnl_pct": 0.0, "combined_pnl_pct": 0.0}], "trade_journal": [{"action": "open", "order": {"order_id": "order_fund_energy_2026-07-27T22-37-12", "proposal_id": "fund_energy_2026-07-27T22-37-12", "agent_id": "portfolio_manager", "execute": true, "pm_rationale": "Strong setup: conviction 8/10 held through debate (macro supported), technical score 8/10 bullish, risk approved at full size. Empty book \u2014 this is the inaugural trade. XOM offers best risk/reward in the sector (cheapest integrated on EV/EBITDA with strongest capital return). Catalyst in 4 weeks provides natural timeline. Trailing stop at 2.5% locks in gains if it runs.", "ticker": "XOM", "direction": "long", "size_pct_nav": 0.04, "entry_approach": "market", "stop_loss_method": "trailing 2.5% from peak", "take_profit": "5% triggers review (take is default)", "hedge_ticker": "RSPG", "hedge_direction": "short", "hedge_size_pct_nav": 0.04, "portfolio_thesis": "Inaugural position. Single-name energy alpha hedged with EW sector ETF. Low correlation to empty book. Catalyst-driven with defined 4-week timeline.", "expected_holding_period": "4-8 weeks", "review_date": "2026-08-10", "priority": "normal", "conviction": 8, "_file": "order_fund_energy_2026-07-27T22-37-12_2026-07-27T22-37-12.json"}, "timestamp": "2026-07-28T00:07:23.802557", "entry_price": 154.77000427246094, "hedge_entry_price": 104.66000366210938}], "last_marked": "2026-07-28T00:07:40.625363"}, "history": [{"timestamp": "2026-07-28T00:07:40.625608", "date": "2026-07-28", "nav": 10000000.0, "positions": 1, "cash_pct": 0.92}], "debates": [{"proposal_id": "fund_energy_2026-07-27T22-37-12", "agent_id": "fund_energy", "round": 2, "stance": "defend", "argument": "Macro support confirms the setup. On DXY risk \u2014 this is a hedged pair trade (XOM vs RSPG), so dollar impact is largely neutralized as both legs have similar commodity sensitivity. Conviction holds at 8/10.", "revised_conviction": 8}, {"proposal_id": "fund_energy_2026-07-27T22-37-12", "agent_id": "macro_commodities", "round": 1, "stance": "support", "argument": "Agree with the setup from a macro perspective. Oil S/D balance is tightening \u2014 OPEC compliance at 96%, US shale growth decelerating, China imports +4% YoY. WTI at $82 is supportive for E&P margins without triggering Fed hawkishness. XLE/RSP ratio at 0.2712 (z-score 0.63) shows energy still cheap vs broad market historically. Only concern: DXY has been strengthening \u2014 if dollar rally accelerates, commodities face headwind. But for a hedged single-name trade, this is less relevant.", "revised_conviction": null}, {"proposal_id": "fund_energy_2026-07-27T22-37-12", "agent_id": "macro_commodities", "round": 1, "stance": "challenge", "argument": "CHALLENGE on macro timing and commodity cycle positioning. While fund_energy's single-name analysis on XOM is solid (valuation discount, capital allocation improvements, Permian growth thesis), the macro setup for energy is problematic. Key concerns: 1) COMMODITY CYCLE TIMING: USO is up +63.9% over 1Y and +68.7% over 6M - this massive move suggests most of the commodity cycle has already played out. Energy equities have similarly run hard (+37.7% XLE 1Y). 2) RECENT TECHNICAL BREAKDOWN: All energy vehicles showed meaningful weakness on July 27th (USO -8.7%, XLE -2.1%, XOM -1.4%) after the sustained run-up, suggesting potential exhaustion. 3) XLE/RSP RATIO CONCERNS: At 69th percentile (0.694), energy vs. broad market is already richly valued relative to historical ranges. The ratio is well above median, indicating energy outperformance is already well-priced. 4) MISSING FUNDAMENTAL ANCHORS: Without current oil inventory levels, OPEC+ policy clarity, or futures curve shape, I cannot assess whether $70+ oil (implied by USO performance) reflects genuine supply tightness or speculative positioning. 5) MACRO EVENT RISK: ISM Manufacturing PMI (Aug 3) and NFP (Aug 7) could shift growth expectations and pressure commodities if weak. The risk/reward appears skewed against new energy longs at current levels. If XOM's Permian thesis is correct, it's likely already reflected in the +44% 1Y return. Conviction should be reduced from 8 to 4-5 maximum given macro headwinds and extended positioning.", "revised_conviction": null}], "risks": [{"proposal_id": "risk_fund_energy_2026-07-27T22-37-12", "agent_id": "risk_management", "decision": "approved", "rationale": "All checks pass. Empty book \u2014 no factor beta concerns, no correlation issues, no concentration risk. Circuit breaker: normal. Hedge (RSPG) correctly resolves for energy single-name long. Size 4% NAV within limits for conviction 8.", "position_size_ok": true, "hedge_present_and_valid": true, "sector_concentration_ok": true, "correlation_to_existing": 0.0, "projected_factor_betas": {"DXY": -0.02, "SPX": 0.03, "USGG10Yr": -0.01, "VIX": -0.04, "CL1": 0.08, "Growth_Value": -0.01, "Large_Small": 0.01, "CDX_HY_5Y": -0.02, "XAU": 0.01}, "factor_breach": false, "projected_gross_leverage": 0.08, "max_allowed_size_pct": 0.04, "risk_warnings": ["CL1 beta will increase \u2014 monitor if adding more energy exposure"]}, {"proposal_id": "risk_fund_energy_2026-07-27T22-37-12", "agent_id": "risk_management", "decision": "approved", "rationale": "Within limited observables: factor betas not directly calculable, but proposal suggests diversified hedge. No drawdown breaches from given data. Needs deeper factor analysis.", "position_size_ok": true, "hedge_present_and_valid": true, "sector_concentration_ok": true, "correlation_to_existing": 0.25, "projected_factor_betas": {}, "factor_breach": false, "projected_gross_leverage": 1.44, "max_allowed_size_pct": 0.04, "risk_warnings": ["Ensure factor beta checks when integrated data available."], "modifications": null}], "scores": [{"proposal_id": "tech_fund_energy_2026-07-27T22-37-12", "agent_id": "tech_equity", "technical_score": 8, "trend_alignment": "above", "momentum_regime": "weak_trend", "support_levels": [152.70513430786133, 149.31499481201172, 145.9248553161621], "resistance_levels": [171.49455151367187, 181.4351300354004], "fibonacci_levels": {"38.2%": 152.70513430786133, "50%": 149.31499481201172, "61.8%": 145.9248553161621}, "suggested_entry": 154.77000427246094, "suggested_stop_loss": 150.9, "suggested_take_profit": 162.51, "trailing_stop_method": "ATR-based 2x (ATR=3.43, trail at $6.86 below price)", "active_signals": [{"signal": "golden_cross", "strength": "strong"}, {"signal": "RSI_neutral", "strength": "moderate", "value": 66.2}, {"signal": "MACD_none", "strength": "moderate"}], "warning_signals": [], "volume_confirmation": false, "timing_recommendation": "now", "timing_rationale": "Score 8/10, bias bullish. Trend aligned, momentum confirmed."}, {"proposal_id": "tech_fund_energy_2026-07-27T22-37-12", "agent_id": "tech_equity", "technical_score": 7, "trend_alignment": "aligned", "momentum_regime": "moderate_trend_with_pullback", "support_levels": [145.92, 149.31, 152.71], "resistance_levels": [156.9, 159.19, 163.68], "fibonacci_levels": {"38.2%": 152.71, "50%": 149.31, "61.8%": 145.92, "127.2%": 171.49, "161.8%": 181.44}, "suggested_entry": 154.5, "suggested_stop_loss": 148.0, "suggested_take_profit": 162.5, "trailing_stop_method": "ATR-based 2x (currently $3.43 ATR = trail at $6.86 below entry)", "active_signals": [{"signal": "golden_cross", "strength": "strong", "note": "50-day SMA above 200-day SMA - bullish structure intact"}, {"signal": "price_above_key_MAs", "strength": "moderate", "note": "Trading above 20/50/200 SMAs but pulled back from recent highs"}, {"signal": "RSI_neutral", "strength": "moderate", "note": "RSI at 66.2 - not overbought, room to move higher"}, {"signal": "MACD_bullish", "strength": "moderate", "note": "MACD line above signal line with positive histogram"}], "warning_signals": [{"signal": "recent_pullback", "note": "Down -1.4% today from 156.94 high, testing 38.2% Fibonacci support"}, {"signal": "volume_below_average", "note": "Volume at 0.93x 20-day average - lacking conviction on recent moves"}, {"signal": "weak_trend_strength", "note": "ADX at 24.8 indicates weak trend - vulnerable to choppy action"}], "volume_confirmation": false, "timing_recommendation": "wait_for_confirmation", "timing_rationale": "While trend structure remains bullish with golden cross intact, today's -1.4% pullback on below-average volume suggests profit-taking. Better entry opportunity may emerge at 50% Fibonacci retracement ($149.31) or on volume confirmation above $156.90 resistance. Current level at 38.2% Fibonacci support ($152.71) makes this a reasonable but not optimal entry."}], "logs": [{"timestamp": "2026-07-27T22:32:25.939685", "proposals_generated": 0, "orders_executed": 0, "book_positions": 0, "nav": 10000000}, {"timestamp": "2026-07-27T23:01:34.888047", "proposals_generated": 1, "orders_executed": 1, "book_positions": 2, "nav": 10000000}, {"timestamp": "2026-07-27T23:12:59.809086", "proposals_generated": 1, "orders_executed": 1, "book_positions": 3, "nav": 10000000}, {"timestamp": "2026-07-27T23:23:41.962241", "proposals_generated": 1, "orders_executed": 1, "book_positions": 4, "nav": 10000000}]};
+const EMBEDDED = {"book": {"nav": 10000000.0, "initial_nav": 10000000, "cash_pct": 0.92, "positions": [{"ticker": "XOM", "direction": "long", "hedge_ticker": "RSPG", "hedge_direction": "short", "pair_ratio": 1.4788, "size_pct_nav": 0.04, "conviction": 8, "entry_price": 154.77000427246094, "hedge_entry_price": 104.66000366210938, "current_price": 154.77000427246094, "hedge_current_price": 104.66000366210938, "entry_date": "2026-07-28", "status": "active", "stop_loss_method": "trailing 2.5% from peak", "take_profit": "5% triggers review (take is default)", "proposal_id": "fund_energy_2026-07-27T22-37-12", "unrealized_pnl_pct": 0.0, "hedge_unrealized_pnl_pct": 0.0, "combined_pnl_pct": 0.0}], "trade_journal": [{"action": "open", "order": {"order_id": "order_fund_energy_2026-07-27T22-37-12", "proposal_id": "fund_energy_2026-07-27T22-37-12", "agent_id": "portfolio_manager", "execute": true, "pm_rationale": "Strong setup: conviction 8/10 held through debate (macro supported), technical score 8/10 bullish, risk approved at full size. Empty book \u2014 this is the inaugural trade. XOM offers best risk/reward in the sector (cheapest integrated on EV/EBITDA with strongest capital return). Catalyst in 4 weeks provides natural timeline. Trailing stop at 2.5% locks in gains if it runs.", "ticker": "XOM", "direction": "long", "size_pct_nav": 0.04, "entry_approach": "market", "stop_loss_method": "trailing 2.5% from peak", "take_profit": "5% triggers review (take is default)", "hedge_ticker": "RSPG", "hedge_direction": "short", "hedge_size_pct_nav": 0.04, "portfolio_thesis": "Inaugural position. Single-name energy alpha hedged with EW sector ETF. Low correlation to empty book. Catalyst-driven with defined 4-week timeline.", "expected_holding_period": "4-8 weeks", "review_date": "2026-08-10", "priority": "normal", "conviction": 8, "_file": "order_fund_energy_2026-07-27T22-37-12_2026-07-27T22-37-12.json"}, "timestamp": "2026-07-28T00:07:23.802557", "entry_price": 154.77000427246094, "hedge_entry_price": 104.66000366210938}], "last_marked": "2026-07-28T00:09:22.791658"}, "history": [{"timestamp": "2026-07-28T00:07:40.625608", "date": "2026-07-28", "nav": 10000000.0, "positions": 1, "cash_pct": 0.92}], "debates": [{"proposal_id": "fund_energy_2026-07-27T22-37-12", "agent_id": "fund_energy", "round": 2, "stance": "defend", "argument": "Macro support confirms the setup. On DXY risk \u2014 this is a hedged pair trade (XOM vs RSPG), so dollar impact is largely neutralized as both legs have similar commodity sensitivity. Conviction holds at 8/10.", "revised_conviction": 8}, {"proposal_id": "fund_energy_2026-07-27T22-37-12", "agent_id": "macro_commodities", "round": 1, "stance": "support", "argument": "Agree with the setup from a macro perspective. Oil S/D balance is tightening \u2014 OPEC compliance at 96%, US shale growth decelerating, China imports +4% YoY. WTI at $82 is supportive for E&P margins without triggering Fed hawkishness. XLE/RSP ratio at 0.2712 (z-score 0.63) shows energy still cheap vs broad market historically. Only concern: DXY has been strengthening \u2014 if dollar rally accelerates, commodities face headwind. But for a hedged single-name trade, this is less relevant.", "revised_conviction": null}, {"proposal_id": "fund_energy_2026-07-27T22-37-12", "agent_id": "macro_commodities", "round": 1, "stance": "challenge", "argument": "CHALLENGE on macro timing and commodity cycle positioning. While fund_energy's single-name analysis on XOM is solid (valuation discount, capital allocation improvements, Permian growth thesis), the macro setup for energy is problematic. Key concerns: 1) COMMODITY CYCLE TIMING: USO is up +63.9% over 1Y and +68.7% over 6M - this massive move suggests most of the commodity cycle has already played out. Energy equities have similarly run hard (+37.7% XLE 1Y). 2) RECENT TECHNICAL BREAKDOWN: All energy vehicles showed meaningful weakness on July 27th (USO -8.7%, XLE -2.1%, XOM -1.4%) after the sustained run-up, suggesting potential exhaustion. 3) XLE/RSP RATIO CONCERNS: At 69th percentile (0.694), energy vs. broad market is already richly valued relative to historical ranges. The ratio is well above median, indicating energy outperformance is already well-priced. 4) MISSING FUNDAMENTAL ANCHORS: Without current oil inventory levels, OPEC+ policy clarity, or futures curve shape, I cannot assess whether $70+ oil (implied by USO performance) reflects genuine supply tightness or speculative positioning. 5) MACRO EVENT RISK: ISM Manufacturing PMI (Aug 3) and NFP (Aug 7) could shift growth expectations and pressure commodities if weak. The risk/reward appears skewed against new energy longs at current levels. If XOM's Permian thesis is correct, it's likely already reflected in the +44% 1Y return. Conviction should be reduced from 8 to 4-5 maximum given macro headwinds and extended positioning.", "revised_conviction": null}], "risks": [{"proposal_id": "risk_fund_energy_2026-07-27T22-37-12", "agent_id": "risk_management", "decision": "approved", "rationale": "All checks pass. Empty book \u2014 no factor beta concerns, no correlation issues, no concentration risk. Circuit breaker: normal. Hedge (RSPG) correctly resolves for energy single-name long. Size 4% NAV within limits for conviction 8.", "position_size_ok": true, "hedge_present_and_valid": true, "sector_concentration_ok": true, "correlation_to_existing": 0.0, "projected_factor_betas": {"DXY": -0.02, "SPX": 0.03, "USGG10Yr": -0.01, "VIX": -0.04, "CL1": 0.08, "Growth_Value": -0.01, "Large_Small": 0.01, "CDX_HY_5Y": -0.02, "XAU": 0.01}, "factor_breach": false, "projected_gross_leverage": 0.08, "max_allowed_size_pct": 0.04, "risk_warnings": ["CL1 beta will increase \u2014 monitor if adding more energy exposure"]}, {"proposal_id": "risk_fund_energy_2026-07-27T22-37-12", "agent_id": "risk_management", "decision": "approved", "rationale": "Within limited observables: factor betas not directly calculable, but proposal suggests diversified hedge. No drawdown breaches from given data. Needs deeper factor analysis.", "position_size_ok": true, "hedge_present_and_valid": true, "sector_concentration_ok": true, "correlation_to_existing": 0.25, "projected_factor_betas": {}, "factor_breach": false, "projected_gross_leverage": 1.44, "max_allowed_size_pct": 0.04, "risk_warnings": ["Ensure factor beta checks when integrated data available."], "modifications": null}], "scores": [{"proposal_id": "tech_fund_energy_2026-07-27T22-37-12", "agent_id": "tech_equity", "technical_score": 8, "trend_alignment": "above", "momentum_regime": "weak_trend", "support_levels": [152.70513430786133, 149.31499481201172, 145.9248553161621], "resistance_levels": [171.49455151367187, 181.4351300354004], "fibonacci_levels": {"38.2%": 152.70513430786133, "50%": 149.31499481201172, "61.8%": 145.9248553161621}, "suggested_entry": 154.77000427246094, "suggested_stop_loss": 150.9, "suggested_take_profit": 162.51, "trailing_stop_method": "ATR-based 2x (ATR=3.43, trail at $6.86 below price)", "active_signals": [{"signal": "golden_cross", "strength": "strong"}, {"signal": "RSI_neutral", "strength": "moderate", "value": 66.2}, {"signal": "MACD_none", "strength": "moderate"}], "warning_signals": [], "volume_confirmation": false, "timing_recommendation": "now", "timing_rationale": "Score 8/10, bias bullish. Trend aligned, momentum confirmed."}, {"proposal_id": "tech_fund_energy_2026-07-27T22-37-12", "agent_id": "tech_equity", "technical_score": 7, "trend_alignment": "aligned", "momentum_regime": "moderate_trend_with_pullback", "support_levels": [145.92, 149.31, 152.71], "resistance_levels": [156.9, 159.19, 163.68], "fibonacci_levels": {"38.2%": 152.71, "50%": 149.31, "61.8%": 145.92, "127.2%": 171.49, "161.8%": 181.44}, "suggested_entry": 154.5, "suggested_stop_loss": 148.0, "suggested_take_profit": 162.5, "trailing_stop_method": "ATR-based 2x (currently $3.43 ATR = trail at $6.86 below entry)", "active_signals": [{"signal": "golden_cross", "strength": "strong", "note": "50-day SMA above 200-day SMA - bullish structure intact"}, {"signal": "price_above_key_MAs", "strength": "moderate", "note": "Trading above 20/50/200 SMAs but pulled back from recent highs"}, {"signal": "RSI_neutral", "strength": "moderate", "note": "RSI at 66.2 - not overbought, room to move higher"}, {"signal": "MACD_bullish", "strength": "moderate", "note": "MACD line above signal line with positive histogram"}], "warning_signals": [{"signal": "recent_pullback", "note": "Down -1.4% today from 156.94 high, testing 38.2% Fibonacci support"}, {"signal": "volume_below_average", "note": "Volume at 0.93x 20-day average - lacking conviction on recent moves"}, {"signal": "weak_trend_strength", "note": "ADX at 24.8 indicates weak trend - vulnerable to choppy action"}], "volume_confirmation": false, "timing_recommendation": "wait_for_confirmation", "timing_rationale": "While trend structure remains bullish with golden cross intact, today's -1.4% pullback on below-average volume suggests profit-taking. Better entry opportunity may emerge at 50% Fibonacci retracement ($149.31) or on volume confirmation above $156.90 resistance. Current level at 38.2% Fibonacci support ($152.71) makes this a reasonable but not optimal entry."}], "logs": [{"timestamp": "2026-07-27T22:32:25.939685", "proposals_generated": 0, "orders_executed": 0, "book_positions": 0, "nav": 10000000}, {"timestamp": "2026-07-27T23:01:34.888047", "proposals_generated": 1, "orders_executed": 1, "book_positions": 2, "nav": 10000000}, {"timestamp": "2026-07-27T23:12:59.809086", "proposals_generated": 1, "orders_executed": 1, "book_positions": 3, "nav": 10000000}, {"timestamp": "2026-07-27T23:23:41.962241", "proposals_generated": 1, "orders_executed": 1, "book_positions": 4, "nav": 10000000}]};
 
 // State
 let state = {
@@ -759,11 +856,13 @@ function escapeHtml(s) { if (!s) return ''; const d = document.createElement('di
 
 function updatePendingBadge() {
     const el = document.getElementById('pending-count');
+    const mobEl = document.getElementById('mob-pending-count');
     if (state.pending.length > 0) {
-        el.style.display = 'inline';
-        el.textContent = state.pending.length;
+        if (el) { el.style.display = 'inline'; el.textContent = state.pending.length; }
+        if (mobEl) { mobEl.style.display = 'flex'; mobEl.textContent = state.pending.length; }
     } else {
-        el.style.display = 'none';
+        if (el) el.style.display = 'none';
+        if (mobEl) mobEl.style.display = 'none';
     }
 }
 
@@ -790,9 +889,17 @@ const TITLES = {
 function switchTab(tab) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.mobile-nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('panel-' + tab).classList.add('active');
-    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    // Desktop sidebar
+    const desktopNav = document.querySelector(`.sidebar [data-tab="${tab}"]`);
+    if (desktopNav) desktopNav.classList.add('active');
+    // Mobile bottom nav
+    const mobileNav = document.querySelector(`.mobile-nav-item[data-tab="${tab}"]`);
+    if (mobileNav) mobileNav.classList.add('active');
     document.getElementById('page-title').textContent = TITLES[tab] || 'Dashboard';
+    // Scroll to top on tab switch (mobile UX)
+    window.scrollTo(0, 0);
 }
 
 // ─── INIT ───────────────────────────────────────────────────────────────────

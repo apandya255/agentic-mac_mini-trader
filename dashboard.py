@@ -277,7 +277,76 @@ body {
 @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
 /* RESPONSIVE */
-@media(max-width:768px) { .sidebar{display:none} .main{margin-left:0} .metrics-grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:768px) {
+    :root { --sidebar-w:0px; --header-h:56px; }
+    .sidebar { display:none; }
+    .main { margin-left:0; padding-bottom:72px; }
+    .topbar { padding:0 16px; }
+    .topbar-left h2 { font-size:0.95em; }
+    .topbar-right { gap:12px; }
+    .topbar-stat .label { font-size:0.6em; }
+    .topbar-stat .value { font-size:0.88em; }
+    .content { padding:16px; }
+    .metrics-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+    .metric-card { padding:14px; }
+    .metric-value { font-size:1.3em; }
+    .metric-label { font-size:0.68em; }
+    .section-title { font-size:0.72em; }
+    .data-table { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .data-table thead, .data-table tbody, .data-table tr { min-width:600px; }
+    .data-table thead th { padding:10px 12px; font-size:0.68em; white-space:nowrap; }
+    .data-table tbody td { padding:10px 12px; font-size:0.82em; white-space:nowrap; }
+    .pending-card { padding:16px; }
+    .pending-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+    .pending-header h3 { font-size:1.05em; }
+    .pending-actions { flex-direction:column; }
+    .pending-actions .btn { width:100%; text-align:center; }
+    .btn { padding:12px 20px; font-size:0.9em; }
+    .factor-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
+    .factor-item { padding:10px 6px; }
+    .factor-name { font-size:0.62em; }
+    .factor-value { font-size:0.95em; }
+    .signal-list { gap:6px; }
+    .signal-chip { font-size:0.74em; padding:5px 10px; }
+    .debate-entry { padding:14px; }
+    .debate-header { flex-wrap:wrap; gap:6px; }
+    .debate-body { font-size:0.84em; }
+    .equity-chart svg { height:140px; }
+    .timeline { padding-left:22px; }
+    .tl-stats { flex-wrap:wrap; gap:8px; }
+    .rec-grid { grid-template-columns:repeat(2,1fr); }
+    .empty-state { padding:32px 16px; }
+    .empty-icon { font-size:1.8em; }
+    .toast { bottom:80px; right:16px; left:16px; text-align:center; }
+}
+
+/* MOBILE BOTTOM NAV */
+.mobile-nav {
+    display:none;
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--bg-secondary); border-top:1px solid var(--border);
+    z-index:200; padding:6px 0 env(safe-area-inset-bottom, 6px);
+}
+.mobile-nav-inner {
+    display:flex; justify-content:space-around; align-items:center;
+}
+.mobile-nav-item {
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    padding:6px 8px; border-radius:8px; cursor:pointer; transition:var(--ease);
+    color:var(--text-muted); font-size:0.62em; font-weight:600; text-transform:uppercase; letter-spacing:0.3px;
+    position:relative; min-width:52px;
+}
+.mobile-nav-item svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; }
+.mobile-nav-item.active { color:var(--brand-gold); }
+.mobile-nav-item .mob-badge {
+    position:absolute; top:2px; right:4px;
+    background:var(--negative); color:#fff; font-size:9px; font-weight:700;
+    width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+}
+@media(max-width:768px) {
+    .mobile-nav { display:block; }
+}
+
 ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:var(--bg-primary)} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 </style>
 """
@@ -338,6 +407,34 @@ def build_main_shell() -> str:
         <div class="panel" id="panel-timeline"></div>
     </div>
 </div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+    <div class="mobile-nav-inner">
+        <div class="mobile-nav-item active" data-tab="overview" onclick="switchTab('overview')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            Home
+        </div>
+        <div class="mobile-nav-item" data-tab="pending" onclick="switchTab('pending')">
+            <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Orders
+            <span class="mob-badge" id="mob-pending-count" style="display:none;">0</span>
+        </div>
+        <div class="mobile-nav-item" data-tab="positions" onclick="switchTab('positions')">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Book
+        </div>
+        <div class="mobile-nav-item" data-tab="debate" onclick="switchTab('debate')">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Debate
+        </div>
+        <div class="mobile-nav-item" data-tab="journal" onclick="switchTab('journal')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            History
+        </div>
+    </div>
+</nav>
+
 <div id="toast-container"></div>
 """
 
@@ -865,11 +962,13 @@ function escapeHtml(s) {{ if (!s) return ''; const d = document.createElement('d
 
 function updatePendingBadge() {{
     const el = document.getElementById('pending-count');
+    const mobEl = document.getElementById('mob-pending-count');
     if (state.pending.length > 0) {{
-        el.style.display = 'inline';
-        el.textContent = state.pending.length;
+        if (el) {{ el.style.display = 'inline'; el.textContent = state.pending.length; }}
+        if (mobEl) {{ mobEl.style.display = 'flex'; mobEl.textContent = state.pending.length; }}
     }} else {{
-        el.style.display = 'none';
+        if (el) el.style.display = 'none';
+        if (mobEl) mobEl.style.display = 'none';
     }}
 }}
 
@@ -896,9 +995,17 @@ const TITLES = {{
 function switchTab(tab) {{
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.mobile-nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('panel-' + tab).classList.add('active');
-    document.querySelector(`[data-tab="${{tab}}"]`).classList.add('active');
+    // Desktop sidebar
+    const desktopNav = document.querySelector(`.sidebar [data-tab="${{tab}}"]`);
+    if (desktopNav) desktopNav.classList.add('active');
+    // Mobile bottom nav
+    const mobileNav = document.querySelector(`.mobile-nav-item[data-tab="${{tab}}"]`);
+    if (mobileNav) mobileNav.classList.add('active');
     document.getElementById('page-title').textContent = TITLES[tab] || 'Dashboard';
+    // Scroll to top on tab switch (mobile UX)
+    window.scrollTo(0, 0);
 }}
 
 // ─── INIT ───────────────────────────────────────────────────────────────────
