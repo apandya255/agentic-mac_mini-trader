@@ -29,10 +29,10 @@
           "price": 152.64999389648438,
           "hedge_price": 103.19999694824219,
           "combined_pnl_pct": 0.00012609253689637237,
-          "daily_change_pct": -0.013697811704162286
+          "daily_change_pct": 0.0
         }
       ],
-      "daily_change_pct": -0.013697811704162286
+      "daily_change_pct": 0.0
     },
     {
       "ticker": "NFLX",
@@ -510,5 +510,5 @@
       "timestamp": "2026-07-28T14:04:40.487029"
     }
   ],
-  "last_marked": "2026-07-28T13:45:14.320907"
+  "last_marked": "2026-07-28T18:38:04.744526"
 }
