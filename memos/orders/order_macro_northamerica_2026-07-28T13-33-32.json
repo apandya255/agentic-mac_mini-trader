@@ -1,0 +1,21 @@
+{
+  "order_id": "order_macro_northamerica_2026-07-28T13-33-32",
+  "proposal_id": "macro_northamerica_2026-07-28T13-33-32",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "Value dramatically outperforming growth with IWF/IWD at 52-week lows (0th percentile). Economic data supporting value tilt with broader market participation. Trade the momentum while hedging via equal-weight.",
+  "ticker": "IWD",
+  "direction": "long",
+  "size_pct_nav": 0.02,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review (take is default)",
+  "hedge_ticker": "RSP",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.02,
+  "portfolio_thesis": "Value dramatically outperforming growth with IWF/IWD at 52-week lows (0th percentile). Economic data supporting value tilt with broader market participation. Trade the momentum while hedging via equal-weight.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-25",
+  "priority": "normal",
+  "conviction": 6
+}

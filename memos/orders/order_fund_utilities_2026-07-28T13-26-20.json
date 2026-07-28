@@ -1,0 +1,21 @@
+{
+  "order_id": "order_fund_utilities_2026-07-28T13-26-20",
+  "proposal_id": "fund_utilities_2026-07-28T13-26-20",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "XEL trades at cheapest PE in peer group (23.5x vs 25.6x median) with strong analyst consensus (Strong Buy, $92.72 target vs $81.19 current), bullish technical setup (score 8/10), and relative outperformance vs XLU (+3.3% over 63 days).",
+  "ticker": "XEL",
+  "direction": "long",
+  "size_pct_nav": 0.03,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review (take is default)",
+  "hedge_ticker": "RSPU",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.03,
+  "portfolio_thesis": "Market is undervaluing XEL's execution on rate base growth and regulatory recovery mechanisms. While consensus focuses on sector-wide interest rate sensitivity, XEL's constructive regulatory backdrop in upper Midwest states provides earnings visibility that justifies a premium to current valuation, not a discount.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-25",
+  "priority": "normal",
+  "conviction": 7
+}
