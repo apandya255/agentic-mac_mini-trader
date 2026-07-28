@@ -54,13 +54,56 @@ if _env_file.exists():
 
 # POC Universe tickers
 POC_TICKERS = [
-    # Energy
+    # ── Energy ──
     "XOM", "CVX", "COP", "EOG", "SLB", "MPC", "PSX", "VLO", "OXY", "DVN",
-    "XLE", "RSPG", "RSP", "USO", "XOP", "GLD", "ACWI",
-    # Japan
-    "EWJ", "DXJ", "EFA",
-    # Factor proxies
-    "UUP", "SPY", "IEF", "VIXY", "IWF", "IWD", "IWB", "IWM", "HYG",
+    "XLE", "RSPG",
+    # ── Information Technology ──
+    "AAPL", "MSFT", "NVDA", "AVGO", "CRM", "ADBE", "ORCL", "AMD", "INTC", "NOW",
+    "XLK", "RSPT",
+    # ── Healthcare ──
+    "UNH", "JNJ", "LLY", "ABBV", "MRK", "PFE", "TMO", "ABT", "AMGN", "ISRG",
+    "XLV", "RSPH",
+    # ── Financials ──
+    "JPM", "BAC", "WFC", "GS", "MS", "BLK", "SCHW", "AXP", "V", "MA",
+    "XLF", "RSPF",
+    # ── Materials ──
+    "LIN", "SHW", "APD", "ECL", "FCX", "NEM", "NUE", "DOW", "DD", "CTVA",
+    "XLB",
+    # ── Industrials ──
+    "CAT", "HON", "UNP", "RTX", "GE", "DE", "LMT", "WM", "ETN", "ITW",
+    "XLI", "RSPI",
+    # ── Consumer Discretionary ──
+    "AMZN", "TSLA", "HD", "MCD", "NKE", "LOW", "SBUX", "TJX", "BKNG", "CMG",
+    "XLY", "RSPD",
+    # ── Consumer Staples ──
+    "PG", "KO", "PEP", "COST", "WMT", "PM", "MO", "MDLZ", "CL", "KHC",
+    "XLP", "RSPS",
+    # ── Communication Services ──
+    "META", "GOOG", "NFLX", "DIS", "CMCSA", "T", "VZ", "TMUS", "CHTR", "EA",
+    "XLC", "RSPC",
+    # ── Utilities ──
+    "NEE", "SO", "DUK", "SRE", "AEP", "D", "XEL", "EXC", "WEC", "ED",
+    "XLU", "RSPU",
+    # ── Real Estate ──
+    "PLD", "AMT", "EQIX", "SPG", "O", "PSA", "WELL", "DLR", "AVB", "EXR",
+    "XLRE", "RSPR",
+    # ── Macro: Commodities ──
+    "USO", "XOP", "GLD",
+    # ── Macro: Asia/Japan ──
+    "EWJ", "DXJ", "EWY", "EWT", "FXI", "INDA",
+    # ── Macro: North America ──
+    "EWC",
+    # ── Macro: Western Europe ──
+    "EWG", "EWU", "EWQ", "EWI", "EWP", "EWL", "EWD", "EWN",
+    # ── Macro: LatAm ──
+    "EWZ", "EWW",
+    # ── Macro: CEEMEA / Broad EM ──
+    "EEM",
+    # ── Benchmarks & Factors ──
+    "SPY", "RSP", "ACWI", "EFA",
+    "IWF", "IWD", "IWB", "IWM",
+    # ── Rates, Vol, Credit ──
+    "UUP", "IEF", "VIXY", "HYG",
 ]
 
 # Models per agent (risk on different family)

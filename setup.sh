@@ -85,19 +85,29 @@ echo "  [6/7] Seeding price database..."
 if [ ! -f data/prices.db ] || [ "$(stat -f%z data/prices.db 2>/dev/null || echo 0)" -lt 1000 ]; then
     cd src
     python3 -m data_platform.cli prices update --tickers \
-        XOM CVX COP EOG SLB MPC PSX VLO OXY DVN \
-        XLE RSPG RSP USO XOP GLD ACWI \
-        AAPL MSFT NVDA AVGO CRM ADBE ORCL AMD INTC NOW \
-        XLK RSPT \
-        UNH JNJ LLY ABBV MRK PFE TMO ABT AMGN ISRG \
-        XLV RSPH \
-        JPM BAC WFC GS MS BLK SCHW AXP V MA \
-        XLF RSPF \
-        EWJ DXJ EFA \
-        UUP SPY IEF VIXY IWF IWD IWB IWM HYG \
+        XOM CVX COP EOG SLB MPC PSX VLO OXY DVN XLE RSPG \
+        AAPL MSFT NVDA AVGO CRM ADBE ORCL AMD INTC NOW XLK RSPT \
+        UNH JNJ LLY ABBV MRK PFE TMO ABT AMGN ISRG XLV RSPH \
+        JPM BAC WFC GS MS BLK SCHW AXP V MA XLF RSPF \
+        LIN SHW APD ECL FCX NEM NUE DOW DD CTVA XLB \
+        CAT HON UNP RTX GE DE LMT WM ETN ITW XLI RSPI \
+        AMZN TSLA HD MCD NKE LOW SBUX TJX BKNG CMG XLY RSPD \
+        PG KO PEP COST WMT PM MO MDLZ CL KHC XLP RSPS \
+        META GOOG NFLX DIS CMCSA T VZ TMUS CHTR EA XLC RSPC \
+        NEE SO DUK SRE AEP D XEL EXC WEC ED XLU RSPU \
+        PLD AMT EQIX SPG O PSA WELL DLR AVB EXR XLRE RSPR \
+        USO XOP GLD \
+        EWJ DXJ EWY EWT FXI INDA \
+        EWC \
+        EWG EWU EWQ EWI EWP EWL EWD EWN \
+        EWZ EWW \
+        EEM \
+        SPY RSP ACWI EFA \
+        IWF IWD IWB IWM \
+        UUP IEF VIXY HYG \
         2>/dev/null || echo "  ⚠ Some tickers may have failed (this is OK for setup)"
     cd "$SCRIPT_DIR"
-    echo "  ✓ Price data seeded"
+    echo "  ✓ Price data seeded (full universe: 11 sectors + 6 macro regions)"
 else
     echo "  ✓ Price database already populated"
 fi
