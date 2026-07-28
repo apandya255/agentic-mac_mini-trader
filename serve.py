@@ -25,11 +25,11 @@ from pathlib import Path
 from flask import Flask, jsonify, request, send_file
 
 # Add src to path
-sys.path.insert(0, "/Users/akashpandya/AgenticTradingResearch/src")
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 from data_platform.prices import PriceService
 
 # --- Paths ---
-BASE_DIR = Path("/Users/akashpandya/AgenticTradingResearch")
+BASE_DIR = Path(__file__).parent
 BOOK_PATH = BASE_DIR / "memos" / "state" / "book.json"
 ORDERS_DIR = BASE_DIR / "memos" / "orders"
 PROPOSALS_DIR = BASE_DIR / "memos" / "proposals"

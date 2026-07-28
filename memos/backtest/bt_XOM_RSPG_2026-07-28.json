@@ -1,0 +1,511 @@
+{
+  "ticker": "XOM",
+  "hedge_ticker": "RSPG",
+  "direction": "long",
+  "hedge_direction": "short",
+  "entry_date": "2026-04-29",
+  "exit_date": "2026-07-27",
+  "exit_reason": "end_of_period",
+  "entry_price": 153.62725830078125,
+  "exit_price": 154.77000427246094,
+  "hedge_entry_price": 107.40376281738281,
+  "hedge_exit_price": 104.66000366210938,
+  "main_leg_pnl_pct": 0.007438,
+  "hedge_leg_pnl_pct": 0.025546,
+  "combined_pnl_pct": 0.016492,
+  "max_drawdown_pct": -0.020107,
+  "max_gain_pct": 0.01654,
+  "days_held": 61,
+  "stop_level_pct": -0.025,
+  "target_level_pct": 0.05,
+  "daily_pnl": [
+    {
+      "date": "2026-04-29",
+      "price": 153.62725830078125,
+      "hedge_price": 107.40376281738281,
+      "main_pnl_pct": 0.0,
+      "hedge_pnl_pct": 0.0,
+      "combined_pnl_pct": 0.0
+    },
+    {
+      "date": "2026-04-30",
+      "price": 153.28955078125,
+      "hedge_price": 108.91536712646484,
+      "main_pnl_pct": -0.002198,
+      "hedge_pnl_pct": -0.014074,
+      "combined_pnl_pct": -0.008136
+    },
+    {
+      "date": "2026-05-01",
+      "price": 151.72019958496094,
+      "hedge_price": 107.29437255859375,
+      "main_pnl_pct": -0.012414,
+      "hedge_pnl_pct": 0.001018,
+      "combined_pnl_pct": -0.005698
+    },
+    {
+      "date": "2026-05-04",
+      "price": 152.65386962890625,
+      "hedge_price": 108.64686584472656,
+      "main_pnl_pct": -0.006336,
+      "hedge_pnl_pct": -0.011574,
+      "combined_pnl_pct": -0.008955
+    },
+    {
+      "date": "2026-05-05",
+      "price": 153.83584594726562,
+      "hedge_price": 108.30874633789062,
+      "main_pnl_pct": 0.001358,
+      "hedge_pnl_pct": -0.008426,
+      "combined_pnl_pct": -0.003534
+    },
+    {
+      "date": "2026-05-06",
+      "price": 147.6875762939453,
+      "hedge_price": 103.30650329589844,
+      "main_pnl_pct": -0.038663,
+      "hedge_pnl_pct": 0.038148,
+      "combined_pnl_pct": -0.000257
+    },
+    {
+      "date": "2026-05-07",
+      "price": 145.591796875,
+      "hedge_price": 101.21810150146484,
+      "main_pnl_pct": -0.052305,
+      "hedge_pnl_pct": 0.057593,
+      "combined_pnl_pct": 0.002644
+    },
+    {
+      "date": "2026-05-08",
+      "price": 143.59535217285156,
+      "hedge_price": 100.87003326416016,
+      "main_pnl_pct": -0.0653,
+      "hedge_pnl_pct": 0.060833,
+      "combined_pnl_pct": -0.002233
+    },
+    {
+      "date": "2026-05-11",
+      "price": 148.6708984375,
+      "hedge_price": 103.42584991455078,
+      "main_pnl_pct": -0.032262,
+      "hedge_pnl_pct": 0.037037,
+      "combined_pnl_pct": 0.002387
+    },
+    {
+      "date": "2026-05-12",
+      "price": 149.614501953125,
+      "hedge_price": 104.19158935546875,
+      "main_pnl_pct": -0.02612,
+      "hedge_pnl_pct": 0.029907,
+      "combined_pnl_pct": 0.001894
+    },
+    {
+      "date": "2026-05-13",
+      "price": 150.5481719970703,
+      "hedge_price": 104.04242706298828,
+      "main_pnl_pct": -0.020043,
+      "hedge_pnl_pct": 0.031296,
+      "combined_pnl_pct": 0.005627
+    },
+    {
+      "date": "2026-05-14",
+      "price": 151.75,
+      "hedge_price": 104.85790252685547,
+      "main_pnl_pct": -0.01222,
+      "hedge_pnl_pct": 0.023704,
+      "combined_pnl_pct": 0.005742
+    },
+    {
+      "date": "2026-05-15",
+      "price": 157.9199981689453,
+      "hedge_price": 106.87669372558594,
+      "main_pnl_pct": 0.027943,
+      "hedge_pnl_pct": 0.004907,
+      "combined_pnl_pct": 0.016425
+    },
+    {
+      "date": "2026-05-18",
+      "price": 160.49000549316406,
+      "hedge_price": 108.78608703613281,
+      "main_pnl_pct": 0.044671,
+      "hedge_pnl_pct": -0.01287,
+      "combined_pnl_pct": 0.015901
+    },
+    {
+      "date": "2026-05-19",
+      "price": 162.5500030517578,
+      "hedge_price": 110.08885192871094,
+      "main_pnl_pct": 0.05808,
+      "hedge_pnl_pct": -0.025,
+      "combined_pnl_pct": 0.01654
+    },
+    {
+      "date": "2026-05-20",
+      "price": 156.27999877929688,
+      "hedge_price": 107.98056030273438,
+      "main_pnl_pct": 0.017267,
+      "hedge_pnl_pct": -0.00537,
+      "combined_pnl_pct": 0.005949
+    },
+    {
+      "date": "2026-05-21",
+      "price": 155.2899932861328,
+      "hedge_price": 106.56840515136719,
+      "main_pnl_pct": 0.010823,
+      "hedge_pnl_pct": 0.007778,
+      "combined_pnl_pct": 0.0093
+    },
+    {
+      "date": "2026-05-22",
+      "price": 154.9199981689453,
+      "hedge_price": 107.40376281738281,
+      "main_pnl_pct": 0.008415,
+      "hedge_pnl_pct": 0.0,
+      "combined_pnl_pct": 0.004207
+    },
+    {
+      "date": "2026-05-26",
+      "price": 149.80999755859375,
+      "hedge_price": 104.7584457397461,
+      "main_pnl_pct": -0.024848,
+      "hedge_pnl_pct": 0.02463,
+      "combined_pnl_pct": -0.000109
+    },
+    {
+      "date": "2026-05-27",
+      "price": 147.89999389648438,
+      "hedge_price": 103.01810455322266,
+      "main_pnl_pct": -0.03728,
+      "hedge_pnl_pct": 0.040833,
+      "combined_pnl_pct": 0.001777
+    },
+    {
+      "date": "2026-05-28",
+      "price": 146.9600067138672,
+      "hedge_price": 102.98827362060547,
+      "main_pnl_pct": -0.043399,
+      "hedge_pnl_pct": 0.041111,
+      "combined_pnl_pct": -0.001144
+    },
+    {
+      "date": "2026-05-29",
+      "price": 145.25999450683594,
+      "hedge_price": 101.6954574584961,
+      "main_pnl_pct": -0.054465,
+      "hedge_pnl_pct": 0.053148,
+      "combined_pnl_pct": -0.000658
+    },
+    {
+      "date": "2026-06-01",
+      "price": 149.3800048828125,
+      "hedge_price": 103.14739227294922,
+      "main_pnl_pct": -0.027646,
+      "hedge_pnl_pct": 0.03963,
+      "combined_pnl_pct": 0.005992
+    },
+    {
+      "date": "2026-06-02",
+      "price": 149.55999755859375,
+      "hedge_price": 104.4601058959961,
+      "main_pnl_pct": -0.026475,
+      "hedge_pnl_pct": 0.027407,
+      "combined_pnl_pct": 0.000466
+    },
+    {
+      "date": "2026-06-03",
+      "price": 152.52999877929688,
+      "hedge_price": 105.76287078857422,
+      "main_pnl_pct": -0.007142,
+      "hedge_pnl_pct": 0.015278,
+      "combined_pnl_pct": 0.004068
+    },
+    {
+      "date": "2026-06-04",
+      "price": 152.0399932861328,
+      "hedge_price": 106.08110809326172,
+      "main_pnl_pct": -0.010332,
+      "hedge_pnl_pct": 0.012315,
+      "combined_pnl_pct": 0.000991
+    },
+    {
+      "date": "2026-06-05",
+      "price": 149.9199981689453,
+      "hedge_price": 103.45568084716797,
+      "main_pnl_pct": -0.024132,
+      "hedge_pnl_pct": 0.036759,
+      "combined_pnl_pct": 0.006314
+    },
+    {
+      "date": "2026-06-08",
+      "price": 151.75,
+      "hedge_price": 104.65899658203125,
+      "main_pnl_pct": -0.01222,
+      "hedge_pnl_pct": 0.025556,
+      "combined_pnl_pct": 0.006668
+    },
+    {
+      "date": "2026-06-09",
+      "price": 148.91000366210938,
+      "hedge_price": 102.9683837890625,
+      "main_pnl_pct": -0.030706,
+      "hedge_pnl_pct": 0.041296,
+      "combined_pnl_pct": 0.005295
+    },
+    {
+      "date": "2026-06-10",
+      "price": 150.6199951171875,
+      "hedge_price": 104.52971649169922,
+      "main_pnl_pct": -0.019575,
+      "hedge_pnl_pct": 0.026759,
+      "combined_pnl_pct": 0.003592
+    },
+    {
+      "date": "2026-06-11",
+      "price": 146.60000610351562,
+      "hedge_price": 102.62032318115234,
+      "main_pnl_pct": -0.045742,
+      "hedge_pnl_pct": 0.044537,
+      "combined_pnl_pct": -0.000603
+    },
+    {
+      "date": "2026-06-12",
+      "price": 147.00999450683594,
+      "hedge_price": 103.57501983642578,
+      "main_pnl_pct": -0.043074,
+      "hedge_pnl_pct": 0.035648,
+      "combined_pnl_pct": -0.003713
+    },
+    {
+      "date": "2026-06-15",
+      "price": 140.9199981689453,
+      "hedge_price": 100.13412475585938,
+      "main_pnl_pct": -0.082715,
+      "hedge_pnl_pct": 0.067685,
+      "combined_pnl_pct": -0.007515
+    },
+    {
+      "date": "2026-06-16",
+      "price": 141.86000061035156,
+      "hedge_price": 99.3783187866211,
+      "main_pnl_pct": -0.076596,
+      "hedge_pnl_pct": 0.074722,
+      "combined_pnl_pct": -0.000937
+    },
+    {
+      "date": "2026-06-17",
+      "price": 140.74000549316406,
+      "hedge_price": 98.24461364746094,
+      "main_pnl_pct": -0.083886,
+      "hedge_pnl_pct": 0.085278,
+      "combined_pnl_pct": 0.000696
+    },
+    {
+      "date": "2026-06-18",
+      "price": 137.80999755859375,
+      "hedge_price": 96.73300170898438,
+      "main_pnl_pct": -0.102959,
+      "hedge_pnl_pct": 0.099352,
+      "combined_pnl_pct": -0.001803
+    },
+    {
+      "date": "2026-06-22",
+      "price": 138.47000122070312,
+      "hedge_price": 98.44999694824219,
+      "main_pnl_pct": -0.098663,
+      "hedge_pnl_pct": 0.083365,
+      "combined_pnl_pct": -0.007649
+    },
+    {
+      "date": "2026-06-23",
+      "price": 139.72999572753906,
+      "hedge_price": 98.91000366210938,
+      "main_pnl_pct": -0.090461,
+      "hedge_pnl_pct": 0.079083,
+      "combined_pnl_pct": -0.005689
+    },
+    {
+      "date": "2026-06-24",
+      "price": 136.89999389648438,
+      "hedge_price": 97.55999755859375,
+      "main_pnl_pct": -0.108882,
+      "hedge_pnl_pct": 0.091652,
+      "combined_pnl_pct": -0.008615
+    },
+    {
+      "date": "2026-06-25",
+      "price": 137.5500030517578,
+      "hedge_price": 98.98999786376953,
+      "main_pnl_pct": -0.104651,
+      "hedge_pnl_pct": 0.078338,
+      "combined_pnl_pct": -0.013157
+    },
+    {
+      "date": "2026-06-26",
+      "price": 136.5399932861328,
+      "hedge_price": 98.55999755859375,
+      "main_pnl_pct": -0.111225,
+      "hedge_pnl_pct": 0.082341,
+      "combined_pnl_pct": -0.014442
+    },
+    {
+      "date": "2026-06-29",
+      "price": 136.05999755859375,
+      "hedge_price": 98.36000061035156,
+      "main_pnl_pct": -0.11435,
+      "hedge_pnl_pct": 0.084203,
+      "combined_pnl_pct": -0.015073
+    },
+    {
+      "date": "2026-06-30",
+      "price": 136.72000122070312,
+      "hedge_price": 97.95999908447266,
+      "main_pnl_pct": -0.110054,
+      "hedge_pnl_pct": 0.087928,
+      "combined_pnl_pct": -0.011063
+    },
+    {
+      "date": "2026-07-01",
+      "price": 136.27999877929688,
+      "hedge_price": 96.79000091552734,
+      "main_pnl_pct": -0.112918,
+      "hedge_pnl_pct": 0.098821,
+      "combined_pnl_pct": -0.007048
+    },
+    {
+      "date": "2026-07-02",
+      "price": 137.08999633789062,
+      "hedge_price": 97.44000244140625,
+      "main_pnl_pct": -0.107645,
+      "hedge_pnl_pct": 0.092769,
+      "combined_pnl_pct": -0.007438
+    },
+    {
+      "date": "2026-07-06",
+      "price": 136.44000244140625,
+      "hedge_price": 97.2699966430664,
+      "main_pnl_pct": -0.111876,
+      "hedge_pnl_pct": 0.094352,
+      "combined_pnl_pct": -0.008762
+    },
+    {
+      "date": "2026-07-07",
+      "price": 141.69000244140625,
+      "hedge_price": 99.68000030517578,
+      "main_pnl_pct": -0.077703,
+      "hedge_pnl_pct": 0.071913,
+      "combined_pnl_pct": -0.002895
+    },
+    {
+      "date": "2026-07-08",
+      "price": 141.1300048828125,
+      "hedge_price": 101.83999633789062,
+      "main_pnl_pct": -0.081348,
+      "hedge_pnl_pct": 0.051802,
+      "combined_pnl_pct": -0.014773
+    },
+    {
+      "date": "2026-07-09",
+      "price": 137.4600067138672,
+      "hedge_price": 100.41999816894531,
+      "main_pnl_pct": -0.105237,
+      "hedge_pnl_pct": 0.065023,
+      "combined_pnl_pct": -0.020107
+    },
+    {
+      "date": "2026-07-10",
+      "price": 138.8800048828125,
+      "hedge_price": 100.63999938964844,
+      "main_pnl_pct": -0.095994,
+      "hedge_pnl_pct": 0.062975,
+      "combined_pnl_pct": -0.016509
+    },
+    {
+      "date": "2026-07-13",
+      "price": 144.50999450683594,
+      "hedge_price": 103.30000305175781,
+      "main_pnl_pct": -0.059347,
+      "hedge_pnl_pct": 0.038209,
+      "combined_pnl_pct": -0.010569
+    },
+    {
+      "date": "2026-07-14",
+      "price": 145.08999633789062,
+      "hedge_price": 103.87999725341797,
+      "main_pnl_pct": -0.055571,
+      "hedge_pnl_pct": 0.032809,
+      "combined_pnl_pct": -0.011381
+    },
+    {
+      "date": "2026-07-15",
+      "price": 144.50999450683594,
+      "hedge_price": 102.7300033569336,
+      "main_pnl_pct": -0.059347,
+      "hedge_pnl_pct": 0.043516,
+      "combined_pnl_pct": -0.007915
+    },
+    {
+      "date": "2026-07-16",
+      "price": 145.9499969482422,
+      "hedge_price": 103.51000213623047,
+      "main_pnl_pct": -0.049973,
+      "hedge_pnl_pct": 0.036253,
+      "combined_pnl_pct": -0.00686
+    },
+    {
+      "date": "2026-07-17",
+      "price": 147.36000061035156,
+      "hedge_price": 104.56999969482422,
+      "main_pnl_pct": -0.040795,
+      "hedge_pnl_pct": 0.026384,
+      "combined_pnl_pct": -0.007206
+    },
+    {
+      "date": "2026-07-20",
+      "price": 148.36000061035156,
+      "hedge_price": 104.5999984741211,
+      "main_pnl_pct": -0.034286,
+      "hedge_pnl_pct": 0.026105,
+      "combined_pnl_pct": -0.004091
+    },
+    {
+      "date": "2026-07-21",
+      "price": 151.7100067138672,
+      "hedge_price": 105.5999984741211,
+      "main_pnl_pct": -0.01248,
+      "hedge_pnl_pct": 0.016794,
+      "combined_pnl_pct": 0.002157
+    },
+    {
+      "date": "2026-07-22",
+      "price": 154.4499969482422,
+      "hedge_price": 107.06999969482422,
+      "main_pnl_pct": 0.005355,
+      "hedge_pnl_pct": 0.003108,
+      "combined_pnl_pct": 0.004231
+    },
+    {
+      "date": "2026-07-23",
+      "price": 156.88999938964844,
+      "hedge_price": 107.0,
+      "main_pnl_pct": 0.021238,
+      "hedge_pnl_pct": 0.003759,
+      "combined_pnl_pct": 0.012499
+    },
+    {
+      "date": "2026-07-24",
+      "price": 156.94000244140625,
+      "hedge_price": 107.30999755859375,
+      "main_pnl_pct": 0.021564,
+      "hedge_pnl_pct": 0.000873,
+      "combined_pnl_pct": 0.011218
+    },
+    {
+      "date": "2026-07-27",
+      "price": 154.77000427246094,
+      "hedge_price": 104.66000366210938,
+      "main_pnl_pct": 0.007438,
+      "hedge_pnl_pct": 0.025546,
+      "combined_pnl_pct": 0.016492
+    }
+  ]
+}

@@ -22,7 +22,17 @@
       "proposal_id": "fund_energy_2026-07-27T22-37-12",
       "unrealized_pnl_pct": 0.0,
       "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0
+      "combined_pnl_pct": 0.0,
+      "price_history": [
+        {
+          "date": "2026-07-28",
+          "price": 154.77000427246094,
+          "hedge_price": 104.66000366210938,
+          "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
+        }
+      ],
+      "daily_change_pct": 0.0
     }
   ],
   "trade_journal": [
@@ -55,5 +65,5 @@
       "hedge_entry_price": 104.66000366210938
     }
   ],
-  "last_marked": "2026-07-28T00:09:22.791658"
+  "last_marked": "2026-07-28T12:33:08.271973"
 }

@@ -17,11 +17,11 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-sys.path.insert(0, "/Users/akashpandya/AgenticTradingResearch/src")
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 from data_platform.prices import PriceService
 
 # Paths
-BASE_DIR = Path("/Users/akashpandya/AgenticTradingResearch")
+BASE_DIR = Path(__file__).parent
 BOOK_PATH = BASE_DIR / "memos" / "state" / "book.json"
 HISTORY_PATH = BASE_DIR / "memos" / "state" / "pnl_history.json"
 

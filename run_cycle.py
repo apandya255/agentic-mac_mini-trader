@@ -65,17 +65,37 @@ POC_TICKERS = [
 
 # Models per agent (risk on different family)
 # Using OpenRouter format: provider/model-name
+# Default model for research agents; risk_management uses a different family per spec
+DEFAULT_RESEARCH_MODEL = "openrouter/anthropic/claude-sonnet-4"
 AGENT_MODELS = {
-    "fund_energy": "openrouter/anthropic/claude-sonnet-4",
-    "macro_commodities": "openrouter/anthropic/claude-sonnet-4",
-    "macro_asia_japan": "openrouter/anthropic/claude-sonnet-4",
-    "tech_equity": "openrouter/anthropic/claude-sonnet-4",
     "risk_management": "openrouter/openai/gpt-4o",  # DIFFERENT MODEL FAMILY per spec
     "portfolio_manager": "openrouter/anthropic/claude-sonnet-4",
+    "tech_equity": "openrouter/anthropic/claude-sonnet-4",
 }
 
 # OpenRouter configuration
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+
+
+def get_model_for_agent(agent_id: str) -> str:
+    """Return the model to use for a given agent, falling back to default."""
+    return AGENT_MODELS.get(agent_id, DEFAULT_RESEARCH_MODEL)
+
+
+def discover_research_agents() -> dict:
+    """
+    Discover all fund_* and macro_* mandates in the mandates directory.
+    Returns dict: {agent_id: mandate_path}
+    """
+    agents = {}
+    if MANDATES_DIR.exists():
+        for f in sorted(MANDATES_DIR.glob("fund_*.md")):
+            agent_id = f.stem  # e.g., "fund_energy"
+            agents[agent_id] = f
+        for f in sorted(MANDATES_DIR.glob("macro_*.md")):
+            agent_id = f.stem  # e.g., "macro_commodities"
+            agents[agent_id] = f
+    return agents
 
 
 def timestamp() -> str:
@@ -125,7 +145,7 @@ def invoke_agent(agent_id: str, task_prompt: str, dry_run: bool = False) -> str 
     Returns the path to the output file, or None if dry_run.
     """
     mandate_file = MANDATES_DIR / f"{agent_id}.md"
-    model = AGENT_MODELS.get(agent_id, "claude-sonnet-4-20250514")
+    model = get_model_for_agent(agent_id)
     output_file = MEMOS_DIR / "raw" / f"{agent_id}_{timestamp()}.json"
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -201,64 +221,55 @@ def phase_2_blind_proposals(dry_run: bool = False) -> list[str]:
     book_state = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {}
     book_context = json.dumps(book_state, indent=2)
 
+    # Discover all research agents dynamically
+    agents = discover_research_agents()
+    log(f"  Discovered {len(agents)} research agent(s): {', '.join(agents.keys())}")
+
     proposals = []
 
-    # Fund Energy — blind pass
-    fund_task = f"""Run your daily screening cycle for the Energy sector.
+    for agent_id, mandate_path in agents.items():
+        # Determine agent type for task framing
+        is_fund = agent_id.startswith("fund_")
+        is_macro = agent_id.startswith("macro_")
+
+        # Extract sector/region name for context
+        label = agent_id.replace("fund_", "").replace("macro_", "").replace("_", " ").title()
+
+        if is_fund:
+            task = f"""Run your daily screening cycle for the {label} sector.
 
 Current book state:
 {book_context}
 
 Instructions:
-1. Use your tools to check returns, valuations, and news for your coverage universe (XOM, CVX, COP, EOG, SLB, MPC, PSX, VLO, OXY, DVN, XLE).
+1. Use your tools to check returns, valuations, technicals, and news for your coverage universe.
 2. Identify the single best opportunity (long or short) you see right now.
-3. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "rationale": "why nothing looks good"}}.
+3. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "agent_id": "{agent_id}", "rationale": "why nothing looks good"}}.
 4. If you have a trade idea, output your TradeProposal JSON per your mandate format.
-5. Write your output to: {MEMOS_DIR}/proposals/fund_energy_{timestamp()}.json
-
-You are in BLIND mode — you cannot see what macro_commodities is proposing. Form your own independent view."""
-
-    out = invoke_agent("fund_energy", fund_task, dry_run)
-    if out:
-        proposals.append(out)
-
-    # Macro Commodities — blind pass
-    macro_task = f"""Run your daily analysis cycle for energy commodities.
-
-Current book state:
-{book_context}
-
-Instructions:
-1. Use your tools to check oil prices, DXY, macro indicators, yields, and credit conditions.
-2. Form your commodity macro view and identify the best expression (XLE, USO, XOP, or pass).
-3. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "rationale": "why nothing looks good"}}.
-4. If you have a trade idea, output your MacroTradeProposal JSON per your mandate format.
-5. Write your output to: {MEMOS_DIR}/proposals/macro_commodities_{timestamp()}.json
-
-You are in BLIND mode — you cannot see what fund_energy is proposing. Form your own independent view."""
-
-    out = invoke_agent("macro_commodities", macro_task, dry_run)
-    if out:
-        proposals.append(out)
-
-    # Japan Macro — blind pass
-    japan_task = f"""Run your daily analysis cycle for Japan macro.
-
-Current book state:
-{book_context}
-
-Instructions:
-1. Use your tools to check EWJ returns, EWJ/EFA pair ratio, relative strength, technicals, macro data, and news.
-2. Form your Japan macro view: BOJ policy, yen dynamics, governance reform, flows.
-3. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "rationale": "why nothing looks good"}}.
-4. If you have a trade idea, output your MacroTradeProposal JSON per your mandate format.
-5. Write your output to: {MEMOS_DIR}/proposals/macro_asia_japan_{timestamp()}.json
+5. Write your output to: {MEMOS_DIR}/proposals/{agent_id}_{timestamp()}.json
 
 You are in BLIND mode — you cannot see what other agents are proposing. Form your own independent view."""
 
-    out = invoke_agent("macro_asia_japan", japan_task, dry_run)
-    if out:
-        proposals.append(out)
+        elif is_macro:
+            task = f"""Run your daily analysis cycle for {label}.
+
+Current book state:
+{book_context}
+
+Instructions:
+1. Use your tools to check relevant prices, macro indicators, yields, FX, and credit conditions.
+2. Form your macro view and identify the best trade expression (ETF, commodity vehicle, or pass).
+3. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "agent_id": "{agent_id}", "rationale": "why nothing looks good"}}.
+4. If you have a trade idea, output your MacroTradeProposal JSON per your mandate format.
+5. Write your output to: {MEMOS_DIR}/proposals/{agent_id}_{timestamp()}.json
+
+You are in BLIND mode — you cannot see what other agents are proposing. Form your own independent view."""
+        else:
+            continue
+
+        out = invoke_agent(agent_id, task, dry_run)
+        if out:
+            proposals.append(out)
 
     log(f"  {len(proposals)} proposal(s) generated")
     return proposals
@@ -286,9 +297,26 @@ def phase_3_debate(proposals: list[str], dry_run: bool = False) -> list[dict]:
     # Round 1: Each agent reads the other's proposal and responds
     for proposal in loaded_proposals:
         agent_id = proposal.get("agent_id", "unknown")
-        opponent = "macro_commodities" if agent_id == "fund_energy" else "fund_energy"
 
-        debate_task = f"""You are in DEBATE mode. Read this proposal from {agent_id} and provide your challenge or support.
+        # Determine debate opponents:
+        # Fund agents get challenged by relevant macro agents and vice versa
+        # Same-type agents (fund vs fund) also cross-challenge
+        opponents = []
+        all_agents = discover_research_agents()
+        for other_id in all_agents:
+            if other_id != agent_id:
+                # Fund agents debate with macro agents primarily
+                # But also cross-sector fund agents can challenge
+                is_cross_type = (agent_id.startswith("fund_") and other_id.startswith("macro_")) or \
+                                (agent_id.startswith("macro_") and other_id.startswith("fund_"))
+                if is_cross_type:
+                    opponents.append(other_id)
+
+        # Limit to max 2 opponents to control costs
+        opponents = opponents[:2]
+
+        for opponent in opponents:
+            debate_task = f"""You are in DEBATE mode. Read this proposal from {agent_id} and provide your challenge or support.
 
 PROPOSAL:
 {json.dumps(proposal, indent=2)}
@@ -308,7 +336,7 @@ Instructions:
 }}
 5. Write to: {MEMOS_DIR}/debate/{opponent}_re_{agent_id}_{timestamp()}.json"""
 
-        invoke_agent(opponent, debate_task, dry_run)
+            invoke_agent(opponent, debate_task, dry_run)
 
     # Round 2: Originators respond to challenges
     debate_files = list((MEMOS_DIR / "debate").glob("*.json"))
