@@ -1,0 +1,27 @@
+{
+  "proposal_id": "risk_fund_energy_2026-07-27T22-37-12",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "All checks pass. Empty book \u2014 no factor beta concerns, no correlation issues, no concentration risk. Circuit breaker: normal. Hedge (RSPG) correctly resolves for energy single-name long. Size 4% NAV within limits for conviction 8.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_factor_betas": {
+    "DXY": -0.02,
+    "SPX": 0.03,
+    "USGG10Yr": -0.01,
+    "VIX": -0.04,
+    "CL1": 0.08,
+    "Growth_Value": -0.01,
+    "Large_Small": 0.01,
+    "CDX_HY_5Y": -0.02,
+    "XAU": 0.01
+  },
+  "factor_breach": false,
+  "projected_gross_leverage": 0.08,
+  "max_allowed_size_pct": 0.04,
+  "risk_warnings": [
+    "CL1 beta will increase \u2014 monitor if adding more energy exposure"
+  ]
+}

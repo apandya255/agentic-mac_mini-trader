@@ -126,6 +126,11 @@ class PriceService:
                 if data.empty:
                     continue
 
+                # yfinance 1.2+ returns MultiIndex columns even for single ticker
+                # Flatten: ('Close', 'XOM') -> 'Close'
+                if hasattr(data.columns, 'levels'):
+                    data.columns = data.columns.get_level_values(0)
+
                 rows = []
                 for dt, row in data.iterrows():
                     rows.append((

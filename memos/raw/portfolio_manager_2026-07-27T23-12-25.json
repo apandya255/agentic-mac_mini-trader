@@ -1,0 +1,7 @@
+{
+  "order_id": "order_fund_energy_2026-07-27T22-37-12_2026-07-27T23-12-25",
+  "proposal_id": "fund_energy_2026-07-27T22-37-12",
+  "agent_id": "portfolio_manager",
+  "execute": false,
+  "pm_rationale": "This exact proposal (fund_energy_2026-07-27T22-37-12) was already executed today at 22:37:12 and is currently active in the book at 4% NAV. Executing again would create 8% single-name exposure to XOM, violating concentration limits. The original trade thesis remains intact - no need to double down without new fundamental catalyst or technical setup change. Maintaining current 4% allocation is appropriate for conviction level 8."
+}
