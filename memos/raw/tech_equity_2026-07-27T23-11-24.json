@@ -1,0 +1,59 @@
+{
+  "proposal_id": "tech_fund_energy_2026-07-27T22-37-12",
+  "agent_id": "tech_equity",
+  "technical_score": 7,
+  "trend_alignment": "aligned",
+  "momentum_regime": "moderate_trend_with_pullback",
+  "support_levels": [145.92, 149.31, 152.71],
+  "resistance_levels": [156.90, 159.19, 163.68],
+  "fibonacci_levels": {
+    "38.2%": 152.71,
+    "50%": 149.31,
+    "61.8%": 145.92,
+    "127.2%": 171.49,
+    "161.8%": 181.44
+  },
+  "suggested_entry": 154.50,
+  "suggested_stop_loss": 148.00,
+  "suggested_take_profit": 162.50,
+  "trailing_stop_method": "ATR-based 2x (currently $3.43 ATR = trail at $6.86 below entry)",
+  "active_signals": [
+    {
+      "signal": "golden_cross",
+      "strength": "strong",
+      "note": "50-day SMA above 200-day SMA - bullish structure intact"
+    },
+    {
+      "signal": "price_above_key_MAs",
+      "strength": "moderate",
+      "note": "Trading above 20/50/200 SMAs but pulled back from recent highs"
+    },
+    {
+      "signal": "RSI_neutral",
+      "strength": "moderate",
+      "note": "RSI at 66.2 - not overbought, room to move higher"
+    },
+    {
+      "signal": "MACD_bullish",
+      "strength": "moderate",
+      "note": "MACD line above signal line with positive histogram"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "recent_pullback",
+      "note": "Down -1.4% today from 156.94 high, testing 38.2% Fibonacci support"
+    },
+    {
+      "signal": "volume_below_average",
+      "note": "Volume at 0.93x 20-day average - lacking conviction on recent moves"
+    },
+    {
+      "signal": "weak_trend_strength",
+      "note": "ADX at 24.8 indicates weak trend - vulnerable to choppy action"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "wait_for_confirmation",
+  "timing_rationale": "While trend structure remains bullish with golden cross intact, today's -1.4% pullback on below-average volume suggests profit-taking. Better entry opportunity may emerge at 50% Fibonacci retracement ($149.31) or on volume confirmation above $156.90 resistance. Current level at 38.2% Fibonacci support ($152.71) makes this a reasonable but not optimal entry."
+}

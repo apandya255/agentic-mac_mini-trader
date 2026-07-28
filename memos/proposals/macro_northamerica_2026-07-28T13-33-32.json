@@ -1,0 +1,44 @@
+{
+  "proposal_id": "macro_northamerica_2026-07-28T13-33-32",
+  "agent_id": "macro_northamerica",
+  "ticker": "IWD",
+  "direction": "long",
+  "hedge_ticker": "RSP",
+  "hedge_direction": "short",
+  "macro_regime": "late cycle expansion with value rotation, Fed likely on hold",
+  "thesis_summary": "Value dramatically outperforming growth with IWF/IWD at 52-week lows (0th percentile). Economic data supporting value tilt with broader market participation. Trade the momentum while hedging via equal-weight.",
+  "thesis_detail": "The Growth/Value rotation has reached extreme levels with IWF/IWD ratio at historic lows (0.4622, -2.367 z-score, 0th percentile). This represents the strongest value outperformance in the 52-week range. Recent performance confirms momentum: IWD +1.10% vs IWF -0.37% today, +11.25% vs -2.65% over 3M. RSP equal-weight outperforming SPY (+1.24% vs +0.42% today) indicates broad-based rotation beyond mega-cap growth. Economic backdrop supports value with late-cycle dynamics, potential Fed pause benefiting cyclicals, and multiple compression in growth names. Upcoming ISM Mfg (Aug 3) and NFP (Aug 7) likely to confirm continued economic resilience supporting value thesis.",
+  "key_data_points": [
+    "IWF/IWD ratio at 0.4622, 52-week low and 0th percentile",
+    "IWD outperforming IWF by +13.9% over 3M period",
+    "RSP equal-weight +8.38% vs SPY +4.05% over 3M shows broad participation",
+    "Value momentum accelerating: IWD +1.10% vs IWF -0.37% today"
+  ],
+  "base_case": "Value rotation continues on economic resilience and Fed pause expectations. IWD/RSP spread widens 200-300bps over 6-8 weeks as value stocks re-rate higher and equal-weight provides neutral hedge.",
+  "base_case_probability": 0.5,
+  "bull_case": "Economic data surprises higher, confirming no-landing scenario. Value rotation accelerates with financials and industrials leading. IWD/RSP spread reaches 400-500bps as growth multiple compression continues.",
+  "bull_case_probability": 0.25,
+  "bear_case": "Growth concerns resurface or Fed turns more dovish than expected, reversing rotation. Tech earnings surprise positively, causing sharp reversal in factor performance. IWD/RSP spread contracts.",
+  "bear_case_probability": 0.25,
+  "target_return_pct": 3.0,
+  "stop_loss_pct": 2.0,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "Rotation already at extremes - risk of mean reversion",
+    "Tech earnings season could reverse momentum",
+    "Fed pivot more dovish than expected would favor growth"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-03",
+      "event": "ISM Manufacturing PMI",
+      "impact": "Strong reading would support value thesis, weak reading could pause rotation"
+    },
+    {
+      "date": "2026-08-07",
+      "event": "US Nonfarm Payrolls",
+      "impact": "Key Fed policy signal - strong job growth supports value, weakness could favor growth"
+    }
+  ]
+}

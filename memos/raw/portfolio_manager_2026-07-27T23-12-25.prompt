@@ -1,0 +1,373 @@
+SYSTEM INSTRUCTIONS (read from portfolio_manager.md):
+# Portfolio Manager
+
+## Identity
+
+You are the Portfolio Manager at an elite macro hedge fund. You are the final decision-maker — you receive risk-approved proposals and determine whether a trade enters the book, at what size, and with what parameters. You synthesize fundamental, macro, technical, and risk inputs into a cohesive portfolio.
+
+## Mandate
+
+Your job is to construct and manage a portfolio that targets 12–15% annualized returns with ≤6% downside volatility. You decide:
+1. Whether to execute a risk-approved trade (yes/no)
+2. Position sizing within risk-approved limits
+3. Entry approach (market, limit, scale-in)
+4. Final stop-loss and take-profit calibration
+5. How the trade fits the overall book narrative
+
+You are judged on:
+- Portfolio return vs. target (12–15%)
+- Drawdown management (max 6% from peak)
+- Sharpe ratio (target ≥2.0)
+- Decision quality (did your sizing and timing add value vs. uniform allocation?)
+
+## Decision Framework
+
+### Minimum Thresholds
+- Post-debate conviction must be ≥ 6 to consider
+- Technical score must be ≥ 5 to proceed
+- Risk must have approved (possibly with modifications)
+
+### Sizing Model
+| Conviction | Standard Size | Notes |
+|-----------|--------------|-------|
+| 6 | 2% NAV | Minimum viable |
+| 7 | 3% NAV | |
+| 8 | 4% NAV | |
+| 9 | 5% NAV | |
+| 10 | 5% NAV | Very rare |
+| HC (8+) | 8% NAV | Max 2 slots, must out-hit standard book or self-revokes |
+
+Adjustments:
+- Technical score < 6: reduce by 30%
+- Technical score > 8: increase by 20%
+- Circuit breaker in warning: apply 0.8x multiplier
+- Position correlated > 0.5 with existing: reduce by 20% per correlated position
+
+### Portfolio Construction Rules
+- Max 3 new positions per day
+- Review existing positions before adding new ones
+- Weekly full book review (are any theses stale?)
+- Maximum book: 8–12 positions at any time in the POC
+
+### Exit Framework
+- **Trailing stop hit:** Immediate exit. No exceptions, no "let me hold a little longer."
+- **+5% from entry:** Take profit is the DEFAULT. Extending requires the originator to re-affirm with a documented flip-condition (what would make you exit if it doesn't keep going).
+- **Thesis invalidated:** Exit regardless of P&L. If the fundamental/macro reason is gone, the position is gone.
+- **60 days without catalyst:** Forced reassessment. If nothing has changed, exit.
+- **Better opportunity:** May exit lower-conviction position to fund higher (capital rotation).
+
+## Tools Available
+
+```
+python -m data_platform.cli sizing compute --conviction <N>
+python -m data_platform.cli sizing compute --conviction <N> --high-conviction
+python -m data_platform.cli sizing table
+python -m data_platform.cli risk circuit-breaker --nav <NAV>
+python -m data_platform.cli carry cash --cash-pct <P>
+python -m data_platform.cli carry position-cost --direction <D> --notional <N>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge <H>
+```
+
+## Input
+
+You read from:
+- `memos/proposals/` — the surviving trade proposals (post-debate)
+- `memos/scores/` — technical scores for each proposal
+- `memos/risk/` — risk decisions (approved/modified/rejected)
+- `memos/state/book.json` — current portfolio state
+
+## Output Format
+
+Write your output as a JSON file:
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "Why this trade fits the book. How it interacts with existing positions. Why now.",
+  "ticker": "XOM",
+  "direction": "long",
+  "size_pct_nav": 0.04,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review, take is default",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.04,
+  "portfolio_thesis": "Adding energy single-name alpha on top of existing sector view. Low correlation to current book. Catalyst within 4 weeks.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-10",
+  "priority": "normal"
+}
+```
+
+For a pass (no execution):
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "execute": false,
+  "pm_rationale": "Technical setup is weak (score 5) and we already have sector exposure via XLE position. Adding single-name doesn't improve the book risk/reward."
+}
+```
+
+## Constraints
+
+- You can ONLY execute risk-approved proposals (you cannot override a risk rejection)
+- If risk approved with modifications (e.g., max size 2%), you must respect that limit
+- You read the full pipeline output before deciding — don't ignore the debate or technical score
+- You manage the book as a whole — every position should have a role in the portfolio narrative
+- Cash is a position. If nothing looks good, stay in cash. Cash earns SOFR.
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-trade (adding positions because "something should always be on")
+- Tendency to hold losers too long ("it'll come back")
+- Tendency to size winners too small and losers too large (disposition effect)
+- Discipline: let the rules work. Trailing stop hit = exit. +5% = take. No exceptions without documented re-affirmed flip-condition.
+
+
+---
+TASK:
+Decide whether to execute this risk-approved trade.
+
+PROPOSAL (post-debate, conviction = 8):
+{
+  "proposal_id": "fund_energy_2026-07-27T22-37-12",
+  "agent_id": "fund_energy",
+  "ticker": "XOM",
+  "direction": "long",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "thesis_summary": "XOM trading at discount to peers after recent pullback (-1.4% today). 1Y return +44% but 1M +12.5% shows momentum still intact. Technical score 8/10 bullish with golden cross confirmed. Capital return yield ~7% (buyback + div) vs peer avg 5.5%.",
+  "thesis_detail": "XOM at $154.77 trades at ~10.5x forward EV/EBITDA vs integrated peer median of 12.2x and own 5-year avg of 11.8x. The discount reflects market concern about peak oil cycle, but Permian breakevens at $38/bbl provide significant downside protection even in a $65 WTI scenario. Capital allocation has improved meaningfully \u2014 buyback yield 4.2% + dividend yield 3.1% = 7.3% total shareholder return. Catalyst: Q3 earnings in 4 weeks likely to show Permian volume growth ahead of street estimates (our model: +8% vs consensus +5%). Refining segment also benefiting from tight product markets.",
+  "variant_perception": "Street underestimates Permian growth rate. Our 8% growth vs consensus 5% implies .2B incremental FCF not in estimates. At 6x FCF multiple, thats .2B upside to EV = ~3% of current market cap, concentrated in one quarter.",
+  "catalyst": "Q3 earnings report \u2014 Permian volumes + buyback acceleration announcement",
+  "catalyst_timeline": "4 weeks",
+  "current_price": 154.77000427246094,
+  "target_price": 162.51,
+  "conviction": 8,
+  "key_risks": [
+    "Oil price below $70 compresses margins",
+    "Permian execution risk on well productivity",
+    "Broader market sell-off drags energy"
+  ],
+  "sector_view": "bullish",
+  "relevant_peers": [
+    "CVX",
+    "COP",
+    "EOG"
+  ],
+  "final_conviction": 8,
+  "risk_decision": {
+    "proposal_id": "risk_fund_energy_2026-07-27T22-37-12",
+    "agent_id": "risk_management",
+    "decision": "approved",
+    "rationale": "All checks pass. Empty book \u2014 no factor beta concerns, no correlation issues, no concentration risk. Circuit breaker: normal. Hedge (RSPG) correctly resolves for energy single-name long. Size 4% NAV within limits for conviction 8.",
+    "position_size_ok": true,
+    "hedge_present_and_valid": true,
+    "sector_concentration_ok": true,
+    "correlation_to_existing": 0.0,
+    "projected_factor_betas": {
+      "DXY": -0.02,
+      "SPX": 0.03,
+      "USGG10Yr": -0.01,
+      "VIX": -0.04,
+      "CL1": 0.08,
+      "Growth_Value": -0.01,
+      "Large_Small": 0.01,
+      "CDX_HY_5Y": -0.02,
+      "XAU": 0.01
+    },
+    "factor_breach": false,
+    "projected_gross_leverage": 0.08,
+    "max_allowed_size_pct": 0.04,
+    "risk_warnings": [
+      "CL1 beta will increase \u2014 monitor if adding more energy exposure"
+    ]
+  }
+}
+
+TECHNICAL SCORE:
+{
+  "proposal_id": "tech_fund_energy_2026-07-27T22-37-12",
+  "agent_id": "tech_equity",
+  "technical_score": 7,
+  "trend_alignment": "aligned",
+  "momentum_regime": "moderate_trend_with_pullback",
+  "support_levels": [
+    145.92,
+    149.31,
+    152.71
+  ],
+  "resistance_levels": [
+    156.9,
+    159.19,
+    163.68
+  ],
+  "fibonacci_levels": {
+    "38.2%": 152.71,
+    "50%": 149.31,
+    "61.8%": 145.92,
+    "127.2%": 171.49,
+    "161.8%": 181.44
+  },
+  "suggested_entry": 154.5,
+  "suggested_stop_loss": 148.0,
+  "suggested_take_profit": 162.5,
+  "trailing_stop_method": "ATR-based 2x (currently $3.43 ATR = trail at $6.86 below entry)",
+  "active_signals": [
+    {
+      "signal": "golden_cross",
+      "strength": "strong",
+      "note": "50-day SMA above 200-day SMA - bullish structure intact"
+    },
+    {
+      "signal": "price_above_key_MAs",
+      "strength": "moderate",
+      "note": "Trading above 20/50/200 SMAs but pulled back from recent highs"
+    },
+    {
+      "signal": "RSI_neutral",
+      "strength": "moderate",
+      "note": "RSI at 66.2 - not overbought, room to move higher"
+    },
+    {
+      "signal": "MACD_bullish",
+      "strength": "moderate",
+      "note": "MACD line above signal line with positive histogram"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "recent_pullback",
+      "note": "Down -1.4% today from 156.94 high, testing 38.2% Fibonacci support"
+    },
+    {
+      "signal": "volume_below_average",
+      "note": "Volume at 0.93x 20-day average - lacking conviction on recent moves"
+    },
+    {
+      "signal": "weak_trend_strength",
+      "note": "ADX at 24.8 indicates weak trend - vulnerable to choppy action"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "wait_for_confirmation",
+  "timing_rationale": "While trend structure remains bullish with golden cross intact, today's -1.4% pullback on below-average volume suggests profit-taking. Better entry opportunity may emerge at 50% Fibonacci retracement ($149.31) or on volume confirmation above $156.90 resistance. Current level at 38.2% Fibonacci support ($152.71) makes this a reasonable but not optimal entry."
+}
+
+RISK DECISION:
+{
+  "proposal_id": "risk_fund_energy_2026-07-27T22-37-12",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "All checks pass. Empty book \u2014 no factor beta concerns, no correlation issues, no concentration risk. Circuit breaker: normal. Hedge (RSPG) correctly resolves for energy single-name long. Size 4% NAV within limits for conviction 8.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_factor_betas": {
+    "DXY": -0.02,
+    "SPX": 0.03,
+    "USGG10Yr": -0.01,
+    "VIX": -0.04,
+    "CL1": 0.08,
+    "Growth_Value": -0.01,
+    "Large_Small": 0.01,
+    "CDX_HY_5Y": -0.02,
+    "XAU": 0.01
+  },
+  "factor_breach": false,
+  "projected_gross_leverage": 0.08,
+  "max_allowed_size_pct": 0.04,
+  "risk_warnings": [
+    "CL1 beta will increase \u2014 monitor if adding more energy exposure"
+  ]
+}
+
+CURRENT BOOK STATE:
+{
+  "nav": 10000000,
+  "initial_nav": 10000000,
+  "cash_pct": 0.8400000000000001,
+  "positions": [
+    {
+      "ticker": "XOM",
+      "direction": "long",
+      "hedge_ticker": "RSPG",
+      "hedge_direction": "short",
+      "entry_price": 154.77000427246094,
+      "hedge_entry_price": 104.66000366210938,
+      "size_pct_nav": 0.04,
+      "conviction": 8,
+      "pair_ratio": 1.4788,
+      "entry_date": "2026-07-27",
+      "status": "active",
+      "proposal_id": "fund_energy_2026-07-27T22-37-12"
+    },
+    {
+      "ticker": "XOM",
+      "direction": "long",
+      "hedge_ticker": "RSPG",
+      "hedge_direction": "short",
+      "size_pct_nav": 0.04,
+      "conviction": 8,
+      "entry_date": "2026-07-27",
+      "status": "active",
+      "proposal_id": "fund_energy_2026-07-27T22-37-12"
+    }
+  ],
+  "trade_journal": [
+    {
+      "action": "open",
+      "ticker": "XOM",
+      "direction": "long",
+      "hedge": "RSPG",
+      "size_pct": 0.04,
+      "entry_price": 154.77000427246094,
+      "conviction": 8,
+      "timestamp": "2026-07-27T22:37:12.412027"
+    },
+    {
+      "action": "open",
+      "order": {
+        "order_id": "order_fund_energy_2026-07-27T22-37-12",
+        "proposal_id": "fund_energy_2026-07-27T22-37-12",
+        "agent_id": "portfolio_manager",
+        "execute": true,
+        "pm_rationale": "Strong setup: conviction 8/10 held through debate (macro supported), technical score 8/10 bullish, risk approved at full size. Empty book \u2014 this is the inaugural trade. XOM offers best risk/reward in the sector (cheapest integrated on EV/EBITDA with strongest capital return). Catalyst in 4 weeks provides natural timeline. Trailing stop at 2.5% locks in gains if it runs.",
+        "ticker": "XOM",
+        "direction": "long",
+        "size_pct_nav": 0.04,
+        "entry_approach": "market",
+        "stop_loss_method": "trailing 2.5% from peak",
+        "take_profit": "5% triggers review (take is default)",
+        "hedge_ticker": "RSPG",
+        "hedge_direction": "short",
+        "hedge_size_pct_nav": 0.04,
+        "portfolio_thesis": "Inaugural position. Single-name energy alpha hedged with EW sector ETF. Low correlation to empty book. Catalyst-driven with defined 4-week timeline.",
+        "expected_holding_period": "4-8 weeks",
+        "review_date": "2026-08-10",
+        "priority": "normal",
+        "conviction": 8
+      },
+      "timestamp": "2026-07-27T23:01:34.744600"
+    }
+  ]
+}
+
+Instructions:
+1. Decide: execute or pass?
+2. If execute: size the position using your conviction-based model.
+3. Set entry approach, trailing stop method, and review date.
+4. Consider how this fits the overall book (portfolio construction).
+5. Output your TradeOrder JSON per your mandate format.
+6. Write to: /Users/akashpandya/AgenticTradingResearch/memos/orders/order_fund_energy_2026-07-27T22-37-12_2026-07-27T23-12-25.json
+
+---
+IMPORTANT: Write your JSON output to the file: /Users/akashpandya/AgenticTradingResearch/memos/raw/portfolio_manager_2026-07-27T23-12-25.json
+Use the exec tool to run: cat > /Users/akashpandya/AgenticTradingResearch/memos/raw/portfolio_manager_2026-07-27T23-12-25.json << 'JSONEOF'
+<your JSON here>
+JSONEOF

@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI Trading System — Meeting Preparation</title>
+    <style>
+        :root {
+            --navy: #0a1628;
+            --navy-light: #1a2a4a;
+            --navy-mid: #0f1f3d;
+            --gold: #c9a84c;
+            --gold-light: #e2c97e;
+            --gold-dim: #8a7033;
+            --white: #f4f4f4;
+            --gray: #b0b8c4;
+            --gray-dark: #6b7a8d;
+            --green: #4caf7c;
+            --red: #cf6679;
+            --blue-accent: #5b8def;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--navy);
+            color: var(--white);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--navy-mid);
+            border-right: 1px solid rgba(201, 168, 76, 0.2);
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-title {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            font-style: italic;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav a {
+            display: block;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 0.35rem 0;
+            transition: color 0.2s;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .nav a:hover {
+            color: var(--gold-light);
+        }
+
+        .nav a.active {
+            color: var(--gold);
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 260px;
+            padding: 3rem 4rem;
+            max-width: 1000px;
+        }
+
+        /* Cover Section */
+        .cover {
+            text-align: center;
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+            margin-bottom: 3rem;
+        }
+
+        .cover-label {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .cover h1 {
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .cover-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+
+        .cover-meta {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12px;
+            color: var(--gray-dark);
+            letter-spacing: 1px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 4rem;
+            padding-top: 2rem;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        .section-number {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.3px;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--gray);
+        }
+
+        strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        em {
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 13.5px;
+        }
+
+        thead {
+            border-bottom: 2px solid var(--gold-dim);
+        }
+
+        th {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            text-align: left;
+            padding: 0.8rem 1rem;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 0.7rem 1rem;
+            color: var(--gray);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr:hover td {
+            background: rgba(201, 168, 76, 0.03);
+        }
+
+        /* Code / Pipeline blocks */
+        .pipeline {
+            background: rgba(10, 22, 40, 0.8);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            border-radius: 4px;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--gray);
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .pipeline .highlight {
+            color: var(--gold);
+        }
+
+        /* Blockquotes (for debate/responses) */
+        blockquote {
+            border-left: 3px solid var(--gold-dim);
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            background: rgba(201, 168, 76, 0.03);
+            border-radius: 0 4px 4px 0;
+        }
+
+        blockquote p {
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1rem 1.5rem;
+            color: var(--gray);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            padding-left: 0.3rem;
+        }
+
+        /* Trade Order Box */
+        .trade-order {
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.95), rgba(26, 42, 74, 0.8));
+            border: 1px solid var(--gold);
+            border-radius: 6px;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .trade-order .order-header {
+            text-align: center;
+            color: var(--gold);
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+        }
+
+        .trade-order .order-section {
+            margin-bottom: 1rem;
+        }
+
+        .trade-order .order-label {
+            color: var(--gold-dim);
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .trade-order .order-value {
+            color: var(--white);
+        }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: rgba(76, 175, 124, 0.15);
+            color: var(--green);
+            border: 1px solid rgba(76, 175, 124, 0.3);
+        }
+
+        .badge-gold {
+            background: rgba(201, 168, 76, 0.15);
+            color: var(--gold);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+        }
+
+        .badge-red {
+            background: rgba(207, 102, 121, 0.15);
+            color: var(--red);
+            border: 1px solid rgba(207, 102, 121, 0.3);
+        }
+
+        /* Q&A styling */
+        .qa-question {
+            font-size: 1.05rem;
+            color: var(--white);
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            font-style: italic;
+        }
+
+        .qa-answer {
+            padding-left: 1.2rem;
+            border-left: 2px solid rgba(201, 168, 76, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .qa-answer p {
+            font-size: 14px;
+        }
+
+        /* Key metrics row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: rgba(201, 168, 76, 0.05);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            border-radius: 4px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+            font-weight: 300;
+        }
+
+        .metric-label {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gray-dark);
+            margin-top: 0.3rem;
+        }
+
+        /* Discussion items */
+        .discussion-item {
+            background: rgba(91, 141, 239, 0.05);
+            border: 1px solid rgba(91, 141, 239, 0.15);
+            border-radius: 4px;
+            padding: 1rem 1.5rem;
+            margin: 0.8rem 0;
+        }
+
+        .discussion-item p {
+            color: var(--gray);
+            font-size: 13.5px;
+            margin-bottom: 0;
+        }
+
+        /* Page break for printing */
+        @media print {
+            .nav { display: none; }
+            .main { margin-left: 0; }
+            .section { page-break-before: always; }
+            body { background: white; color: #1a1a1a; }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--navy);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--navy-light);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-dim);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .nav { display: none; }
+            .main { margin-left: 0; padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">Agentic Trading</div>
+        <div class="nav-title">Meeting Preparation</div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Section I</div>
+            <a href="#executive-brief">Executive Brief</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Section II</div>
+            <a href="#worked-example">Worked Example</a>
+            <a href="#stage-1">Idea Generation</a>
+            <a href="#stage-2">Debate</a>
+            <a href="#stage-3">Technical Scoring</a>
+            <a href="#stage-4">Risk Gate</a>
+            <a href="#stage-5">PM Decision</a>
+            <a href="#stage-6">Delivery & Outcome</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Section III</div>
+            <a href="#risk-discussion">Risk Parameters</a>
+            <a href="#factor-betas">Factor Beta Limits</a>
+            <a href="#position-risk">Position-Level Risk</a>
+            <a href="#leverage">Leverage Framework</a>
+            <a href="#drawdown">Drawdown Management</a>
+            <a href="#hedging">Hedging Parameters</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Section IV</div>
+            <a href="#qa">Anticipated Q&A</a>
+            <a href="#qa-basics">The Basics</a>
+            <a href="#qa-edge">The Edge</a>
+            <a href="#qa-skepticism">Skepticism</a>
+            <a href="#qa-logistics">Logistics</a>
+            <a href="#qa-closing">Closing</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Cover -->
+        <div class="cover">
+            <div class="cover-label">Confidential Preparation Materials</div>
+            <h1>Agentic AI Trading System</h1>
+            <div class="cover-subtitle">Partner Meeting Preparation Pack</div>
+            <div class="cover-meta">July 2026 &nbsp;&middot;&nbsp; Internal Use Only</div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION I: EXECUTIVE BRIEF                   -->
+        <!-- ============================================ -->
+        <div class="section" id="executive-brief">
+            <div class="section-divider"></div>
+            <div class="section-number">Section I</div>
+            <h2>Executive Brief</h2>
+
+            <h3>What It Is</h3>
+            <p>A multi-agent AI system that continuously screens ~500 equities, 11 sector ETFs, 20 country ETFs, and key commodities to generate hedged long/short trade recommendations. Twenty-one specialized agents &mdash; fundamental analysts, macro strategists, technical traders, a risk manager, and a portfolio manager &mdash; operate within a structured debate and approval pipeline. Every output is advisory; a human makes the final execution decision.</p>
+
+            <h3>How It Works</h3>
+            <div class="pipeline">Fundamental &amp; Macro agents screen universe continuously
+        <span class="highlight">&darr;</span>
+Agent identifies opportunity &rarr; publishes thesis with conviction score
+        <span class="highlight">&darr;</span>
+Other agents debate (adversarial, evidence-based, 2-3 rounds)
+        <span class="highlight">&darr;</span>
+Technical agent scores the setup (entry, stops, levels)
+        <span class="highlight">&darr;</span>
+Risk agent gates: factor betas, concentration, drawdown budget
+        <span class="highlight">&darr;</span>
+PM agent sizes, sets parameters, delivers recommendation
+        <span class="highlight">&darr;</span>
+Human reviews and executes discretionarily</div>
+
+            <h3>Why Build It</h3>
+            <table>
+                <thead>
+                    <tr><th>Problem</th><th>Solution</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Attention budget &mdash; can't screen 500 names daily</td><td>21 agents running continuously, never fatigued</td></tr>
+                    <tr><td>Style drift under pressure</td><td>Risk rules enforced structurally, not behaviorally</td></tr>
+                    <tr><td>Missed overnight catalysts</td><td>Agents process events as they happen, propose by morning</td></tr>
+                    <tr><td>Cognitive biases (anchoring, loss aversion)</td><td>Agents debate adversarially, forced to cite evidence</td></tr>
+                    <tr><td>Single-analyst blind spots</td><td>Cross-agent debate surfaces variant views</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Key Design Principles</h3>
+            <ol>
+                <li><strong>Every bet is hedged</strong> &mdash; single names vs. equal-weight sector ETF, sector ETFs vs. RSP, country ETFs vs. DM/EM broad index</li>
+                <li><strong>Factor-neutral discipline</strong> &mdash; book never exceeds &plusmn;0.6 beta to DXY, SPX, rates, VIX, oil, credit, gold, growth/value, large/small</li>
+                <li><strong>Dynamic leverage</strong> &mdash; scales with P&amp;L and correlation regime (higher when winning + uncorrelated)</li>
+                <li><strong>Advisory only</strong> &mdash; no auto-execution, preserves discretionary overlay</li>
+                <li><strong>Audit trail</strong> &mdash; every thesis, debate, score, and decision is logged and reviewable</li>
+            </ol>
+
+            <h3>Performance Targets &amp; Risk Envelope</h3>
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-value">12&ndash;15%+</div>
+                    <div class="metric-label">Annualized Return</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&le;6%</div>
+                    <div class="metric-label">Downside Vol</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">2&ndash;3%</div>
+                    <div class="metric-label">Position Stop</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">5%</div>
+                    <div class="metric-label">Position Target</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&plusmn;0.6</div>
+                    <div class="metric-label">Max Factor Beta</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&ge;2.0</div>
+                    <div class="metric-label">Implied Sharpe</div>
+                </div>
+            </div>
+
+            <h3>Agent Composition</h3>
+            <ul>
+                <li><strong>11 Fundamental agents</strong> &mdash; one per GICS sector, bottom-up L/S equity analysis</li>
+                <li><strong>6 Macro agents</strong> &mdash; LatAm, CEEMEA, Asia, North America, Western Europe, Commodities</li>
+                <li><strong>2 Technical agents</strong> &mdash; equity/ETF technicals + commodity-specific</li>
+                <li><strong>1 Risk Management agent</strong> &mdash; factor betas, correlation, drawdown, leverage</li>
+                <li><strong>1 Portfolio Management agent</strong> &mdash; final sizing, entry, stops, book construction</li>
+            </ul>
+
+            <h3>Cost &amp; Infrastructure</h3>
+            <table>
+                <thead>
+                    <tr><th>Item</th><th>Estimate</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Monthly run cost</td><td>~$750 (LLM APIs + data feeds)</td></tr>
+                    <tr><td>Hardware</td><td>Personal server (Mac Studio or equivalent)</td></tr>
+                    <tr><td>Access</td><td>Tailscale VPN &mdash; secure read-only from any device</td></tr>
+                    <tr><td>Development timeline</td><td>~30 weeks to full production (POC in 4-6 weeks)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>What We Need to Decide</h3>
+            <ol>
+                <li>Risk parameters &mdash; are &plusmn;0.6 factor limits and 6% downside vol correct for this strategy?</li>
+                <li>Leverage operating range &mdash; what's the real comfort zone?</li>
+                <li>Data priority &mdash; which feeds matter most early on?</li>
+                <li>Interaction preference &mdash; email digest? Dashboard? Both?</li>
+                <li>Hedge instrument preferences &mdash; any overrides to the default mapping?</li>
+            </ol>
+
+            <p><em>This system augments discretionary judgment with structured, tireless research. It doesn't replace the PM &mdash; it gives the PM better raw material, faster.</em></p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION II: WORKED EXAMPLE                   -->
+        <!-- ============================================ -->
+        <div class="section" id="worked-example">
+            <div class="section-divider"></div>
+            <div class="section-number">Section II</div>
+            <h2>Worked Example: End-to-End Trade Pipeline</h2>
+            <p><em>This walkthrough shows exactly how a single trade idea moves from inception to recommendation delivery, with realistic (illustrative) data.</em></p>
+
+            <h3>The Setup</h3>
+            <p><strong>Date:</strong> Tuesday morning, 6:30 AM ET</p>
+            <p><strong>Context:</strong> OPEC+ announced an unexpected 500k bbl/d production cut overnight. WTI crude jumps 4% in Asian trading.</p>
+
+            <!-- Stage 1 -->
+            <h3 id="stage-1">Stage 1: Idea Generation</h3>
+            <h4>Agent: <code>macro_commodities</code></h4>
+            <p>The Commodities macro agent processes the overnight news during its 6:30 AM cycle. It updates its beliefs:</p>
+            <blockquote>
+                <p><strong>Belief update:</strong> OPEC+ supply discipline stronger than consensus expected. With China PMIs stabilizing and US SPR still depleted, S/D balance tightening faster than market is pricing. Brent forward curve was in mild contango &mdash; expect shift toward backwardation.</p>
+            </blockquote>
+
+            <p><strong>Proposal published:</strong></p>
+            <table>
+                <thead><tr><th>Field</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>Ticker</td><td>XLE (Energy Select Sector ETF)</td></tr>
+                    <tr><td>Direction</td><td><span class="badge badge-green">LONG</span></td></tr>
+                    <tr><td>Hedge</td><td><span class="badge badge-red">SHORT</span> RSP (equal-weight S&amp;P 500)</td></tr>
+                    <tr><td>Thesis</td><td>OPEC+ cut tightens S/D into a market already underestimating demand recovery. Energy equities under-owned after 6-month rotation into tech. XLE at 10.5x fwd P/E vs. 5-yr avg of 12.8x.</td></tr>
+                    <tr><td>Conviction</td><td><strong>8/10</strong></td></tr>
+                    <tr><td>Target</td><td>+5% (sector re-rate as oil stabilizes above $85)</td></tr>
+                    <tr><td>Stop</td><td>-2.5%</td></tr>
+                    <tr><td>Time horizon</td><td>4&ndash;8 weeks</td></tr>
+                </tbody>
+            </table>
+
+            <!-- Stage 2 -->
+            <h3 id="stage-2">Stage 2: Debate</h3>
+            <h4>Round 1 &mdash; Challenges</h4>
+
+            <p><strong><code>fund_energy</code></strong> (Energy Fundamental Agent): <span class="badge badge-green">SUPPORT</span></p>
+            <blockquote>
+                <p>Agree with the setup. My bottom-up work confirms energy names are cheap. XOM at 11.2x, CVX at 10.8x, both below 5-year averages despite improved capital discipline. Shareholder return yields (buyback + dividend) averaging 7.2% across the top 5 names. Sector positioning per 13F data is 2 standard deviations below 3-year average.</p>
+                <p><em>Would add: Consider expressing via single-name (XOM) for more alpha, but XLE works for speed.</em></p>
+            </blockquote>
+
+            <p><strong><code>macro_north_america</code></strong> (North America Macro Agent): <span class="badge badge-red">CHALLENGE</span></p>
+            <blockquote>
+                <p>Concern: if oil spikes too far too fast ($90+), the Fed hawkishness narrative returns. DXY strengthens, real rates re-price higher, and energy equities sell off <em>despite</em> the commodity rallying. We saw this dynamic in Q3 2023. Additionally, US gasoline demand is seasonally peaking &mdash; watch for demand disappointment post-summer.</p>
+                <p><em>Revised conviction if I were proposing: 6/10. The asymmetry isn't as clean as it looks.</em></p>
+            </blockquote>
+
+            <p><strong><code>fund_technology</code></strong> (Technology Fundamental Agent): <span class="badge badge-gold">NEUTRAL</span></p>
+            <blockquote>
+                <p>No direct view on energy fundamentals, but flagging that if this trade works, it may correlate with a risk-on rotation out of tech. Our current book has a long MSFT position. Factor correlation between XLE long and MSFT long is -0.3 &mdash; actually diversifying. No objection.</p>
+            </blockquote>
+
+            <h4>Round 2 &mdash; Originator Response</h4>
+            <p><strong><code>macro_commodities</code></strong> responds to <code>macro_north_america</code>:</p>
+            <blockquote>
+                <p>Acknowledge the Fed risk but disagree it's the base case here. The cut is 500k bbl/d, not 2M &mdash; this takes oil to $82-87, not $95. That's the sweet spot for energy equities (high enough for margins, not high enough to trigger macro blowback). On seasonality: yes, gasoline peaks, but distillate demand is the swing factor into Q4, and inventories are at 5-year lows.</p>
+                <p><strong>Conviction holds at 8/10.</strong> The macro_north_america challenge is the tail risk, not the base case.</p>
+            </blockquote>
+
+            <h4>Round 3 &mdash; Final Assessment</h4>
+            <p><strong><code>macro_north_america</code></strong>:</p>
+            <blockquote>
+                <p>Fair point on magnitude. $82-87 is not the danger zone. Withdrawing the challenge &mdash; I'd move to <strong>neutral/mild support</strong> at this level. If oil breaks above $90 before the position target is hit, that's when I'd flag for review.</p>
+            </blockquote>
+            <p><strong>Debate outcome:</strong> Conviction 8/10, no withdrawal. <span class="badge badge-green">PROCEED</span></p>
+
+            <!-- Stage 3 -->
+            <h3 id="stage-3">Stage 3: Technical Scoring</h3>
+            <h4>Agent: <code>tech_equity</code></h4>
+            <table>
+                <thead><tr><th>Signal</th><th>Assessment</th></tr></thead>
+                <tbody>
+                    <tr><td>Technical Score</td><td><strong>7/10</strong></td></tr>
+                    <tr><td>Trend</td><td>XLE above rising 50-day MA ($88.42), above 200-day ($85.10). Aligned.</td></tr>
+                    <tr><td>Momentum</td><td>RSI at 58 &mdash; not overbought. MACD just crossed bullish.</td></tr>
+                    <tr><td>Volume</td><td>Pre-market volume 2.3x average &mdash; institutional interest confirmed.</td></tr>
+                    <tr><td>Key Support</td><td>$87.50 (50d MA) &rarr; $85.00 (200d MA) &rarr; $83.20 (March low)</td></tr>
+                    <tr><td>Key Resistance</td><td>$93.80 (Jan high) &rarr; $96.00 (2024 high)</td></tr>
+                    <tr><td>Fibonacci</td><td>61.8% retracement of Jan-to-March decline at $92.40</td></tr>
+                    <tr><td>CTA Context</td><td>Systematics currently short &mdash; break above $91 triggers est. $2-3B buy programs</td></tr>
+                    <tr><td>Options</td><td>P/C ratio dropped from 1.4 to 0.8. IV at 22% vs. 18% realized.</td></tr>
+                </tbody>
+            </table>
+            <p><strong>Suggested levels:</strong> Entry $89.50 | Stop $86.80 (-3%) | Target $94.00 (+5%) | Trail: 2x ATR</p>
+            <p><strong>Timing:</strong> Now. Volume confirmation + catalyst + trend alignment = don't wait.</p>
+
+            <!-- Stage 4 -->
+            <h3 id="stage-4">Stage 4: Risk Gate</h3>
+            <h4>Agent: <code>risk_management</code></h4>
+            <p><strong>Pre-trade book state:</strong> NAV $10M | Gross 1.4x | Net +0.15 | 8 positions active</p>
+
+            <p><strong>Projected factor beta impact (Long XLE / Short RSP at 2% NAV):</strong></p>
+            <table>
+                <thead><tr><th>Factor</th><th>Current</th><th>Projected</th><th>Limit</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td>DXY</td><td>-0.12</td><td>-0.10</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                    <tr><td>SPX</td><td>+0.18</td><td>+0.16</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                    <tr><td>USGG10Yr</td><td>-0.05</td><td>-0.04</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                    <tr><td>VIX</td><td>-0.22</td><td>-0.24</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                    <tr><td>CL1</td><td>+0.08</td><td>+0.19</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                    <tr><td>Growth/Value</td><td>+0.05</td><td>-0.02</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                    <tr><td>Large/Small</td><td>+0.03</td><td>+0.02</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                    <tr><td>CDX HY 5Y</td><td>-0.08</td><td>-0.06</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                    <tr><td>XAU</td><td>+0.10</td><td>+0.12</td><td>&plusmn;0.6</td><td><span class="badge badge-green">OK</span></td></tr>
+                </tbody>
+            </table>
+            <p><strong>Additional checks:</strong> Gross leverage 1.44x &#10003; | Max correlation 0.35 &#10003; | Sector concentration 2% &#10003; | Stop 3.0% &#10003;</p>
+            <p><strong>Risk Decision:</strong> <span class="badge badge-green">APPROVED</span> &mdash; No modifications required. CL1 beta at +0.19 comfortable; monitoring if oil spikes.</p>
+
+            <!-- Stage 5 -->
+            <h3 id="stage-5">Stage 5: PM Decision</h3>
+            <h4>Agent: <code>portfolio_management</code></h4>
+            <p><strong>Synthesis:</strong> Conviction 8/10 (held) | Technical 7/10 (aligned) | Risk approved | Correlation low | Regime favorable</p>
+            <p><strong>Sizing:</strong> Base 2.0% &times; conviction 1.0x &times; technical 1.0x &times; no correlation penalty = <strong>2.0% NAV ($200K per leg)</strong></p>
+
+            <div class="trade-order">
+                <div class="order-header">TRADE RECOMMENDATION</div>
+                <div class="order-section">
+                    <span class="order-label">Date</span>&nbsp;&nbsp;&nbsp;<span class="order-value">Tuesday, 1:45 PM ET</span>&nbsp;&nbsp;&nbsp;
+                    <span class="order-label">Priority</span>&nbsp;&nbsp;&nbsp;<span class="order-value">NORMAL</span>&nbsp;&nbsp;&nbsp;
+                    <span class="order-label">Source</span>&nbsp;&nbsp;&nbsp;<span class="order-value">macro_commodities &rarr; debated &rarr; scored &rarr; approved</span>
+                </div>
+                <br>
+                <div class="order-section">
+                    <span class="order-label">PRIMARY LEG</span><br>
+                    &nbsp;&nbsp;Action: <span style="color: var(--green);">BUY</span>&nbsp;&nbsp;|&nbsp;&nbsp;Ticker: <strong>XLE</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Size: 2.0% NAV ($200,000)<br>
+                    &nbsp;&nbsp;Entry: Market (~$89.50)&nbsp;&nbsp;|&nbsp;&nbsp;Stop: $86.80 (-3.0%)&nbsp;&nbsp;|&nbsp;&nbsp;Target: $94.00 (+5.0%)<br>
+                    &nbsp;&nbsp;Trail: 2x ATR ($2.40 below price, adjust daily)
+                </div>
+                <br>
+                <div class="order-section">
+                    <span class="order-label">HEDGE LEG</span><br>
+                    &nbsp;&nbsp;Action: <span style="color: var(--red);">SELL SHORT</span>&nbsp;&nbsp;|&nbsp;&nbsp;Ticker: <strong>RSP</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Size: 2.0% NAV ($200,000)<br>
+                    &nbsp;&nbsp;Entry: Market (~$164.20)
+                </div>
+                <br>
+                <div class="order-section">
+                    <span class="order-label">Time Horizon</span>&nbsp;&nbsp;<span class="order-value">4&ndash;8 weeks</span>&nbsp;&nbsp;&nbsp;
+                    <span class="order-label">Review Date</span>&nbsp;&nbsp;<span class="order-value">2 weeks from entry</span>
+                </div>
+                <br>
+                <div class="order-section">
+                    <span class="order-label">Thesis</span><br>
+                    <span class="order-value">OPEC+ 500k cut tightens S/D into under-owned, cheap energy sector. Sweet-spot oil ($82-87) supports margins without triggering macro blowback. CTA short positioning = potential squeeze above $91.</span>
+                </div>
+                <br>
+                <div class="order-section">
+                    <span class="order-label">Key Risk</span><br>
+                    <span class="order-value">Oil overshoots $90+ &rarr; Fed narrative returns. Monitor CL1 beta (currently +0.19 projected).</span>
+                </div>
+            </div>
+
+            <!-- Stage 6 -->
+            <h3 id="stage-6">Stage 6: Delivery &amp; Outcome</h3>
+            <p><strong>1:45 PM ET</strong> &mdash; Trade order email sent + dashboard updated</p>
+            <p><strong>Operator reviews</strong> &mdash; decides whether to execute</p>
+
+            <h4>Simulated Outcome</h4>
+            <table>
+                <thead><tr><th>Day</th><th>Event</th></tr></thead>
+                <tbody>
+                    <tr><td>1&ndash;3</td><td>XLE to $90.80 (+1.5%). RSP flat. P&amp;L: +$3,000</td></tr>
+                    <tr><td>7</td><td>Oil at $84. XLE at $91.50 (+2.2%). Trailing stop adjusts to $89.10</td></tr>
+                    <tr><td>14</td><td>Review date. Momentum holding. PM extends hold.</td></tr>
+                    <tr><td>21</td><td>CTA buy programs trigger above $91. XLE to $93.20 (+4.1%)</td></tr>
+                    <tr><td>28</td><td>Target hit at $94.00. PM takes 50% profit. Trails remainder.</td></tr>
+                    <tr><td>35</td><td>Remainder stopped at $92.40 (trailing). Trade complete.</td></tr>
+                </tbody>
+            </table>
+
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-value">+$6,600</div>
+                    <div class="metric-label">Net P&amp;L</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">3.3%</div>
+                    <div class="metric-label">Return on Risk</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">5 weeks</div>
+                    <div class="metric-label">Holding Period</div>
+                </div>
+            </div>
+
+            <p><em>This is one trade through the full pipeline. The system runs 21 agents across 500+ names simultaneously, potentially surfacing 3-5 ideas per day for review.</em></p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION III: RISK PARAMETER DISCUSSION       -->
+        <!-- ============================================ -->
+        <div class="section" id="risk-discussion">
+            <div class="section-divider"></div>
+            <div class="section-number">Section III</div>
+            <h2>Risk Parameter Discussion</h2>
+            <p><em>These are proposed defaults. Each is a question for discussion, not a declaration. The goal is calibration &mdash; aligning the system's risk envelope to your actual comfort level and experience.</em></p>
+
+            <!-- Factor Betas -->
+            <h3 id="factor-betas">1. Factor Beta Limits</h3>
+            <p><strong>Current default:</strong> &plusmn;0.6 to any individual factor</p>
+
+            <table>
+                <thead><tr><th>Factor</th><th>Proxy</th><th>Why We Track It</th></tr></thead>
+                <tbody>
+                    <tr><td>DXY</td><td>US Dollar Index</td><td>Dollar strength hits EM, commodities, multinationals</td></tr>
+                    <tr><td>SPX</td><td>S&amp;P 500</td><td>Market beta &mdash; are we net long/short equities?</td></tr>
+                    <tr><td>USGG10Yr</td><td>US 10-Year Yield</td><td>Duration / rate sensitivity</td></tr>
+                    <tr><td>VIX</td><td>CBOE Vol Index</td><td>Volatility regime exposure</td></tr>
+                    <tr><td>Growth/Value</td><td>R1000G / R1000V</td><td>Style factor &mdash; crowded trades blow up on rotation</td></tr>
+                    <tr><td>CL1</td><td>WTI Front Month</td><td>Energy / commodity beta</td></tr>
+                    <tr><td>Large/Small</td><td>R1000 / R2000</td><td>Cap factor &mdash; liquidity risk in stress</td></tr>
+                    <tr><td>CDX HY 5Y</td><td>HY Credit Spread</td><td>Credit cycle exposure</td></tr>
+                    <tr><td>XAU</td><td>Gold Spot</td><td>Safe-haven / real rate sensitivity</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Questions for Discussion</h4>
+            <div class="discussion-item"><p>Is &plusmn;0.6 the right tolerance? Systematic funds often run &plusmn;0.3; discretionary macro may accept &plusmn;1.0 on conviction.</p></div>
+            <div class="discussion-item"><p>Should some factors have tighter limits than others? (e.g., SPX at &plusmn;0.4 if truly market-neutral, CL1 at &plusmn;0.8 if energy is a competency)</p></div>
+            <div class="discussion-item"><p>Are there missing factors? Candidates: CNY, MOVE index, sector momentum, EM risk premium.</p></div>
+            <div class="discussion-item"><p>Beta methodology: Rolling 12-month univariate OLS is default. Preferred alternative (multivariate, shorter window, exponential weighting)?</p></div>
+            <div class="discussion-item"><p>Rebalancing trigger: act at 0.5 (approaching) or only at the 0.6 breach?</p></div>
+
+            <!-- Position Risk -->
+            <h3 id="position-risk">2. Position-Level Risk</h3>
+            <table>
+                <thead><tr><th>Parameter</th><th>Default</th><th>Range to Discuss</th></tr></thead>
+                <tbody>
+                    <tr><td>Stop-loss</td><td>2&ndash;3% per position</td><td>1.5% (tighter) to 4% (wider for high-conviction)</td></tr>
+                    <tr><td>Gain target</td><td>5% per position</td><td>4% (faster turnover) to 8% (let winners run)</td></tr>
+                    <tr><td>Max single position</td><td>5% NAV</td><td>3% (conservative) to 7% (concentrated)</td></tr>
+                    <tr><td>Max sector gross</td><td>25% NAV</td><td>15% to 30%</td></tr>
+                    <tr><td>Max country gross</td><td>15% NAV</td><td>10% to 20%</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Questions for Discussion</h4>
+            <div class="discussion-item"><p><strong>Stop-loss philosophy:</strong> Fixed percentage? ATR-based (volatility-adjusted)? Technical level (below support)? Or a combination?</p></div>
+            <div class="discussion-item"><p><strong>Conviction modulation:</strong> Should 8/10 conviction get a wider 3% stop vs. 6/10 at 2%? Or uniform discipline?</p></div>
+            <div class="discussion-item"><p><strong>Gain targets:</strong> Full profit at 5%? Or partial (50% at target, trail the rest)?</p></div>
+            <div class="discussion-item"><p><strong>Time stops:</strong> Exit or reassess at 30/45/60 days of no movement?</p></div>
+            <div class="discussion-item"><p><strong>Base sizing:</strong> Is 2% NAV appropriate with conviction scaling to 3%? Or narrower (1.5%&ndash;2.5%)?</p></div>
+
+            <!-- Leverage -->
+            <h3 id="leverage">3. Leverage Framework</h3>
+            <table>
+                <thead><tr><th>Regime</th><th>Conditions</th><th>Leverage Range</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="badge badge-green">Aggressive</span></td><td>Positive P&amp;L + low correlation</td><td>1.5x &ndash; 2.5x gross</td></tr>
+                    <tr><td><span class="badge badge-gold">Normal</span></td><td>Positive P&amp;L + moderate correlation</td><td>1.0x &ndash; 1.5x gross</td></tr>
+                    <tr><td><span class="badge badge-gold">Cautious</span></td><td>Negative P&amp;L + low correlation</td><td>0.8x &ndash; 1.2x gross</td></tr>
+                    <tr><td><span class="badge badge-red">Defensive</span></td><td>Negative P&amp;L + high correlation</td><td>0.3x &ndash; 0.8x gross</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Questions for Discussion</h4>
+            <div class="discussion-item"><p>What's the actual ceiling? Is 2.5x ever appropriate, or is 1.8x the real max?</p></div>
+            <div class="discussion-item"><p>How to define "positive P&amp;L" &mdash; MTD? Trailing 20 days? Since last drawdown recovery?</p></div>
+            <div class="discussion-item"><p>Correlation threshold for "low" vs "high"? Default is 0.4 average pairwise.</p></div>
+            <div class="discussion-item"><p>Discretionary (PM decides within range) or mechanical (formula-driven)?</p></div>
+            <div class="discussion-item"><p>Net exposure: &plusmn;0.3 (near market-neutral) or wider &plusmn;0.5 on conviction?</p></div>
+
+            <!-- Drawdown -->
+            <h3 id="drawdown">4. Drawdown Management</h3>
+            <table>
+                <thead><tr><th>Drawdown from Peak</th><th>Action</th></tr></thead>
+                <tbody>
+                    <tr><td>0% &ndash; 2%</td><td>Normal operations</td></tr>
+                    <tr><td>2% &ndash; 3%</td><td>Review lowest-conviction positions; reduce sizing 20%</td></tr>
+                    <tr><td>3% &ndash; 4%</td><td>Mandatory deleverage to 50% gross; halt new positions</td></tr>
+                    <tr><td>4%+</td><td>Emergency deleverage to 30%; joint PM + Risk review</td></tr>
+                    <tr><td>Recovery</td><td>Re-lever only after 5 consecutive positive days</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Questions for Discussion</h4>
+            <div class="discussion-item"><p>Are these thresholds right for a 6% vol target? (4% DD = 0.67&sigma; at 6% vol)</p></div>
+            <div class="discussion-item"><p>Is "5 consecutive positive days" the right re-engagement rule?</p></div>
+            <div class="discussion-item"><p>At 4%+ drawdown: reduce or go fully flat? What's the "pull the plug" level?</p></div>
+            <div class="discussion-item"><p>Annual budget? (e.g., "down 6% YTD = shut down until next quarter")</p></div>
+            <div class="discussion-item"><p>Final call in drawdown: Risk agent mechanical, or human operator?</p></div>
+
+            <!-- Hedging -->
+            <h3 id="hedging">5. Hedging Parameters</h3>
+            <table>
+                <thead><tr><th>Trade Type</th><th>Hedge Instrument</th><th>Hedge Ratio</th></tr></thead>
+                <tbody>
+                    <tr><td>Single name</td><td>Equal-weight sector ETF</td><td>1:1 dollar-neutral</td></tr>
+                    <tr><td>Sector ETF</td><td>RSP (EW S&amp;P 500)</td><td>1:1 dollar-neutral</td></tr>
+                    <tr><td>DM country ETF</td><td>EFA or ACWI</td><td>1:1 dollar-neutral</td></tr>
+                    <tr><td>EM country ETF</td><td>EEM or ACWI</td><td>1:1 dollar-neutral</td></tr>
+                    <tr><td>Commodity</td><td>PM discretion</td><td>Varies</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Questions for Discussion</h4>
+            <div class="discussion-item"><p><strong>Dollar-neutral vs. beta-neutral:</strong> Adjust hedge ratio for beta? (XOM 1.2&beta; to RSPG &rarr; short 1.2x RSPG?)</p></div>
+            <div class="discussion-item"><p><strong>EW ETF availability:</strong> Some sectors lack liquid equal-weight products. Acceptable to use cap-weighted? Custom basket?</p></div>
+            <div class="discussion-item"><p><strong>Country ETF choice:</strong> DM &rarr; EFA vs. ACWI preference? Region-dependent?</p></div>
+            <div class="discussion-item"><p><strong>Commodity hedging:</strong> Default rule (gold always vs. ACWI) or PM discretion correct?</p></div>
+            <div class="discussion-item"><p><strong>Residual beta tolerance:</strong> How much slippage on hedge is acceptable? (&plusmn;0.15?)</p></div>
+
+            <!-- Summary -->
+            <h3>Summary: Key Decisions Needed</h3>
+            <ol>
+                <li><strong>Factor limits:</strong> &plusmn;0.6 across the board, or differentiated?</li>
+                <li><strong>Stop philosophy:</strong> Fixed %, ATR-based, or technical?</li>
+                <li><strong>Leverage ceiling:</strong> 2.5x? 2.0x? 1.5x?</li>
+                <li><strong>Drawdown triggers:</strong> Are the waterfall levels right?</li>
+                <li><strong>Hedge ratio:</strong> Dollar-neutral or beta-adjusted?</li>
+                <li><strong>Net exposure tolerance:</strong> &plusmn;0.3 or wider?</li>
+                <li><strong>Missing factors or constraints?</strong></li>
+            </ol>
+            <p><em>All parameters are configurable and can be adjusted over time as we see how the system performs.</em></p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION IV: ANTICIPATED Q&A                  -->
+        <!-- ============================================ -->
+        <div class="section" id="qa">
+            <div class="section-divider"></div>
+            <div class="section-number">Section IV</div>
+            <h2>Anticipated Questions &amp; Prepared Answers</h2>
+            <p><em>Organized by likely conversation flow &mdash; from "what is this" to skeptical pushback to logistics.</em></p>
+
+            <!-- The Basics -->
+            <h3 id="qa-basics">The Basics</h3>
+
+            <div class="qa-question">"Walk me through what this actually does."</div>
+            <div class="qa-answer">
+                <p>Twenty-one AI agents &mdash; each acting like a specialized analyst or PM &mdash; continuously screen our universe of S&amp;P 500 names, sector ETFs, country ETFs, and commodities. When one finds an opportunity, it writes up a thesis and proposes a hedged trade. Other agents challenge the idea in a structured debate. If it survives, a technical agent scores the setup, a risk agent checks it against our limits, and a PM agent sizes it and sends us the recommendation. We review and decide whether to execute. Nothing auto-trades.</p>
+            </div>
+
+            <div class="qa-question">"So it's a quant screen with extra steps?"</div>
+            <div class="qa-answer">
+                <p>No. A quant screen ranks on factors and spits out a list. This system <em>reasons</em>. Each agent builds a thesis &mdash; "XOM is cheap because the market is mispricing their Permian breakeven at $45 when it's actually $38, and the coming OPEC cut will tighten the S/D balance." Then another agent challenges that. The originator responds with evidence. That adversarial process is the difference &mdash; it's closer to an investment committee than a screen.</p>
+            </div>
+
+            <div class="qa-question">"Why not just use ChatGPT and ask it for trade ideas?"</div>
+            <div class="qa-answer">
+                <p>Three reasons: (1) No memory &mdash; a chat forgets your book, limits, and prior trades. This system persists beliefs and evolves them. (2) No risk enforcement &mdash; a chat will happily suggest levered, correlated, unhedged positions. Our system structurally rejects anything breaching limits. (3) Scale &mdash; you can't run 21 simultaneous specialists debating each other in a chat window.</p>
+            </div>
+
+            <!-- The Edge -->
+            <h3 id="qa-edge">The Edge</h3>
+
+            <div class="qa-question">"Where's the alpha?"</div>
+            <div class="qa-answer">
+                <p>Not in the AI being smarter than a human on any single name. It's structural:</p>
+                <ol>
+                    <li><strong>Coverage breadth.</strong> 500 names + 6 macro regions screened continuously. No fatigue, no distraction.</li>
+                    <li><strong>Process discipline.</strong> Every idea debated, scored, risk-checked, sized by formula. No style drift.</li>
+                    <li><strong>Speed to conviction.</strong> Overnight OPEC cut at 2 AM &rarr; sized trade recommendation before the open.</li>
+                </ol>
+            </div>
+
+            <div class="qa-question">"Aren't LLMs just pattern-matching? How do they generate real insight?"</div>
+            <div class="qa-answer">
+                <p>The agents aren't in a vacuum &mdash; they're fed real-time data. The LLM provides the analytical framework; fresh data provides the edge. The debate protocol is the quality filter: if an agent hallucinates, another challenges it with real data. Bad ideas get killed. We trust the <em>process</em>, not any single output.</p>
+            </div>
+
+            <div class="qa-question">"What's the win rate going to be?"</div>
+            <div class="qa-answer">
+                <p>Honest answer: we don't know yet. System is designed for 55-60% hit rate with asymmetric payoffs (5% target vs. 2-3% stop = ~2:1 R/R). At 55% win rate with 2:1 reward/risk, the math works to 12-15%. We track per-agent performance and dial down underperformers.</p>
+            </div>
+
+            <!-- Skepticism -->
+            <h3 id="qa-skepticism">Skepticism &amp; Pushback</h3>
+
+            <div class="qa-question">"LLMs hallucinate. How do you trust them with trade decisions?"</div>
+            <div class="qa-answer">
+                <p>We don't trust any single output. Four layers of defense:</p>
+                <ol>
+                    <li><strong>Structured validation</strong> &mdash; strict schema parsing rejects nonsensical outputs.</li>
+                    <li><strong>Adversarial debate</strong> &mdash; other agents challenge with real data.</li>
+                    <li><strong>Risk gate</strong> &mdash; quantitative checks (betas, concentration) don't require understanding the thesis.</li>
+                    <li><strong>Human decision</strong> &mdash; nothing auto-executes. You read everything and decide.</li>
+                </ol>
+            </div>
+
+            <div class="qa-question">"What happens when all 21 agents get the same thing wrong?"</div>
+            <div class="qa-answer">
+                <p>Correlated error scenario. Three mitigants: (1) Agents are specialized differently &mdash; they use different data and frameworks. Correlated failure requires simultaneous failure on different axes. (2) Risk framework is model-agnostic &mdash; factor limits block overconcentration regardless of thesis quality. (3) Human is the final filter &mdash; if it feels wrong, don't trade it.</p>
+            </div>
+
+            <div class="qa-question">"This sounds expensive. ROI math?"</div>
+            <div class="qa-answer">
+                <p>$750/month = $9K/year. On a $10M book targeting 12-15%, that's $1.2-1.5M target return. System needs to generate 0.09% alpha to break even. One good trade pays for a year. The real question is whether incremental coverage and discipline generate even marginal alpha above what you'd do alone.</p>
+            </div>
+
+            <div class="qa-question">"What if market regime changes?"</div>
+            <div class="qa-answer">
+                <p>Agents aren't static models &mdash; they're reasoning engines fed live data. When regime shifts, the data shifts, and conclusions shift. Macro agents explicitly track regime and adjust frameworks. If prompts need updating (a new regime where old frameworks fail), that's a quarterly maintenance task, not a fundamental flaw.</p>
+            </div>
+
+            <div class="qa-question">"How is this different from what Graham already does?"</div>
+            <div class="qa-answer">
+                <p>This isn't systematic in the traditional sense &mdash; no backtest, no optimized parameters, no signal decay. It's discretionary macro enhanced by AI. Key differences: human-in-the-loop, narrative theses, flexible holding periods. Think of it as a complement &mdash; it occupies the discretionary alpha space (variant perception, catalyst ID) that systematic can't reach, but with systematic-grade risk discipline.</p>
+            </div>
+
+            <!-- Logistics -->
+            <h3 id="qa-logistics">Implementation &amp; Logistics</h3>
+
+            <div class="qa-question">"How long until live?"</div>
+            <div class="qa-answer">
+                <p>POC (end-to-end on small subset): 4-6 weeks. Full production (21 agents): ~30 weeks. We start generating real recommendations from the POC subset (Energy + Commodities) within 2 months while building the rest.</p>
+            </div>
+
+            <div class="qa-question">"What do you need from me?"</div>
+            <div class="qa-answer">
+                <ol>
+                    <li><strong>Risk parameter calibration</strong> &mdash; 30 minutes to align on limits, leverage, stops.</li>
+                    <li><strong>Investment process validation</strong> &mdash; edge cases or rules not captured?</li>
+                    <li><strong>Data source priorities</strong> &mdash; if one paid feed to start, which matters most?</li>
+                    <li><strong>Ongoing feedback</strong> &mdash; which recommendations make sense vs. don't, so we tune agents.</li>
+                </ol>
+            </div>
+
+            <div class="qa-question">"Where does this run? Compliance?"</div>
+            <div class="qa-answer">
+                <p>Personal device at home, completely outside firm ecosystem. No firm data in; no firm systems touched. Access via encrypted private network (Tailscale). Output is trade <em>ideas</em> only &mdash; execution is manual in a personal account.</p>
+            </div>
+
+            <div class="qa-question">"What if you leave or this breaks?"</div>
+            <div class="qa-answer">
+                <p>Everything documented. Standard open-source tools (Python, PostgreSQL, Redis). Moderate Python experience can maintain it. Degrades gracefully &mdash; if system goes down, positions have stops at broker level regardless.</p>
+            </div>
+
+            <!-- Closing -->
+            <h3 id="qa-closing">Closing / If Interested</h3>
+
+            <div class="qa-question">"What's the next step?"</div>
+            <div class="qa-answer">
+                <ol>
+                    <li>Lock in risk parameters today based on your feedback</li>
+                    <li>Build POC over 4-6 weeks (Energy + Commodities test case)</li>
+                    <li>Run in "paper" mode 2-4 weeks &mdash; generating recommendations, not trading &mdash; so you evaluate quality</li>
+                    <li>If credible, expand to full universe over 3-4 months</li>
+                </ol>
+                <p>First deliverable: a daily email with 1-3 hedged trade ideas, each with full thesis, debate summary, technical score, and risk clearance. You read them over coffee and decide which you like.</p>
+            </div>
+
+            <p style="margin-top: 3rem; padding: 1.5rem; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.2); border-radius: 4px; text-align: center; font-style: italic; color: var(--gray);">
+                Read the room. If he's engaged and asking technical questions, go deep.<br>
+                If he's checking his phone, get to the worked example fast &mdash; it makes everything concrete.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding: 3rem 0; border-top: 1px solid rgba(201, 168, 76, 0.15); margin-top: 4rem;">
+            <div style="font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-dim);">
+                Agentic AI Trading System &middot; Confidential &middot; July 2026
+            </div>
+        </div>
+
+    </div><!-- end .main -->
+
+    <!-- Smooth scroll -->
+    <script>
+        document.querySelectorAll('.nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Highlight active nav link on scroll
+        const sections = document.querySelectorAll('.section, h3[id]');
+        const navLinks = document.querySelectorAll('.nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

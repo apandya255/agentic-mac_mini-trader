@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/akashpandya/AgenticTradingResearch/mark_to_market.py", line 204, in <module>
+    main()
+  File "/Users/akashpandya/AgenticTradingResearch/mark_to_market.py", line 140, in main
+    print(f"  {ticker}/{hedge_ticker}  {direction}  entry=${entry:.2f}  now=${current:.2f}  P&L={pnl_str}{daily_str}")
+TypeError: unsupported format string passed to NoneType.__format__

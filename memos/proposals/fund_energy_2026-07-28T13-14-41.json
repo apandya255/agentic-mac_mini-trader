@@ -1,0 +1,27 @@
+{
+  "proposal_id": "fund_energy_2026-07-28T13-14-41",
+  "agent_id": "fund_energy",
+  "ticker": "DVN",
+  "direction": "long",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "thesis_summary": "DVN offers exceptional value in E&P space, trading at 0th percentile vs peers on EV/EBITDA (5.0x) and forward PE (8.1x) with 39% analyst upside target. Pair ratio at extreme oversold levels (0.8th percentile, z-score -2.02) vs equal-weight energy, suggesting strong mean-reversion opportunity.",
+  "thesis_detail": "Devon Energy presents the clearest value opportunity in my coverage universe. Trading at EV/EBITDA of 5.0x and forward PE of 8.1x, DVN ranks at the 0th percentile vs E&P peers COP, EOG, and OXY on both metrics. This represents a 23% discount to peer median EV/EBITDA of 6.5x. The company maintains strong fundamentals with 47% gross margins, 15% ROE, and manageable 56% debt-to-equity ratio. Analyst consensus of Strong Buy with $59.38 target vs $42.64 current implies 39% upside. The DVN/RSPG pair ratio at 0.4129 sits at the 0.8th percentile with z-score of -2.02, near the 52-week low of 0.4084. This extreme relative weakness vs equal-weight energy has historically mean-reverted within 4-6 weeks. DVN has underperformed XLE by 13.6% over the last two months despite maintaining sector-leading FCF yield of 3.3% and attractive 2.4% dividend yield (75th percentile vs peers). Recent earnings decline of 75% YoY appears cyclical rather than structural, with revenue growth of -0.8% suggesting operational stability. The company's Permian Basin focus provides cost advantages and drilling efficiency that should drive margin expansion as commodity prices stabilize.",
+  "variant_perception": "Market is overly penalizing DVN for cyclical earnings volatility, missing that: 1) Valuation discount to peers has reached extreme levels not seen since 2020 oil crash, 2) Free cash flow generation remains strong at 3.3% yield despite commodity headwinds, 3) Pair ratio suggests technical oversold condition vs broader energy basket, creating mean-reversion catalyst independent of oil price direction.",
+  "catalyst": "Earnings season in next 2-4 weeks likely to show stabilization in cash flow metrics, with potential for guidance raise on 2H production efficiency gains. Pair ratio this stretched typically mean-reverts within 4-6 weeks regardless of sector direction.",
+  "catalyst_timeline": "2-4 weeks",
+  "current_price": 42.64,
+  "target_price": 52.0,
+  "conviction": 7,
+  "key_risks": [
+    "Oil price collapse below $70 WTI",
+    "Continued production efficiency issues in Permian operations",
+    "Broader E&P sector rotation to refiners/integrateds"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "COP",
+    "EOG",
+    "OXY"
+  ]
+}

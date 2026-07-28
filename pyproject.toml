@@ -1,0 +1,16 @@
+[project]
+name = "agentic-trading-data"
+version = "0.1.0"
+description = "Data platform and risk math layer for the Agentic AI Trading System"
+requires-python = ">=3.11"
+dependencies = [
+    "yfinance==0.2.40",
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "fredapi==0.5.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]

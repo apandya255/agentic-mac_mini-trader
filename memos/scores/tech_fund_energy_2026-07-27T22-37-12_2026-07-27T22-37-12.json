@@ -1,0 +1,44 @@
+{
+  "proposal_id": "tech_fund_energy_2026-07-27T22-37-12",
+  "agent_id": "tech_equity",
+  "technical_score": 8,
+  "trend_alignment": "above",
+  "momentum_regime": "weak_trend",
+  "support_levels": [
+    152.70513430786133,
+    149.31499481201172,
+    145.9248553161621
+  ],
+  "resistance_levels": [
+    171.49455151367187,
+    181.4351300354004
+  ],
+  "fibonacci_levels": {
+    "38.2%": 152.70513430786133,
+    "50%": 149.31499481201172,
+    "61.8%": 145.9248553161621
+  },
+  "suggested_entry": 154.77000427246094,
+  "suggested_stop_loss": 150.9,
+  "suggested_take_profit": 162.51,
+  "trailing_stop_method": "ATR-based 2x (ATR=3.43, trail at $6.86 below price)",
+  "active_signals": [
+    {
+      "signal": "golden_cross",
+      "strength": "strong"
+    },
+    {
+      "signal": "RSI_neutral",
+      "strength": "moderate",
+      "value": 66.2
+    },
+    {
+      "signal": "MACD_none",
+      "strength": "moderate"
+    }
+  ],
+  "warning_signals": [],
+  "volume_confirmation": false,
+  "timing_recommendation": "now",
+  "timing_rationale": "Score 8/10, bias bullish. Trend aligned, momentum confirmed."
+}

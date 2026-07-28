@@ -1,0 +1,19 @@
+{
+  "proposal_id": "fund_healthcare_2026-07-28T13-18-28",
+  "agent_id": "fund_healthcare", 
+  "ticker": "ISRG",
+  "direction": "long",
+  "hedge_ticker": "RSPH",
+  "hedge_direction": "short",
+  "thesis_summary": "ISRG has become severely dislocated from fundamentals, trading at 2nd percentile vs equal-weight healthcare despite maintaining strong growth and market dominance. Technical oversold condition presents asymmetric risk/reward with 32% analyst target upside.",
+  "thesis_detail": "Intuitive Surgical has been caught in an indiscriminate healthcare tech selloff despite maintaining robust fundamentals. The company posted 19% revenue growth and 27% earnings growth while expanding gross margins to 67%. The core robotics moat remains intact with growing procedure volumes and expansion into new specialties. However, the stock has fallen -26% YTD vs XLV +25%, creating a 51pp underperformance gap that appears disconnected from business reality. The ISRG/RSPH pair ratio sits at 10.44 vs a 52-week high of 19.01, placing it in the 2nd percentile with a z-score of -2.6 - indicating extreme technical dislocation. Analysts maintain conviction with a $484 average target price representing 32% upside from current levels of $365. The technical setup shows washout characteristics with the stock below all major moving averages but RSI at 44 suggesting oversold without full capitulation. Volume patterns show controlled selling rather than panic. The fundamental story of robotics adoption in surgery remains intact, with expanding TAM as procedures move from open to minimally invasive approaches. Recent weakness likely reflects broader growth stock multiple compression and healthcare tech rotation rather than company-specific deterioration. Current valuation of 30.4x forward P/E represents a significant discount to historical premium multiples for this quality growth asset.",
+  "variant_perception": "Market is treating ISRG as a cyclical medical device company rather than a structural growth story. Consensus appears focused on near-term procedure volume volatility and macro headwinds, missing the long-term robotics adoption curve and expanding addressable procedures. We see temporary dislocation in a dominant platform with pricing power.",
+  "catalyst": "Q3 earnings report expected to show continued procedure growth momentum and guidance confirmation, paired with technical reversion from extreme oversold levels as growth rotation resumes",
+  "catalyst_timeline": "3-4 weeks", 
+  "current_price": 365.27,
+  "target_price": 425.00,
+  "conviction": 7,
+  "key_risks": ["Procedure volume deceleration worse than expected", "Healthcare spending cuts impact elective surgery", "New competitive threats to robotics platform", "Multiple compression continues in growth names"],
+  "sector_view": "neutral", 
+  "relevant_peers": ["ABT", "TMO"]
+}
