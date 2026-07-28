@@ -94,14 +94,50 @@ def main():
             combined = None
         pos["combined_pnl_pct"] = combined
 
+        # ── Per-position daily price history ──
+        today = datetime.now().strftime("%Y-%m-%d")
+        if "price_history" not in pos:
+            pos["price_history"] = []
+
+        # Compute daily change vs previous close
+        prev_close = None
+        if pos["price_history"]:
+            prev_close = pos["price_history"][-1].get("price")
+
+        if current is not None and prev_close is not None and prev_close != 0:
+            daily_chg = (current - prev_close) / prev_close
+        else:
+            daily_chg = 0.0
+
+        daily_record = {
+            "date": today,
+            "price": current,
+            "hedge_price": hedge_current,
+            "combined_pnl_pct": combined,
+            "daily_change_pct": daily_chg,
+        }
+
+        # One record per day (overwrite if same day)
+        if pos["price_history"] and pos["price_history"][-1].get("date") == today:
+            pos["price_history"][-1] = daily_record
+        else:
+            pos["price_history"].append(daily_record)
+
+        # Keep last 90 days max
+        pos["price_history"] = pos["price_history"][-90:]
+
+        # Store daily change on the position for quick access
+        pos["daily_change_pct"] = daily_chg
+
         # Accumulate NAV impact
         size = pos.get("size_pct_nav", 0)
         if combined is not None:
             total_pnl_dollars += combined * size * initial_nav
 
         # Print
+        daily_str = f"  day={daily_chg*100:+.2f}%" if daily_chg else ""
         pnl_str = f"{combined*100:+.2f}%" if combined is not None else "N/A"
-        print(f"  {ticker}/{hedge_ticker}  {direction}  entry=${entry:.2f}  now=${current:.2f}  P&L={pnl_str}")
+        print(f"  {ticker}/{hedge_ticker}  {direction}  entry=${entry:.2f}  now=${current:.2f}  P&L={pnl_str}{daily_str}")
 
     # Update NAV
     book["nav"] = initial_nav + total_pnl_dollars

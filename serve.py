@@ -117,7 +117,12 @@ def get_price(ticker: str):
 
 def mark_positions_to_market(book: dict) -> dict:
     """Update all positions with current prices and compute P&L."""
+    today = datetime.now().strftime("%Y-%m-%d")
+
     for pos in book.get("positions", []):
+        if pos.get("status") != "active":
+            continue
+
         ticker = pos.get("ticker", "")
         hedge_ticker = pos.get("hedge_ticker", "")
 
@@ -160,6 +165,32 @@ def mark_positions_to_market(book: dict) -> dict:
             pos["combined_pnl_pct"] = main_pnl
         else:
             pos["combined_pnl_pct"] = None
+
+        # ── Per-position daily price history ──
+        if "price_history" not in pos:
+            pos["price_history"] = []
+
+        prev_close = pos["price_history"][-1].get("price") if pos["price_history"] else None
+        if current is not None and prev_close is not None and prev_close != 0:
+            daily_chg = (current - prev_close) / prev_close
+        else:
+            daily_chg = 0.0
+
+        daily_record = {
+            "date": today,
+            "price": current,
+            "hedge_price": hedge_current,
+            "combined_pnl_pct": pos.get("combined_pnl_pct"),
+            "daily_change_pct": daily_chg,
+        }
+
+        if pos["price_history"] and pos["price_history"][-1].get("date") == today:
+            pos["price_history"][-1] = daily_record
+        else:
+            pos["price_history"].append(daily_record)
+
+        pos["price_history"] = pos["price_history"][-90:]
+        pos["daily_change_pct"] = daily_chg
 
     # Update NAV based on positions P&L
     initial_nav = book.get("initial_nav", 10_000_000)

@@ -520,10 +520,11 @@ function renderOverview() {
 
     // Quick position summary
     if (activePos.length) {
-        html += `<div class="section-title">Position Summary</div><table class="data-table"><thead><tr><th>Ticker</th><th>Direction</th><th>Hedge</th><th>P&L</th><th>Size</th><th></th></tr></thead><tbody>`;
+        html += `<div class="section-title">Position Summary</div><table class="data-table"><thead><tr><th>Ticker</th><th>Direction</th><th>Hedge</th><th>Today</th><th>Total P&L</th><th>Size</th><th></th></tr></thead><tbody>`;
         for (const p of activePos) {
             const cpnl = p.combined_pnl_pct;
-            html += `<tr><td style="font-weight:600;">${p.ticker}</td><td>${p.direction?.toUpperCase()}</td><td>${p.hedge_ticker||'—'}</td><td class="${pnlClass(cpnl)}" style="font-weight:700;">${formatPct(cpnl)}</td><td>${(p.size_pct_nav*100).toFixed(1)}%</td><td><button class="btn btn-close" onclick="closePosition('${p.ticker}')">Close</button></td></tr>`;
+            const dailyChg = p.daily_change_pct || 0;
+            html += `<tr><td style="font-weight:600;">${p.ticker}</td><td>${p.direction?.toUpperCase()}</td><td>${p.hedge_ticker||'—'}</td><td class="${pnlClass(dailyChg)}" style="font-weight:600;">${formatPct(dailyChg)}</td><td class="${pnlClass(cpnl)}" style="font-weight:700;">${formatPct(cpnl)}</td><td>${(p.size_pct_nav*100).toFixed(1)}%</td><td><button class="btn btn-close" onclick="closePosition('${p.ticker}')">Close</button></td></tr>`;
         }
         html += `</tbody></table>`;
     }
@@ -595,21 +596,23 @@ function renderPositions() {
 
     let html = '';
     if (positions.length) {
-        html += '<div class="section-title">Active Positions</div><table class="data-table"><thead><tr><th>Ticker</th><th>Dir</th><th>Hedge</th><th>Entry</th><th>Current</th><th>P&L</th><th>Size</th><th>Conv.</th><th>Stop</th><th>Days</th><th></th></tr></thead><tbody>';
+        html += '<div class="section-title">Active Positions</div><table class="data-table"><thead><tr><th>Ticker</th><th>Dir</th><th>Hedge</th><th>Entry</th><th>Current</th><th>Today</th><th>Total P&L</th><th>Sparkline</th><th>Size</th><th>Days</th><th></th></tr></thead><tbody>';
         for (const p of positions) {
             const cpnl = p.combined_pnl_pct;
+            const dailyChg = p.daily_change_pct || 0;
             const entryDate = p.entry_date ? new Date(p.entry_date) : null;
             const days = entryDate ? Math.floor((Date.now() - entryDate.getTime()) / 86400000) : '—';
+            const sparkSvg = renderSparkline(p.price_history || []);
             html += `<tr>
                 <td style="font-weight:700;">${p.ticker}</td>
                 <td><span class="badge badge-${p.direction==='long'?'positive':'negative'}">${(p.direction||'').toUpperCase()}</span></td>
                 <td>${p.hedge_ticker||'—'} <span style="color:var(--text-muted);">(${p.hedge_direction||'short'})</span></td>
                 <td>$${p.entry_price?.toFixed(2)||'—'}</td>
                 <td>$${p.current_price?.toFixed(2)||'—'}</td>
+                <td class="${pnlClass(dailyChg)}" style="font-weight:600;">${formatPct(dailyChg)}</td>
                 <td class="${pnlClass(cpnl)}" style="font-weight:700;">${formatPct(cpnl)}</td>
+                <td style="width:100px;">${sparkSvg}</td>
                 <td>${(p.size_pct_nav*100).toFixed(1)}%</td>
-                <td>${p.conviction||'—'}/10</td>
-                <td style="font-size:0.8em;color:var(--text-muted);">${p.stop_loss_method||'—'}</td>
                 <td>${days}</td>
                 <td><button class="btn btn-close" onclick="closePosition('${p.ticker}')">Close</button></td>
             </tr>`;
@@ -852,6 +855,28 @@ function renderEquityCurve(history) {
 function formatMoney(v) { if (v == null) return '—'; return '$' + Math.round(v).toLocaleString(); }
 function formatPct(v) { if (v == null) return '—'; return (v >= 0 ? '+' : '') + (v * 100).toFixed(2) + '%'; }
 function pnlClass(v) { if (v == null) return 'neutral'; return v > 0 ? 'positive' : v < 0 ? 'negative' : 'neutral'; }
+
+function renderSparkline(history) {
+    if (!history || history.length < 2) return '<span style="color:var(--text-muted);font-size:0.75em;">—</span>';
+    const prices = history.map(h => h.price).filter(p => p != null);
+    if (prices.length < 2) return '<span style="color:var(--text-muted);font-size:0.75em;">—</span>';
+
+    const W = 90, H = 28, PAD = 2;
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    const range = max - min || 1;
+
+    const scaleX = (i) => PAD + (i / (prices.length - 1)) * (W - PAD * 2);
+    const scaleY = (v) => H - PAD - ((v - min) / range) * (H - PAD * 2);
+
+    let d = `M ${scaleX(0)} ${scaleY(prices[0])}`;
+    for (let i = 1; i < prices.length; i++) d += ` L ${scaleX(i)} ${scaleY(prices[i])}`;
+
+    const isUp = prices[prices.length - 1] >= prices[0];
+    const color = isUp ? 'var(--positive)' : 'var(--negative)';
+
+    return `<svg viewBox="0 0 ${W} ${H}" style="width:90px;height:28px;"><path d="${d}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
 function escapeHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
 function updatePendingBadge() {
