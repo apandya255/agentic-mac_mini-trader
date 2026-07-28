@@ -18,10 +18,12 @@ warnings.filterwarnings('ignore')
 
 import argparse
 import json
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
 
+import requests as http_requests
 from flask import Flask, jsonify, request, send_file
 
 # Add src to path
@@ -491,6 +493,183 @@ def api_logs():
                 continue
     return jsonify({"logs": logs})
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CHAT AGENT
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Load .env for API key
+_env_file = BASE_DIR / ".env"
+if _env_file.exists():
+    for line in _env_file.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            key, val = line.split("=", 1)
+            os.environ.setdefault(key.strip(), val.strip())
+
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
+CHAT_MODEL = "anthropic/claude-sonnet-4"
+
+
+def gather_system_context() -> str:
+    """Gather all current system state for the chat agent's context."""
+    book = load_book()
+    active_pos = [p for p in book.get("positions", []) if p.get("status") == "active"]
+
+    # Alerts
+    alerts = []
+    if ALERTS_PATH.exists():
+        alerts = json.loads(ALERTS_PATH.read_text())
+
+    # Recent proposals
+    proposals = []
+    if PROPOSALS_DIR.exists():
+        for f in sorted(PROPOSALS_DIR.glob("*.json"))[-5:]:
+            try:
+                proposals.append(json.loads(f.read_text()))
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+    # Recent debates
+    debates = []
+    if DEBATE_DIR.exists():
+        for f in sorted(DEBATE_DIR.glob("*.json"))[-5:]:
+            try:
+                debates.append(json.loads(f.read_text()))
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+    # Recent orders
+    orders = []
+    if ORDERS_DIR.exists():
+        for f in sorted(ORDERS_DIR.glob("order_*.json"))[-3:]:
+            try:
+                orders.append(json.loads(f.read_text()))
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+    # Cycle logs
+    logs = []
+    if LOGS_DIR.exists():
+        for f in sorted(LOGS_DIR.glob("cycle_*.json"))[-5:]:
+            try:
+                logs.append(json.loads(f.read_text()))
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+    # NAV history
+    history = load_history()[-30:]  # last 30 snapshots
+
+    context = f"""CURRENT PORTFOLIO STATE:
+NAV: ${book.get('nav', 10_000_000):,.0f}
+Initial NAV: ${book.get('initial_nav', 10_000_000):,.0f}
+Total P&L: {((book.get('nav', 10_000_000) - book.get('initial_nav', 10_000_000)) / book.get('initial_nav', 10_000_000)) * 100:+.2f}%
+Cash: {book.get('cash_pct', 1.0)*100:.1f}%
+Active Positions: {len(active_pos)}
+Last Marked: {book.get('last_marked', 'never')}
+
+POSITIONS:
+{json.dumps(active_pos, indent=2) if active_pos else 'No active positions.'}
+
+ALERTS:
+{json.dumps(alerts, indent=2) if alerts else 'No active alerts.'}
+
+RECENT PROPOSALS (last 5):
+{json.dumps(proposals, indent=2) if proposals else 'None.'}
+
+RECENT DEBATES (last 5):
+{json.dumps(debates, indent=2) if debates else 'None.'}
+
+RECENT ORDERS (last 3):
+{json.dumps(orders, indent=2) if orders else 'None.'}
+
+CYCLE HISTORY (last 5):
+{json.dumps(logs, indent=2) if logs else 'None.'}
+
+NAV HISTORY (last 30 snapshots):
+{json.dumps(history, indent=2) if history else 'None.'}
+
+TRADE JOURNAL:
+{json.dumps(book.get('trade_journal', [])[-10:], indent=2)}
+"""
+    return context
+
+
+ALERTS_PATH = BASE_DIR / "memos" / "state" / "alerts.json"
+
+
+@app.route("/api/chat", methods=["POST"])
+def api_chat():
+    """Chat with the portfolio assistant. Sends user question + full system context to LLM."""
+    if not OPENROUTER_API_KEY:
+        return jsonify({"error": "OPENROUTER_API_KEY not set in .env"}), 500
+
+    data = request.get_json()
+    if not data or not data.get("message"):
+        return jsonify({"error": "No message provided"}), 400
+
+    user_message = data["message"]
+    system_context = gather_system_context()
+
+    system_prompt = f"""You are the Portfolio Assistant for an agentic AI trading system. You have complete visibility into the portfolio state, positions, alerts, proposals, debates, and trade history.
+
+Your role:
+- Answer questions about current positions, P&L, and portfolio state
+- Explain why trades were proposed, debated, and approved/denied
+- Summarize risk alerts and what they mean
+- Explain the system's architecture and how agents interact
+- Provide market context for positions using the data available
+- Be concise, direct, and data-driven in your answers
+
+LIVE SYSTEM STATE:
+{system_context}
+
+SYSTEM ARCHITECTURE:
+- 6 research agents (4 fundamental sector analysts + 2 macro) generate proposals
+- Proposals go through multi-round debate between agents
+- Technical scoring agent evaluates chart setup
+- Risk management agent (different model family) gates all trades
+- Portfolio Manager makes final execute/deny decision
+- Dashboard allows human to accept/deny pending orders
+- mark_to_market.py runs daily at 4:05pm to update prices
+- monitor.py checks risk thresholds and auto-closes stopped positions
+
+Answer the user's question based on this context. If you don't have enough data to answer precisely, say so."""
+
+    # Call OpenRouter
+    try:
+        resp = http_requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": CHAT_MODEL,
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message},
+                ],
+                "max_tokens": 1024,
+                "temperature": 0.3,
+            },
+            timeout=30,
+        )
+        resp.raise_for_status()
+        result = resp.json()
+        answer = result["choices"][0]["message"]["content"]
+        return jsonify({"answer": answer})
+    except http_requests.exceptions.Timeout:
+        return jsonify({"error": "LLM request timed out"}), 504
+    except http_requests.exceptions.RequestException as e:
+        return jsonify({"error": f"LLM request failed: {str(e)}"}), 502
+    except (KeyError, IndexError):
+        return jsonify({"error": "Unexpected LLM response format"}), 502
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# HELPERS (continued)
+# ──────────────────────────────────────────────────────────────────────────────
 
 def record_nav_snapshot(book: dict) -> None:
     """Record a point in NAV history."""

@@ -274,6 +274,23 @@ body {
 .toast { position:fixed; bottom:24px; right:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:14px 20px; font-size:0.88em; z-index:9999; animation:slideUp 0.3s ease; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
 .toast.success { border-color:var(--positive); }
 .toast.error { border-color:var(--negative); }
+
+/* CHAT */
+.chat-container { display:flex; flex-direction:column; height:calc(100vh - var(--header-h) - 80px); max-height:700px; }
+.chat-messages { flex:1; overflow-y:auto; padding:16px 0; display:flex; flex-direction:column; gap:12px; }
+.chat-msg { max-width:85%; padding:12px 16px; border-radius:12px; font-size:0.9em; line-height:1.6; animation:fadeIn 0.2s ease; }
+.chat-msg.user { align-self:flex-end; background:var(--bg-hover); border:1px solid var(--border); color:var(--text-primary); }
+.chat-msg.assistant { align-self:flex-start; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); }
+.chat-msg.assistant pre { background:var(--bg-primary); padding:8px 12px; border-radius:6px; overflow-x:auto; font-size:0.85em; margin:8px 0; }
+.chat-msg.assistant code { font-family:'SF Mono',monospace; font-size:0.88em; }
+.chat-input-row { display:flex; gap:10px; padding-top:16px; border-top:1px solid var(--border); }
+.chat-input { flex:1; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:12px 16px; color:var(--text-primary); font-size:0.9em; font-family:inherit; resize:none; outline:none; transition:var(--ease); }
+.chat-input:focus { border-color:var(--brand-gold); }
+.chat-input::placeholder { color:var(--text-muted); }
+.chat-send { background:var(--brand-gold); color:#000; border:none; border-radius:10px; padding:12px 20px; font-size:0.88em; font-weight:700; cursor:pointer; transition:var(--ease); white-space:nowrap; }
+.chat-send:hover { opacity:0.85; transform:translateY(-1px); }
+.chat-send:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+.chat-typing { color:var(--text-muted); font-size:0.82em; font-style:italic; padding:8px 0; }
 @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
 /* RESPONSIVE */
@@ -375,6 +392,9 @@ def build_sidebar() -> str:
 
         <div class="nav-label">History</div>
         <div class="nav-item" data-tab="timeline" onclick="switchTab('timeline')">Cycle History</div>
+
+        <div class="nav-label">Assistant</div>
+        <div class="nav-item" data-tab="chat" onclick="switchTab('chat')">Ask Agent</div>
     </div>
     <div class="sidebar-footer">
         <button class="btn btn-mark" onclick="markToMarket()" style="width:100%;margin-bottom:8px;">Refresh Prices</button>
@@ -405,6 +425,7 @@ def build_main_shell() -> str:
         <div class="panel" id="panel-risk"></div>
         <div class="panel" id="panel-technical"></div>
         <div class="panel" id="panel-timeline"></div>
+        <div class="panel" id="panel-chat"></div>
     </div>
 </div>
 
@@ -578,6 +599,7 @@ function renderAll() {{
     renderRisk();
     renderTechnical();
     renderTimeline();
+    renderChat();
     updatePendingBadge();
 }}
 
@@ -1091,6 +1113,90 @@ function renderPortfolioChart(positions) {{
     </div>`;
 }}
 
+// ─── CHAT AGENT ─────────────────────────────────────────────────────────────
+let chatMessages = [];
+let chatInitialized = false;
+
+function renderChat() {{
+    const panel = document.getElementById('panel-chat');
+    if (chatInitialized) return;  // Don't re-render — preserve conversation
+    chatInitialized = true;
+
+    panel.innerHTML = `
+        <div class="chat-container">
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-msg assistant">Hi — I'm your portfolio assistant. Ask me anything about your positions, P&L, proposals, risk alerts, or how the system works.</div>
+            </div>
+            <div class="chat-input-row">
+                <textarea class="chat-input" id="chat-input" placeholder="Ask about your portfolio..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){{event.preventDefault();sendChatMessage();}}"></textarea>
+                <button class="chat-send" id="chat-send-btn" onclick="sendChatMessage()">Send</button>
+            </div>
+        </div>
+    `;
+}}
+
+async function sendChatMessage() {{
+    const input = document.getElementById('chat-input');
+    const btn = document.getElementById('chat-send-btn');
+    const messagesEl = document.getElementById('chat-messages');
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // Add user message
+    messagesEl.innerHTML += `<div class="chat-msg user">${{escapeHtml(message)}}</div>`;
+    input.value = '';
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    // Show typing indicator
+    messagesEl.innerHTML += `<div class="chat-typing" id="chat-typing">Thinking...</div>`;
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    try {{
+        const resp = await fetch('/api/chat', {{
+            method: 'POST',
+            headers: {{ 'Content-Type': 'application/json' }},
+            body: JSON.stringify({{ message }}),
+        }});
+        const data = await resp.json();
+
+        // Remove typing indicator
+        const typing = document.getElementById('chat-typing');
+        if (typing) typing.remove();
+
+        if (data.error) {{
+            messagesEl.innerHTML += `<div class="chat-msg assistant" style="color:var(--negative);">Error: ${{escapeHtml(data.error)}}</div>`;
+        }} else {{
+            // Simple markdown-like formatting
+            const formatted = formatChatResponse(data.answer);
+            messagesEl.innerHTML += `<div class="chat-msg assistant">${{formatted}}</div>`;
+        }}
+    }} catch(e) {{
+        const typing = document.getElementById('chat-typing');
+        if (typing) typing.remove();
+        messagesEl.innerHTML += `<div class="chat-msg assistant" style="color:var(--negative);">Connection error — is serve.py running?</div>`;
+    }}
+
+    btn.disabled = false;
+    btn.textContent = 'Send';
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}}
+
+function formatChatResponse(text) {{
+    // Basic formatting: bold, code blocks, newlines
+    let html = escapeHtml(text);
+    // Code blocks
+    html = html.replace(/```([\\s\\S]*?)```/g, '<pre><code>$1</code></pre>');
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // Bold
+    html = html.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
+    // Newlines
+    html = html.replace(/\\n/g, '<br>');
+    return html;
+}}
+
 function escapeHtml(s) {{ if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }}
 
 function updatePendingBadge() {{
@@ -1123,6 +1229,7 @@ const TITLES = {{
     risk: 'Risk Assessment',
     technical: 'Technical Analysis',
     timeline: 'Cycle History',
+    chat: 'Portfolio Assistant',
 }};
 
 function switchTab(tab) {{
