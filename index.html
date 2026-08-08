@@ -1037,7 +1037,7 @@ button:focus-visible,
 
 <div class="main">
     <header class="topbar">
-        <div class="topbar-left"><h2 id="page-title">Jimothy Paper Trading LLC</h2></div>
+        <div class="topbar-left"><h2 id="page-title">Agentic Trading</h2></div>
         <div class="topbar-right">
             <div class="topbar-stat"><div class="label">NAV</div><div class="value" id="topbar-nav" style="color:var(--brand-gold);">—</div></div>
             <div class="topbar-stat"><div class="label">P&L</div><div class="value" id="topbar-pnl">—</div></div>
@@ -1324,8 +1324,8 @@ function renderDashboardHeader() {
         <div class="dashboard-header">
             <div class="dashboard-header-top">
                 <div class="dashboard-header-title">
-                    <h2>Jimothy Paper Trading LLC</h2>
-                    <div class="dashboard-header-subtitle">Multi-Sector Hedged L/S | $10M Initial NAV</div>
+                    <h2>Agentic Trading</h2>
+                    <div class="dashboard-header-subtitle">Multi-Sector Hedged L/S | ${formatCurrency(state.book.initial_nav || state.book.nav)} Initial NAV</div>
                     <div class="dashboard-header-meta">Last updated: ${lastUpdatedStr}</div>
                 </div>
                 <span class="badge-paper">PAPER TRADING</span>
@@ -2939,10 +2939,10 @@ function renderEquityChartInner() {
     const lineColor = lastNav > firstNav ? 'var(--positive)' : lastNav < firstNav ? 'var(--negative)' : 'var(--text-muted)';
     const fillColor = lastNav > firstNav ? 'rgba(0,200,83,0.08)' : lastNav < firstNav ? 'rgba(255,23,68,0.08)' : 'rgba(160,160,160,0.05)';
 
-    // Initial capital reference line ($10M horizontal dashed)
+    // Initial capital reference line (horizontal dashed)
     const refY = scaleY(initialCapital);
     const refLine = `<line x1="${PAD_L}" y1="${refY}" x2="${W-PAD_R}" y2="${refY}" stroke="var(--brand-gold-dim)" stroke-width="1" stroke-dasharray="5,4" opacity="0.7"/>
-    <text x="${W-PAD_R+2}" y="${refY-4}" fill="var(--brand-gold-dim)" font-size="9" text-anchor="start">$10M</text>`;
+    <text x="${W-PAD_R+2}" y="${refY-4}" fill="var(--brand-gold-dim)" font-size="9" text-anchor="start">${formatDollar(initialCapital)}</text>`;
 
     // Tooltip points (circle elements with title attributes for native hover tooltips)
     let points = '';
@@ -3624,7 +3624,7 @@ function showToast(msg, type) {
 }
 
 const TITLES = {
-    overview: 'Jimothy Paper Trading LLC',
+    overview: 'Agentic Trading',
     pending: 'Pending Orders',
     positions: 'Active Positions',
     journal: 'Trade Journal',
