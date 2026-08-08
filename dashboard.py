@@ -1103,6 +1103,7 @@ def build_sidebar() -> str:
         <div class="nav-item" data-tab="debate" onclick="switchTab('debate')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('debate');}">Agent Debate</div>
         <div class="nav-item" data-tab="risk" onclick="switchTab('risk')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('risk');}">Risk</div>
         <div class="nav-item" data-tab="technical" onclick="switchTab('technical')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('technical');}">Technical</div>
+        <div class="nav-item" data-tab="calendar" onclick="switchTab('calendar')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('calendar');}">Calendar</div>
 
         <div class="nav-label">History</div>
         <div class="nav-item" data-tab="timeline" onclick="switchTab('timeline')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('timeline');}">Cycle History</div>
@@ -1139,6 +1140,7 @@ def build_main_shell() -> str:
         <div class="panel" id="panel-debate"></div>
         <div class="panel" id="panel-risk"></div>
         <div class="panel" id="panel-technical"></div>
+        <div class="panel" id="panel-calendar"></div>
         <div class="panel" id="panel-timeline"></div>
         <div class="panel" id="panel-chat"></div>
     </div>
@@ -1201,6 +1203,9 @@ let state = {{
     scores: EMBEDDED.scores || [],
     logs: EMBEDDED.logs || [],
     apiAvailable: false,
+    derived: null,
+    calendar: null,
+    factors: null,
 }};
 
 // ─── API ────────────────────────────────────────────────────────────────────
@@ -1256,6 +1261,17 @@ async function refreshAll() {{
     if (riskData) state.risks = riskData.risks || [];
     if (scoreData) state.scores = scoreData.scores || [];
     if (logData) state.logs = logData.logs || [];
+
+    // Fetch calendar and factors data
+    const [calendarData, factorsData] = await Promise.all([
+        apiFetch('/api/calendar'),
+        apiFetch('/api/factors'),
+    ]);
+    if (calendarData) state.calendar = calendarData;
+    if (factorsData) state.factors = factorsData;
+
+    // Compute derived metrics from raw state
+    state.derived = computeDerivedMetrics(state);
 
     renderAll();
 }}
@@ -1380,6 +1396,7 @@ function renderAll() {{
     renderDebate();
     renderRisk();
     renderTechnical();
+    renderCalendar();
     renderTimeline();
     renderChat();
     updatePendingBadge();
@@ -1518,6 +1535,15 @@ function renderSystemHealth() {{
     // Alert indicator class
     const alertDotClass = alertCount === 0 ? 'fresh' : alertSeverity;
 
+    // Leverage regime badge (Task 6.1)
+    const leverageRegime = state.book.leverage_regime || null;
+    const regimeText = leverageRegime ? leverageRegime.toUpperCase() : '—';
+    const regimeCol = regimeColor(leverageRegime);
+    const regimeBgMap = {{ 'green': 'rgba(0,200,83,0.12)', 'red': 'rgba(255,23,68,0.12)', 'gray': 'rgba(160,160,160,0.1)' }};
+    const regimeColorMap = {{ 'green': 'var(--positive)', 'red': 'var(--negative)', 'gray': 'var(--text-secondary)' }};
+    const regimeBg = regimeBgMap[regimeCol] || regimeBgMap['gray'];
+    const regimeFg = regimeColorMap[regimeCol] || regimeColorMap['gray'];
+
     return `<div class="system-health-panel" role="region" aria-label="System health status">
         <div class="shp-item">
             <span class="health-indicator ${{refreshFreshness}}" aria-hidden="true"></span>
@@ -1533,6 +1559,10 @@ function renderSystemHealth() {{
             <span class="health-indicator ${{alertDotClass}}" aria-hidden="true"></span>
             <span class="shp-label">Alerts</span>
             <span class="shp-value">${{alertCount}}</span>
+        </div>
+        <div class="shp-item">
+            <span class="shp-label">Regime</span>
+            <span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:0.78em;font-weight:700;background:${{regimeBg}};color:${{regimeFg}};">${{regimeText}}</span>
         </div>
         ${{staleWarningHtml}}
     </div>`;
@@ -1702,6 +1732,39 @@ function renderOverview() {{
 
     let html = renderKPIGrid();
 
+    // Factor warnings + Total Loss-at-Trail KPI (Task 6.2)
+    let factorWarningsHtml = '';
+    if (state.factors && state.factors.available) {{
+        const FACTOR_DISPLAY = {{
+            'USD_DXY': 'USD/DXY', 'SPX': 'SPX', 'RATES_10Y': '10Y',
+            'VIX': 'VIX', 'GROWTH_VALUE': 'Grw/Val', 'CRUDE_CL1': 'Crude',
+            'LARGE_SMALL': 'Lg/Sm', 'HY_CREDIT': 'HY', 'GOLD_XAU': 'Gold'
+        }};
+        const warningFactors = Object.entries(state.factors.factors || {{}}).filter(([k, v]) => Math.abs(v) > 0.4);
+        if (warningFactors.length > 0) {{
+            factorWarningsHtml = `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <span style="font-size:0.75em;font-weight:700;color:var(--warning);text-transform:uppercase;letter-spacing:0.5px;">&#9888; Factor Warning</span>`;
+            for (const [key, val] of warningFactors) {{
+                const cls = Math.abs(val) > 0.6 ? 'badge-negative' : 'badge-warning';
+                factorWarningsHtml += `<span class="badge ${{cls}}" style="font-size:0.75em;">${{FACTOR_DISPLAY[key] || key}}: ${{val > 0 ? '+' : ''}}${{val.toFixed(2)}}</span>`;
+            }}
+            factorWarningsHtml += `</div>`;
+        }}
+    }}
+    html += factorWarningsHtml;
+
+    // Total Loss-at-Trail KPI (Task 6.2)
+    if (state.derived) {{
+        const totalLAT = state.derived.totalLossAtTrail;
+        html += `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:16px;">
+            <div>
+                <div style="font-size:0.72em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;">Total Loss-at-Trail</div>
+                <div style="font-size:1.4em;font-weight:800;color:var(--negative);margin-top:4px;">${{totalLAT}} bps</div>
+            </div>
+            <div style="font-size:0.78em;color:var(--text-muted);margin-left:auto;">Max portfolio impact if all trails trigger simultaneously</div>
+        </div>`;
+    }}
+
     // Action Required panel (below KPI grid)
     html += renderActionRequired();
 
@@ -1726,7 +1789,58 @@ function renderOverview() {{
     // System Health Panel (compact row at bottom of overview)
     html += renderSystemHealth();
 
+    // Compact Calendar Widget (Task 6.3)
+    html += renderCalendarCompact();
+
     document.getElementById('panel-overview').innerHTML = html;
+}}
+
+// ─── COMPACT CALENDAR WIDGET (Task 6.3) ─────────────────────────────────────
+function renderCalendarCompact() {{
+    if (!state.calendar || state.calendar.empty) {{
+        return `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:20px;">
+            <div style="font-size:0.78em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;">Week Ahead</div>
+            <div style="color:var(--text-muted);font-size:0.88em;">No calendar data available</div>
+        </div>`;
+    }}
+
+    let items = [];
+    const cal = state.calendar;
+
+    // Gather up to 5-6 items across categories
+    if (cal.macro && cal.macro.length) {{
+        for (const e of cal.macro.slice(0, 2)) {{
+            items.push(`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;"><span style="font-size:0.7em;font-weight:700;color:var(--steel-blue);text-transform:uppercase;min-width:40px;">MACRO</span><span style="font-size:0.84em;color:var(--text-secondary);">${{escapeHtml(e.day || e.date || '')}} ${{escapeHtml(e.time || '')}} — ${{escapeHtml(e.release || e.event || '')}}</span><span style="font-size:0.75em;color:var(--text-muted);margin-left:auto;">${{escapeHtml(e.currency || '')}}</span></div>`);
+        }}
+    }}
+    if (cal.cb && cal.cb.length) {{
+        for (const e of cal.cb.slice(0, 2)) {{
+            items.push(`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;"><span style="font-size:0.7em;font-weight:700;color:var(--warning);text-transform:uppercase;min-width:40px;">CB</span><span style="font-size:0.84em;color:var(--text-secondary);">${{escapeHtml(e.date || '')}} — ${{escapeHtml(e.currency || '')}} ${{escapeHtml(e.action || '')}}</span></div>`);
+        }}
+    }}
+    if (cal.earnings && cal.earnings.length) {{
+        for (const e of cal.earnings.slice(0, 2)) {{
+            items.push(`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;"><span style="font-size:0.7em;font-weight:700;color:var(--positive);text-transform:uppercase;min-width:40px;">EARN</span><span style="font-size:0.84em;color:var(--text-secondary);">${{escapeHtml(e.date || '')}} — ${{escapeHtml(e.ticker || '')}} (${{escapeHtml(e.timing || '')}})</span></div>`);
+        }}
+    }}
+
+    // Limit to max 6
+    items = items.slice(0, 6);
+
+    if (items.length === 0) {{
+        return `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:20px;">
+            <div style="font-size:0.78em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;">Week Ahead</div>
+            <div style="color:var(--text-muted);font-size:0.88em;">No calendar data available</div>
+        </div>`;
+    }}
+
+    return `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:20px;">
+        <div style="font-size:0.78em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+            <span>Week Ahead</span>
+            <a style="font-size:1em;color:var(--brand-gold);cursor:pointer;text-decoration:none;font-weight:600;text-transform:none;letter-spacing:0;" onclick="switchTab('calendar')">View All &rarr;</a>
+        </div>
+        ${{items.join('')}}
+    </div>`;
 }}
 
 // ─── ACTION REQUIRED PANEL ──────────────────────────────────────────────────
@@ -2002,27 +2116,72 @@ function renderPending() {{
         const risk = o._risk || {{}};
         const id = o.order_id || o.proposal_id;
 
+        // Thesis (max 3 lines) — Task 7.1
+        const thesisRaw = prop.thesis_summary || prop.portfolio_thesis || o.portfolio_thesis || o.pm_rationale || '—';
+        const thesis = thesisRaw.length > 300 ? thesisRaw.substring(0, 300) + '...' : thesisRaw;
+
+        // Best Counter
+        const bestCounter = prop.best_counter || prop.best_counterargument || '—';
+
+        // Entry / Stop / Target
+        const entryLevel = o.entry_price || tech.suggested_entry || '—';
+        const stopLevel = tech.suggested_stop_loss || o.stop_loss_method || '—';
+        const targetLevel = tech.suggested_take_profit || o.take_profit || '—';
+
+        // Size + Loss-at-trail
+        const sizePctNav = o.size_pct_nav != null ? o.size_pct_nav : null;
+        const sizeDisplay = sizePctNav != null ? (sizePctNav * 100).toFixed(1) + '% NAV' : '—';
+        const trailPct = parseTrailPct(o.stop_loss_method);
+        let lossAtTrailDisplay = '—';
+        if (trailPct != null && sizePctNav != null) {{
+            const lat = Math.round((trailPct / 100) * sizePctNav * 10000);
+            lossAtTrailDisplay = lat + ' bps';
+        }}
+
+        // Technical Score
+        const techScore = tech.technical_score != null ? tech.technical_score + '/10' : '—';
+
+        // Risk Verdict
+        const riskDecision = risk.decision || '—';
+        const riskBadgeClass = riskDecision.toLowerCase().includes('approved') ? 'badge-positive' : riskDecision === '—' ? 'badge-neutral' : 'badge-negative';
+
+        // Factor Deltas (filtered to |delta| > 0.1)
+        const projectedBetas = risk.projected_factor_betas || {{}};
+        const factorDeltas = filterFactorDeltas(projectedBetas);
+
         html += `
         <div class="pending-card">
             <div class="pending-header">
                 <h3>${{o.ticker}} — ${{(o.direction||'').toUpperCase()}}</h3>
                 <span class="badge badge-warning">AWAITING DECISION</span>
             </div>
+
+            <div style="margin-bottom:14px;">
+                <div style="font-size:0.72em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Thesis</div>
+                <div style="font-size:0.9em;color:var(--text-secondary);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">${{escapeHtml(thesis)}}</div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <div style="font-size:0.72em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Best Counter</div>
+                <div style="font-size:0.88em;color:var(--text-secondary);">${{escapeHtml(bestCounter)}}</div>
+            </div>
+
             <div class="pending-grid">
+                <div class="pending-field"><div class="pf-label">Entry</div><div class="pf-value">${{typeof entryLevel === 'number' ? '$' + entryLevel.toFixed(2) : escapeHtml(String(entryLevel))}}</div></div>
+                <div class="pending-field"><div class="pf-label">Stop</div><div class="pf-value" style="color:var(--negative);">${{typeof stopLevel === 'number' ? '$' + stopLevel.toFixed(2) : escapeHtml(String(stopLevel))}}</div></div>
+                <div class="pending-field"><div class="pf-label">Target</div><div class="pf-value" style="color:var(--positive);">${{typeof targetLevel === 'number' ? '$' + targetLevel.toFixed(2) : escapeHtml(String(targetLevel))}}</div></div>
+                <div class="pending-field"><div class="pf-label">Size</div><div class="pf-value">${{sizeDisplay}}</div></div>
+                <div class="pending-field"><div class="pf-label">Loss@Trail</div><div class="pf-value">${{lossAtTrailDisplay}}</div></div>
+                <div class="pending-field"><div class="pf-label">Technical Score</div><div class="pf-value">${{techScore}}</div></div>
+                <div class="pending-field"><div class="pf-label">Risk Verdict</div><div class="pf-value"><span class="badge ${{riskBadgeClass}}">${{riskDecision.toUpperCase()}}</span></div></div>
                 <div class="pending-field"><div class="pf-label">Hedge</div><div class="pf-value">${{o.hedge_ticker||'—'}} (${{o.hedge_direction||'short'}})</div></div>
-                <div class="pending-field"><div class="pf-label">Size</div><div class="pf-value">${{(o.size_pct_nav*100).toFixed(1)}}% NAV</div></div>
-                <div class="pending-field"><div class="pf-label">Conviction</div><div class="pf-value">${{o.conviction||'—'}}/10</div></div>
-                <div class="pending-field"><div class="pf-label">Technical</div><div class="pf-value">${{tech.technical_score||'—'}}/10</div></div>
-                <div class="pending-field"><div class="pf-label">Risk</div><div class="pf-value"><span class="badge ${{risk.decision==='approved'?'badge-positive':'badge-negative'}}">${{(risk.decision||'—').toUpperCase()}}</span></div></div>
-                <div class="pending-field"><div class="pf-label">Stop</div><div class="pf-value" style="font-size:0.85em;">${{o.stop_loss_method||'—'}}</div></div>
-                <div class="pending-field"><div class="pf-label">Take Profit</div><div class="pf-value" style="font-size:0.85em;">${{o.take_profit||'—'}}</div></div>
-                <div class="pending-field"><div class="pf-label">Holding</div><div class="pf-value">${{o.expected_holding_period||'—'}}</div></div>
             </div>
-            <div class="pending-rationale">
-                <strong>PM Rationale:</strong> ${{escapeHtml(o.pm_rationale||'No rationale provided.')}}
-            </div>
-            ${{prop.thesis_summary ? `<div style="font-size:0.85em;color:var(--text-muted);margin-top:8px;line-height:1.5;"><strong>Thesis:</strong> ${{escapeHtml(prop.thesis_summary)}}</div>` : ''}}
-            ${{prop.variant_perception ? `<div style="font-size:0.85em;color:var(--text-muted);margin-top:6px;line-height:1.5;"><strong>Variant:</strong> ${{escapeHtml(prop.variant_perception)}}</div>` : ''}}
+
+            ${{factorDeltas.length > 0 ? `<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+                <div style="font-size:0.72em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Factor Deltas (|&delta;| &gt; 0.1)</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">${{factorDeltas.map(([k,v]) => `<span class="badge ${{Math.abs(v) > 0.6 ? 'badge-negative' : 'badge-warning'}}" style="font-size:0.75em;">${{k.replace(/_/g,' ')}}: ${{v > 0 ? '+' : ''}}${{v.toFixed(2)}}</span>`).join('')}}</div>
+            </div>` : ''}}
+
             <div class="pending-actions">
                 <button class="btn btn-accept" data-accept-id="${{id}}" onclick="acceptOrder('${{id}}')">Accept &amp; Execute</button>
                 <button class="btn btn-deny" data-deny-id="${{id}}" onclick="denyOrder('${{id}}')">Deny</button>
@@ -2078,10 +2237,15 @@ function getPositionSortValue(p, col) {{
         case 'ticker': return (p.ticker || '').toLowerCase();
         case 'direction': return (p.direction || '').toLowerCase();
         case 'status': return (p.status || '').toLowerCase();
-        case 'entry': return p.entry_price || 0;
-        case 'current': return p.current_price || 0;
+        case 'entry': return p.entryRatio || p.entry_price || 0;
+        case 'current': return p.currentRatio || p.current_price || 0;
+        case 'peak': return p.peakRatio || 0;
         case 'today': return p.daily_change_pct || 0;
-        case 'total': return p.combined_pnl_pct || 0;
+        case 'total': return p.pnlPct || p.combined_pnl_pct || 0;
+        case 'trail': return p.trailPct || 0;
+        case 'distpeak': return p.distFromPeak || 0;
+        case 'disttarget': return p.distToTarget || 0;
+        case 'lossattrail': return p.lossAtTrail || 0;
         case 'size': return p.size_pct_nav || 0;
         case 'hedge': return (p.hedge_ticker || '');
         case 'confidence': return p.conviction || 0;
@@ -2123,8 +2287,11 @@ function renderPositions() {{
     html += `<div class="section-title">Positions</div>`;
     html += `<input class="position-filter-input" type="text" placeholder="Filter by ticker..." value="${{escapeHtml(positionTickerFilter)}}" oninput="filterPositionsByTicker(this.value)" aria-label="Filter positions by ticker" />`;
 
+    // Use enriched positions from state.derived if available
+    const enrichedPositions = (state.derived && state.derived.positions) ? state.derived.positions : [];
+
     // Apply filter
-    let positions = allPositions;
+    let positions = enrichedPositions.length > 0 ? enrichedPositions : allPositions.filter(p => p.status === 'active');
     if (positionTickerFilter) {{
         positions = positions.filter(p => (p.ticker || '').toLowerCase().includes(positionTickerFilter));
     }}
@@ -2158,20 +2325,21 @@ function renderPositions() {{
         return `<th class="sortable-header${{activeClass}}${{numClass}}" onclick="sortPositions('${{col}}')">${{label}}<span class="sort-arrow">&#9650;</span></th>`;
     }}
 
-    // Table start
+    // Table start — includes pair-ratio columns (Task 4.1)
     html += `<div class="position-table-wrapper">`;
     html += `<table class="position-table"><thead><tr>`;
     html += sortHeader('Ticker', 'ticker', false);
     html += sortHeader('Direction', 'direction', false);
-    html += sortHeader('Status', 'status', false);
-    html += sortHeader('Entry', 'entry', true);
-    html += sortHeader('Current', 'current', true);
-    html += sortHeader('Today', 'today', true);
-    html += sortHeader('Total P&L', 'total', true);
+    html += sortHeader('Entry Ratio', 'entry', true);
+    html += sortHeader('Current Ratio', 'current', true);
+    html += sortHeader('Peak Ratio', 'peak', true);
+    html += sortHeader('Pair P&L (%)', 'total', true);
+    html += sortHeader('Trail %', 'trail', true);
+    html += sortHeader('Dist Peak %', 'distpeak', true);
+    html += sortHeader('Dist Target %', 'disttarget', true);
+    html += sortHeader('Loss@Trail (bps)', 'lossattrail', true);
     html += sortHeader('Size', 'size', true);
     html += sortHeader('Hedge', 'hedge', false);
-    html += sortHeader('Confidence', 'confidence', true);
-    html += sortHeader('Days', 'days', true);
     html += `<th style="text-align:center;">Sparkline</th>`;
     html += `<th>Actions</th>`;
     html += `</tr></thead><tbody>`;
@@ -2179,51 +2347,60 @@ function renderPositions() {{
     for (const p of positions) {{
         const ticker = p.ticker || '—';
         const direction = (p.direction || '').toLowerCase();
-        const status = (p.status || 'active').toLowerCase();
-        const entryPrice = p.entry_price;
-        const currentPrice = p.current_price;
-        const dailyChg = p.daily_change_pct || 0;
-        const cpnl = p.combined_pnl_pct || 0;
         const sizePct = p.size_pct_nav || 0;
         const hedge = p.hedge_ticker || '—';
         const hedgeDir = p.hedge_direction || 'short';
-        const conviction = p.conviction || 0;
-        const entryDate = p.entry_date ? new Date(p.entry_date) : null;
-        const days = entryDate ? Math.floor((Date.now() - entryDate.getTime()) / 86400000) : '—';
         const sparkSvg = renderSparkline(p.price_history || []);
         const isExpanded = expandedPositions.has(ticker);
+
+        // Enriched pair-ratio fields (Task 4.1)
+        const entryRatio = p.entryRatio != null ? p.entryRatio.toFixed(4) : '—';
+        const currentRatio = p.currentRatio != null ? p.currentRatio.toFixed(4) : '—';
+        const peakRatio = p.peakRatio != null ? p.peakRatio.toFixed(4) : '—';
+        const pnlPct = p.pnlPct != null ? (p.pnlPct >= 0 ? '+' : '') + p.pnlPct.toFixed(2) + '%' : '—';
+        const trailPct = p.trailPct != null ? p.trailPct.toFixed(1) + '%' : '—';
+        const distFromPeak = p.distFromPeak != null ? p.distFromPeak.toFixed(2) + '%' : '—';
+        const distToTarget = p.distToTarget != null ? p.distToTarget.toFixed(2) + '%' : '—';
+        const lossAtTrail = p.lossAtTrail != null ? p.lossAtTrail + ' bps' : '—';
+        const pnlColor = p.pnlPct != null ? pnlState(p.pnlPct / 100) : 'neutral';
 
         // Direction badge
         const dirBadge = `<span class="dir-badge ${{direction}}">${{direction.toUpperCase()}}</span>`;
 
-        // Status badge
-        const statusBadge = `<span class="status-badge ${{status}}">${{status.toUpperCase()}}</span>`;
+        // Trail proximity highlight style (Task 4.2)
+        let rowStyle = '';
+        if (p.highlight === 'red') rowStyle = 'background:rgba(255,23,68,0.08);';
+        else if (p.highlight === 'amber') rowStyle = 'background:rgba(255,171,0,0.08);';
 
-        // Confidence classification
-        const convClass = classifyConfidence(conviction);
+        // High conviction gold border (Task 4.2)
+        if (p.isHighConviction) rowStyle += 'border-left:3px solid var(--brand-gold);';
+
+        // Conviction badge (Task 4.2)
+        const convBadge = p.isHighConviction ? ' <span style="background:rgba(200,169,110,0.18);color:var(--brand-gold);font-size:0.68em;font-weight:700;padding:2px 6px;border-radius:8px;vertical-align:middle;letter-spacing:0.3px;">HIGH CONVICTION</span>' : '';
 
         // Hedge display
         const hedgeDisplay = hedge !== '—' ? `${{hedge}} <span style="color:var(--text-muted);font-size:0.82em;">(${{hedgeDir}})</span>` : '—';
 
-        html += `<tr class="position-row" onclick="togglePositionDetail('${{ticker}}')" aria-expanded="${{isExpanded}}" title="Click to expand details">`;
-        html += `<td style="font-weight:700;">${{ticker}}</td>`;
+        html += `<tr class="position-row" onclick="togglePositionDetail('${{ticker}}')" aria-expanded="${{isExpanded}}" title="Click to expand details" style="${{rowStyle}}">`;
+        html += `<td style="font-weight:700;">${{ticker}}${{convBadge}}</td>`;
         html += `<td>${{dirBadge}}</td>`;
-        html += `<td>${{statusBadge}}</td>`;
-        html += `<td class="num-col">${{entryPrice != null ? '$' + entryPrice.toFixed(2) : '—'}}</td>`;
-        html += `<td class="num-col">${{currentPrice != null ? '$' + currentPrice.toFixed(2) : '—'}}</td>`;
-        html += `<td class="num-col ${{pnlState(dailyChg)}}" style="font-weight:600;">${{formatPctSigned(dailyChg)}}</td>`;
-        html += `<td class="num-col ${{pnlState(cpnl)}}" style="font-weight:700;">${{formatPctSigned(cpnl)}}</td>`;
+        html += `<td class="num-col">${{entryRatio}}</td>`;
+        html += `<td class="num-col">${{currentRatio}}</td>`;
+        html += `<td class="num-col">${{peakRatio}}</td>`;
+        html += `<td class="num-col ${{pnlColor}}" style="font-weight:700;">${{pnlPct}}</td>`;
+        html += `<td class="num-col">${{trailPct}}</td>`;
+        html += `<td class="num-col">${{distFromPeak}}</td>`;
+        html += `<td class="num-col">${{distToTarget}}</td>`;
+        html += `<td class="num-col">${{lossAtTrail}}</td>`;
         html += `<td class="num-col">${{(sizePct * 100).toFixed(1)}}%</td>`;
         html += `<td>${{hedgeDisplay}}</td>`;
-        html += `<td class="num-col"><span style="color:var(--${{convClass === 'high' ? 'positive' : convClass === 'medium' ? 'warning' : 'text-muted'}});">${{conviction}}/10</span></td>`;
-        html += `<td class="num-col">${{days}}</td>`;
         html += `<td style="text-align:center;width:100px;">${{sparkSvg}}</td>`;
         html += `<td><button class="btn-review" onclick="event.stopPropagation();closePosition('${{ticker}}')" aria-label="Review position for ${{ticker}}">Review Position</button></td>`;
         html += `</tr>`;
 
         // Expandable detail row
         if (isExpanded) {{
-            html += `<tr class="position-detail-row"><td colspan="13">`;
+            html += `<tr class="position-detail-row"><td colspan="14">`;
             html += renderPositionDetailPanel(p);
             html += `</td></tr>`;
         }}
@@ -2247,9 +2424,10 @@ function renderPositionDetailPanel(p) {{
     let entryRationale = '';
     let exitCriteria = '';
     let riskTriggers = '';
+    let flipCondition = 'Not specified';
+    let convictionMemo = 'Memo not available';
 
     // If position has a proposalId, try to find matching proposal data
-    // Also look at pending items that may have enriched _proposal data
     const matchingPending = (state.pending || []).find(r => r.ticker === ticker);
     if (matchingPending && matchingPending._proposal) {{
         thesis = matchingPending._proposal.thesis_summary || matchingPending._proposal.thesisSummary || '';
@@ -2257,6 +2435,29 @@ function renderPositionDetailPanel(p) {{
         exitCriteria = matchingPending._proposal.catalyst || '';
         const risks = matchingPending._proposal.key_risks || matchingPending._proposal.keyRisks || [];
         riskTriggers = Array.isArray(risks) ? risks.join('; ') : risks;
+        // Flip condition (Task 4.3)
+        if (matchingPending._proposal.flip_condition) {{
+            flipCondition = matchingPending._proposal.flip_condition;
+        }}
+        // Conviction memo (Task 4.3)
+        if (matchingPending._proposal.conviction_memo || matchingPending._proposal.why_this_deserves_size) {{
+            convictionMemo = matchingPending._proposal.conviction_memo || matchingPending._proposal.why_this_deserves_size;
+        }}
+    }}
+
+    // Also search trade_journal for proposal data
+    const journalEntry = (state.book.trade_journal || []).find(e => {{
+        const o = e.order || {{}};
+        return o.ticker === ticker;
+    }});
+    if (journalEntry && journalEntry.order) {{
+        const order = journalEntry.order;
+        if (!thesis && order.portfolio_thesis) thesis = order.portfolio_thesis;
+        if (!entryRationale && order.pm_rationale) entryRationale = order.pm_rationale;
+        if (order.flip_condition) flipCondition = order.flip_condition;
+        if (order.conviction_memo || order.why_this_deserves_size) {{
+            convictionMemo = order.conviction_memo || order.why_this_deserves_size;
+        }}
     }}
 
     // Fallback: use position fields
@@ -2294,9 +2495,20 @@ function renderPositionDetailPanel(p) {{
     // Hedge details
     html += `<div class="pdp-section"><div class="pdp-label">Hedge Details</div><div class="pdp-value">${{hedgeInfo}}</div></div>`;
 
+    // Flip Condition (Task 4.3)
+    html += `<div class="pdp-section" style="grid-column:1/-1;"><div class="pdp-label">Flip Condition</div><div class="pdp-value" style="color:${{flipCondition === 'Not specified' ? 'var(--text-muted)' : 'var(--warning)'}};">${{escapeHtml(flipCondition)}}</div></div>`;
+
     // Risk triggers
     if (riskTriggers) {{
         html += `<div class="pdp-section"><div class="pdp-label">Risk Triggers</div><div class="pdp-value">${{escapeHtml(riskTriggers)}}</div></div>`;
+    }}
+
+    // Conviction Memo (Task 4.3) — only for high-conviction positions
+    if (p.isHighConviction) {{
+        html += `<div class="pdp-section" style="grid-column:1/-1;border-top:1px solid var(--border);padding-top:12px;margin-top:8px;">
+            <div class="pdp-label" style="color:var(--brand-gold);">Why This Deserves Size</div>
+            <div class="pdp-value">${{escapeHtml(convictionMemo)}}</div>
+        </div>`;
     }}
 
     html += `</div>`;  // pdp-grid
@@ -2450,8 +2662,74 @@ function renderDebate() {{
 <script>
 function renderRisk() {{
     const panel = document.getElementById('panel-risk');
+
+    let html = '';
+
+    // ─── Factor Beta Table (Task 5.1) ─────────────────────────────────────────
+    html += `<div class="section-title">Factor Exposure (Book Betas)</div>`;
+    const FACTOR_DISPLAY = {{
+        'USD_DXY': 'USD / DXY', 'SPX': 'SPX', 'RATES_10Y': 'Rates / 10Y',
+        'VIX': 'VIX', 'GROWTH_VALUE': 'Growth / Value', 'CRUDE_CL1': 'Crude / CL1',
+        'LARGE_SMALL': 'Large / Small', 'HY_CREDIT': 'HY Credit', 'GOLD_XAU': 'Gold / XAU'
+    }};
+    const FACTOR_KEYS = ['USD_DXY', 'SPX', 'RATES_10Y', 'VIX', 'GROWTH_VALUE', 'CRUDE_CL1', 'LARGE_SMALL', 'HY_CREDIT', 'GOLD_XAU'];
+
+    html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Factor</th><th style="text-align:right;">Beta</th><th>Status</th></tr></thead><tbody>`;
+    if (state.factors && state.factors.available) {{
+        for (const key of FACTOR_KEYS) {{
+            const beta = state.factors.factors[key];
+            const betaVal = beta != null ? beta.toFixed(2) : '—';
+            const cls = classifyBeta(beta);
+            let statusBadge = '';
+            if (cls === 'red') statusBadge = '<span class="badge badge-negative">BREACH</span>';
+            else if (cls === 'amber') statusBadge = '<span class="badge badge-warning">WARNING</span>';
+            else statusBadge = '<span class="badge badge-neutral">OK</span>';
+            const cellStyle = cls === 'red' ? 'background:rgba(255,23,68,0.08);' : cls === 'amber' ? 'background:rgba(255,171,0,0.08);' : '';
+            html += `<tr><td>${{FACTOR_DISPLAY[key] || key}}</td><td style="text-align:right;font-weight:600;${{cellStyle}}">${{betaVal}}</td><td>${{statusBadge}}</td></tr>`;
+        }}
+    }} else {{
+        for (const key of FACTOR_KEYS) {{
+            html += `<tr><td>${{FACTOR_DISPLAY[key] || key}}</td><td style="text-align:right;color:var(--text-muted);">—</td><td><span class="badge badge-neutral">pending</span></td></tr>`;
+        }}
+    }}
+    html += `</tbody></table>`;
+
+    // ─── Concentration Limits Table (Task 5.2) ────────────────────────────────
+    html += `<div class="section-title">Concentration Limits</div>`;
+    const concentration = (state.derived && state.derived.concentration) ? state.derived.concentration : {{}};
+    const sectorEntries = Object.entries(concentration);
+
+    if (sectorEntries.length > 0) {{
+        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Sector</th><th style="text-align:right;">Positions</th><th style="text-align:right;">NAV %</th><th>Status</th></tr></thead><tbody>`;
+        for (const [sector, data] of sectorEntries) {{
+            const countDisplay = data.count + ' / 4 max';
+            const navDisplay = (data.navPct * 100).toFixed(1) + '% / 15% max';
+            let statusBadge = '<span class="badge badge-neutral">OK</span>';
+            let rowStyle = '';
+            if (data.highlight === 'red') {{
+                statusBadge = '<span class="badge badge-negative">AT LIMIT</span>';
+                rowStyle = 'background:rgba(255,23,68,0.08);';
+            }} else if (data.highlight === 'amber') {{
+                statusBadge = '<span class="badge badge-warning">NEAR LIMIT</span>';
+                rowStyle = 'background:rgba(255,171,0,0.08);';
+            }}
+            html += `<tr style="${{rowStyle}}"><td style="font-weight:600;">${{sector}}</td><td style="text-align:right;">${{countDisplay}}</td><td style="text-align:right;">${{navDisplay}}</td><td>${{statusBadge}}</td></tr>`;
+        }}
+        html += `</tbody></table>`;
+    }} else {{
+        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No active positions for concentration analysis.</div>`;
+    }}
+
+    // Country Concentration placeholder
+    html += `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:24px;">
+        <div style="font-size:0.78em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Country Concentration</div>
+        <div style="color:var(--text-muted);font-size:0.88em;">Country data pending</div>
+    </div>`;
+
+    // ─── Existing Risk Assessment ─────────────────────────────────────────────
     if (!state.risks.length) {{
-        panel.innerHTML = '<div class="empty-state"><div class="empty-icon">&#9888;</div><div class="empty-text">No risk assessments yet.</div></div>';
+        html += '<div class="empty-state"><div class="empty-icon">&#9888;</div><div class="empty-text">No risk assessments yet.</div></div>';
+        panel.innerHTML = html;
         return;
     }}
     const latest = state.risks[state.risks.length - 1];
@@ -2469,7 +2747,7 @@ function renderRisk() {{
         warningsHtml += `<li style="padding:4px 0;color:var(--warning);font-size:0.88em;">${{escapeHtml(w)}}</li>`;
     }}
 
-    let html = `
+    html += `
         <div class="section-title">Latest Risk Assessment</div>
         <div class="pending-card" style="margin-bottom:24px;">
             <div class="pending-header"><h3>${{latest.proposal_id||'—'}}</h3><span class="badge ${{decClass}}">${{(latest.decision||'').toUpperCase()}}</span></div>
@@ -2481,7 +2759,7 @@ function renderRisk() {{
                 <div class="metric-card" style="padding:14px;"><div class="metric-label">Max Size</div><div class="metric-value" style="font-size:1.2em;">${{((latest.max_allowed_size_pct||0)*100).toFixed(1)}}%</div></div>
             </div>
         </div>
-        <div class="section-title">Factor Betas</div>
+        <div class="section-title">Projected Factor Betas (from Risk Assessment)</div>
         <div class="factor-grid" style="margin-bottom:24px;">${{factorHtml}}</div>
         ${{warningsHtml ? `<div class="section-title">Risk Warnings</div><ul style="list-style:none;margin-bottom:24px;">${{warningsHtml}}</ul>` : ''}}
     `;
@@ -2539,6 +2817,73 @@ function renderTechnical() {{
             <div class="metric-card" style="padding:14px;"><div class="metric-label">Target</div><div class="metric-value positive" style="font-size:1.1em;">$${{(latest.suggested_take_profit||0).toFixed(2)}}</div></div>
         </div>
     `;
+    panel.innerHTML = html;
+}}
+
+// ─── CALENDAR TAB (Task 8.1) ────────────────────────────────────────────────
+function renderCalendar() {{
+    const panel = document.getElementById('panel-calendar');
+    if (!panel) return;
+
+    if (!state.calendar || state.calendar.empty) {{
+        panel.innerHTML = `<div class="empty-state">
+            <div class="empty-icon">&#128197;</div>
+            <div class="empty-text">No calendar data available</div>
+        </div>`;
+        return;
+    }}
+
+    const cal = state.calendar;
+    let html = '';
+
+    // Macro releases
+    html += `<div class="section-title">Macro Releases</div>`;
+    if (cal.macro && cal.macro.length > 0) {{
+        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Day</th><th>Time</th><th>Currency</th><th>Release</th><th>Consensus</th></tr></thead><tbody>`;
+        for (const e of cal.macro) {{
+            html += `<tr><td>${{escapeHtml(e.day || e.date || '—')}}</td><td>${{escapeHtml(e.time || '—')}}</td><td style="font-weight:600;">${{escapeHtml(e.currency || '—')}}</td><td>${{escapeHtml(e.release || e.event || '—')}}</td><td>${{escapeHtml(e.consensus || '—')}}</td></tr>`;
+        }}
+        html += `</tbody></table>`;
+    }} else {{
+        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No macro releases scheduled.</div>`;
+    }}
+
+    // CB Decisions
+    html += `<div class="section-title">Central Bank Decisions</div>`;
+    if (cal.cb && cal.cb.length > 0) {{
+        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Date</th><th>Currency</th><th>Expected Action</th></tr></thead><tbody>`;
+        for (const e of cal.cb) {{
+            html += `<tr><td>${{escapeHtml(e.date || '—')}}</td><td style="font-weight:600;">${{escapeHtml(e.currency || '—')}}</td><td>${{escapeHtml(e.action || '—')}}</td></tr>`;
+        }}
+        html += `</tbody></table>`;
+    }} else {{
+        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No CB decisions scheduled.</div>`;
+    }}
+
+    // Earnings
+    html += `<div class="section-title">Earnings</div>`;
+    if (cal.earnings && cal.earnings.length > 0) {{
+        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Date</th><th>Ticker</th><th>Timing</th></tr></thead><tbody>`;
+        for (const e of cal.earnings) {{
+            html += `<tr><td>${{escapeHtml(e.date || '—')}}</td><td style="font-weight:700;">${{escapeHtml(e.ticker || '—')}}</td><td>${{escapeHtml(e.timing || '—')}}</td></tr>`;
+        }}
+        html += `</tbody></table>`;
+    }} else {{
+        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No earnings events scheduled.</div>`;
+    }}
+
+    // Holidays
+    html += `<div class="section-title">Market Holidays</div>`;
+    if (cal.holidays && cal.holidays.length > 0) {{
+        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Date</th><th>Holiday</th><th>Type</th></tr></thead><tbody>`;
+        for (const e of cal.holidays) {{
+            html += `<tr><td>${{escapeHtml(e.date || '—')}}</td><td>${{escapeHtml(e.name || '—')}}</td><td>${{escapeHtml(e.type || '—')}}</td></tr>`;
+        }}
+        html += `</tbody></table>`;
+    }} else {{
+        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No holidays scheduled.</div>`;
+    }}
+
     panel.innerHTML = html;
 }}
 
@@ -3002,6 +3347,156 @@ function computePortfolioSummary(book, history, pending) {{
     }};
 }}
 
+// ─── BOOTSTRAP ALIGNMENT: DERIVED METRICS ────────────────────────────────────
+
+const HEDGE_TO_SECTOR = {{
+    'RSPG': 'Energy', 'RSPM': 'Materials', 'RSPN': 'Industrials',
+    'RSPD': 'Consumer Discretionary', 'RSPS': 'Consumer Staples',
+    'RSPH': 'Health Care', 'RSPF': 'Financials', 'RSPT': 'Information Technology',
+    'RSPC': 'Communication Services', 'RSPU': 'Utilities', 'RSPR': 'Real Estate'
+}};
+
+function round4(x) {{
+    if (x == null) return null;
+    return Math.round(x * 10000) / 10000;
+}}
+
+function parseTrailPct(stopLossMethod) {{
+    if (!stopLossMethod) return null;
+    const match = stopLossMethod.match(/(\\d+\\.?\\d*)\\s*%/);
+    return match ? parseFloat(match[1]) : null;
+}}
+
+function computeDerivedMetrics(state) {{
+    const positions = (state.book.positions || []).filter(p => p.status === 'active').map(pos => {{
+        const entryRatio = (pos.entry_price && pos.hedge_entry_price && pos.hedge_entry_price > 0)
+            ? round4(pos.entry_price / pos.hedge_entry_price) : null;
+        const currentRatio = (pos.current_price && pos.hedge_current_price && pos.hedge_current_price > 0)
+            ? round4(pos.current_price / pos.hedge_current_price) : null;
+        
+        // Peak ratio: use stored value or default to max of entry/current
+        let peakRatio = pos.peak_ratio || entryRatio;
+        if (currentRatio != null && peakRatio != null) {{
+            const dir = (pos.direction || 'long').toLowerCase();
+            if (dir === 'long') {{
+                peakRatio = Math.max(peakRatio, currentRatio);
+            }} else {{
+                peakRatio = Math.min(peakRatio, currentRatio);
+            }}
+        }}
+        
+        // P&L from ratio (not individual legs)
+        let pnlPct = null;
+        if (entryRatio != null && currentRatio != null && entryRatio !== 0) {{
+            const dir = (pos.direction || 'long').toLowerCase();
+            if (dir === 'long') {{
+                pnlPct = ((currentRatio - entryRatio) / entryRatio) * 100;
+            }} else {{
+                pnlPct = ((entryRatio - currentRatio) / entryRatio) * 100;
+            }}
+        }}
+        
+        // Distance from peak (how far the position has pulled back from its best)
+        let distFromPeak = null;
+        if (peakRatio != null && currentRatio != null && peakRatio !== 0) {{
+            const dir = (pos.direction || 'long').toLowerCase();
+            if (dir === 'long') {{
+                distFromPeak = ((peakRatio - currentRatio) / peakRatio) * 100;
+            }} else {{
+                distFromPeak = ((currentRatio - peakRatio) / peakRatio) * 100;
+            }}
+        }}
+        
+        // Distance to target (+5% from entry ratio)
+        let distToTarget = null;
+        if (entryRatio != null && currentRatio != null && currentRatio !== 0) {{
+            const targetRatio = entryRatio * 1.05;
+            distToTarget = ((targetRatio - currentRatio) / currentRatio) * 100;
+        }}
+        
+        // Trail percentage
+        const trailPct = parseTrailPct(pos.stop_loss_method);
+        
+        // Loss at trail in bps of NAV
+        let lossAtTrail = null;
+        if (trailPct != null && pos.size_pct_nav != null) {{
+            lossAtTrail = Math.round((trailPct / 100) * pos.size_pct_nav * 10000);
+        }}
+        
+        // Trail proximity highlight
+        const highlight = classifyProximity(distFromPeak, trailPct);
+        
+        // High conviction tier
+        const isHighConviction = (pos.size_pct_nav || 0) > 0.05;
+        
+        // Sector from hedge ticker
+        const sector = HEDGE_TO_SECTOR[pos.hedge_ticker] || 'Unknown';
+        
+        return {{
+            ...pos,
+            entryRatio, currentRatio, peakRatio, pnlPct,
+            distFromPeak, distToTarget, trailPct, lossAtTrail,
+            highlight, isHighConviction, sector
+        }};
+    }});
+    
+    // Total loss at trail (sum across all positions)
+    const totalLossAtTrail = positions.reduce((sum, p) => sum + (p.lossAtTrail || 0), 0);
+    
+    // Concentration by sector
+    const concentration = computeConcentration(positions);
+    
+    return {{ positions, totalLossAtTrail, concentration }};
+}}
+
+function classifyProximity(distFromPeak, trailPct) {{
+    if (trailPct == null || distFromPeak == null) return 'normal';
+    const gap = trailPct - distFromPeak; // how far from triggering the trail
+    if (gap <= 0.5) return 'red';
+    if (gap <= 1.0) return 'amber';
+    return 'normal';
+}}
+
+function classifyBeta(beta) {{
+    if (beta == null) return 'normal';
+    const abs = Math.abs(beta);
+    if (abs > 0.6) return 'red';
+    if (abs > 0.4) return 'amber';
+    return 'normal';
+}}
+
+function regimeColor(regime) {{
+    if (!regime) return 'gray';
+    switch (regime.toUpperCase()) {{
+        case 'LEAN-IN': return 'green';
+        case 'NEUTRAL': return 'gray';
+        case 'CUT': return 'red';
+        default: return 'gray';
+    }}
+}}
+
+function computeConcentration(positions) {{
+    const sectors = {{}};
+    for (const pos of positions) {{
+        const sector = pos.sector || HEDGE_TO_SECTOR[pos.hedge_ticker] || 'Unknown';
+        if (!sectors[sector]) sectors[sector] = {{ count: 0, navPct: 0 }};
+        sectors[sector].count += 1;
+        sectors[sector].navPct += (pos.size_pct_nav || 0);
+    }}
+    // Classify each sector
+    for (const [name, data] of Object.entries(sectors)) {{
+        if (data.count >= 4) data.highlight = 'red';
+        else if (data.count >= 3 || data.navPct > 0.12) data.highlight = 'amber';
+        else data.highlight = 'normal';
+    }}
+    return sectors;
+}}
+
+function filterFactorDeltas(deltas) {{
+    if (!deltas || typeof deltas !== 'object') return [];
+    return Object.entries(deltas).filter(([key, val]) => Math.abs(val) > 0.1);
+}}
+
 function renderSparkline(history) {{
     if (!history || history.length < 2) return '<span style="color:var(--text-muted);font-size:0.75em;">—</span>';
     const prices = history.map(h => h.price).filter(p => p != null);
@@ -3242,6 +3737,7 @@ const TITLES = {{
     debate: 'Agent Debate',
     risk: 'Risk Assessment',
     technical: 'Technical Analysis',
+    calendar: 'Calendar',
     timeline: 'Cycle History',
     chat: 'Portfolio Assistant',
 }};

@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/factor_betas.py
+# hypothesis_version: 6.141.1
+
+[0.0, 0.4, 0.5, 0.6, 1.0, 252, 280, 'CDX_HY_5Y', 'CL1', 'DXY', 'GLD', 'Gold Spot Price', 'Growth_Value', 'HYG', 'IEF', 'IWB', 'IWD', 'IWF', 'IWM', 'Large_Small', 'S&P 500', 'SPX', 'SPY', 'US Dollar Index', 'USGG10Yr', 'USO', 'UUP', 'VIX', 'VIXY', 'XAU', 'alerts', 'avg_pairwise_corr', 'book', 'breach', 'crowded_clusters', 'description', 'etf', 'factor', 'insufficient_data', 'inverse_etf', 'l', 'ok', 'proxy_ticker', 'proxy_ticker_long', 'proxy_ticker_short', 'proxy_type', 'ratio', 's', 'warning']

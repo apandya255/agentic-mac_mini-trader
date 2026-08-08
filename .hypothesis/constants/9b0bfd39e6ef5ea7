@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/book_ops.py
+# hypothesis_version: 6.141.1
+
+[0.0, 0.025, 0.05, 0.5, 1.0, 2.0, '.json.lock', '.json.tmp', 'PriceService', 'active', 'book.json', 'carry_adjustment_pct', 'cash_pct', 'combined_pnl_pct', 'current_price', 'direction', 'entry_price', 'hedge_current_price', 'hedge_direction', 'hedge_entry_price', 'hedge_ticker', 'initial_nav', 'last_marked', 'long', 'memos', 'nav', 'peak_pnl', 'positions', 'r', 'short', 'state', 'status', 'ticker', 'trade_journal', 'unrealized_pnl_pct', 'w']

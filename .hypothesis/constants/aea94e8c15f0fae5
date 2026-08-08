@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/news.py
+# hypothesis_version: 6.141.1
+
+[2.0, 3.0, '%Y-%m-%d', 'AgenticTrading/1.0', 'FOMC Decision', 'US', 'US CPI Release', 'US Nonfarm Payrolls', 'User-Agent', 'articles', 'forwardEps', 'high', 'iloc', 'link', 'medium', 'name', 'providerPublishTime', 'publishedAt', 'publisher', 'shortName', 'source', 'title', 'unknown', 'url']

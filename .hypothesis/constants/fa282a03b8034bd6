@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/prices.py
+# hypothesis_version: 6.141.1
+
+[0.0, 126, 252, 400, 1024, '%Y-%m-%d', '+', '--full', '--lookback', '--tickers', '1D', '1M', '1W', '1Y', '3M', '6M', 'Close', 'Fetch full universe', 'High', 'Low', 'Open', 'SPY', 'Volume', '__main__', 'close', 'data', 'date', 'levels', 'long', 'prices.db', 'short', 'store_true']

@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/carry.py
+# hypothesis_version: 6.141.1
+
+[0.0, 0.005, 0.05, 100.0, 360.0, 360, 10000, 650000000, '%Y-%m-%d', 'SOFR', 'carry.db', 'cash_daily_carry_usd', 'cash_pct', 'data', 'date', 'direction', 'long', 'nav', 'net_annual_carry_usd', 'net_daily_carry_usd', 'notional', 'short', 'sofr_rate', 'ticker']

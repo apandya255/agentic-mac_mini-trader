@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-08-08T18:14:08.898852+00:00",
+  "cycle_type": "telegram_delivery",
+  "trigger_source": "heartbeat",
+  "status": "retry",
+  "attempt": 1,
+  "message_preview": "Retry test",
+  "error": "First attempt failed"
+}

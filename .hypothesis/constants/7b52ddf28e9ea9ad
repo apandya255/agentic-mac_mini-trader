@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/trailing_stop.py
+# hypothesis_version: 6.141.1
+
+[0.005, 0.02, 0.025, 0.03, 0.05, 1.0, 'critical', 'current_price', 'direction', 'distance_to_stop_pct', 'entry_price', 'gains_locked_pct', 'info', 'is_stopped', 'is_target_review', 'last_updated', 'long', 'near_stop', 'peak_price', 'pnl_from_peak_pct', 'pnl_pct', 'short', 'stop_level', 'stopped_out', 'target_review', 'ticker', 'trail_pct', 'warning']

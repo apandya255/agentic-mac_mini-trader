@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/book.py
+# hypothesis_version: 6.141.1
+
+[0.0, 252, 650000000, ' [PM REVIEW]', ' [STOPPED]', 'action', 'active', 'book', 'cash_pct', 'close', 'closed', 'conviction', 'date', 'direction', 'entry_price', 'gross_exposure_pct', 'h', 'hedge', 'high_conviction', 'initial_nav', 'long', 'manual', 'nav', 'net_exposure_pct', 'open', 'p', 'pnl_pct', 'position_count', 'position_id', 'positions_at_target', 'positions_stopped', 'reason', 'size_pct', 'standard', 'stopped_out', 'target_review', 'ticker', 'tier', 'total_pnl_dollars', 'total_pnl_pct']

@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/env_loader.py
+# hypothesis_version: 6.141.1
+
+['"', '#', "'", '.env', '.openclaw', '=', 'utf-8']

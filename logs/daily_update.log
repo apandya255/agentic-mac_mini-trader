@@ -1,0 +1,501 @@
+=== Daily Update: Wed Jul 29 16:45:54 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+1 Failed download:
+['ACWI']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['COPX']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EEM']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EFA']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWA']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWC']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWD']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWG']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWH']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWI']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWJ']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWL']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWM']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWN']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWP']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWQ']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWS']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWT']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWU']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWW']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWY']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['EWZ']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['FXI']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['GDX']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['GLD']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['INDA']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSP']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPC']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPD']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPF']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPG']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPH']: TypeError("'NoneType' object is not subscriptable")
+Failed to get ticker 'RSPI' reason: Failed to perform, curl: (6) Could not resolve host: query1.finance.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+
+1 Failed download:
+['RSPI']: DNSError('Failed to perform, curl: (6) Could not resolve host: query1.finance.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.')
+
+1 Failed download:
+['RSPM']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPR']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPS']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPT']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['RSPU']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['SIL']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['SLV']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['USO']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLB']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLC']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLE']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLF']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLI']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLK']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLP']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLRE']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLU']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLV']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XLY']: TypeError("'NoneType' object is not subscriptable")
+
+1 Failed download:
+['XOP']: TypeError("'NoneType' object is not subscriptable")
+Prices updated: 0 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=+0.01%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=+0.00%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=+0.00%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+0.00%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=+0.00%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=+0.00%
+
+  NAV: $10,000,050 (+0.00%)
+  Cash: 58.0%
+  Marked at: 2026-07-29T16:45:58.817888
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 233,395 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Wed Jul 29 16:45:59 EDT 2026 ===
+
+=== Daily Update: Thu Jul 30 16:45:04 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+Prices updated: 104 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=-1.00%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=+0.92%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=+0.24%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+0.84%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=-1.02%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=+0.59%
+
+  NAV: $10,001,533 (+0.02%)
+  Cash: 58.0%
+  Marked at: 2026-07-30T16:45:18.547433
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 234,661 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Thu Jul 30 16:45:18 EDT 2026 ===
+
+=== Daily Update: Fri Jul 31 16:52:15 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+Prices updated: 52 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=-1.73%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=+0.86%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=+0.47%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+1.16%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=-1.76%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=+0.73%
+
+  NAV: $9,998,680 (-0.01%)
+  Cash: 58.0%
+  Marked at: 2026-07-31T16:52:28.816512
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 235,744 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Fri Jul 31 16:52:29 EDT 2026 ===
+
+=== Daily Update: Sat Aug  1 16:53:16 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+Prices updated: 52 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=-1.73%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=+0.86%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=+0.47%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+1.16%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=-1.76%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=+0.73%
+
+  NAV: $9,998,680 (-0.01%)
+  Cash: 58.0%
+  Marked at: 2026-08-01T16:53:30.337252
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 236,835 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Sat Aug  1 16:53:30 EDT 2026 ===
+
+=== Daily Update: Sun Aug  2 16:45:05 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+Prices updated: 52 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=-1.73%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=+0.86%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=+0.47%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+1.16%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=-1.76%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=+0.73%
+
+  NAV: $9,998,680 (-0.01%)
+  Cash: 58.0%
+  Marked at: 2026-08-02T16:45:18.712767
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 237,926 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Sun Aug  2 16:45:18 EDT 2026 ===
+
+=== Daily Update: Mon Aug  3 16:50:21 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+Prices updated: 52 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=-1.02%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=+0.04%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=-0.05%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+1.17%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=-1.05%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=+0.30%
+
+  NAV: $9,997,375 (-0.03%)
+  Cash: 58.0%
+  Marked at: 2026-08-03T16:50:34.702809
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 239,036 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Mon Aug  3 16:50:34 EDT 2026 ===
+
+=== Daily Update: Tue Aug  4 16:55:23 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+1 Failed download:
+['EWP']: TypeError("'NoneType' object is not subscriptable")
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+
+1 Failed download:
+['XLC']: TypeError("'NoneType' object is not subscriptable")
+Prices updated: 50 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=-0.80%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=-0.53%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=-0.21%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+0.76%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=-0.83%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=-0.14%
+
+  NAV: $9,993,594 (-0.06%)
+  Cash: 58.0%
+  Marked at: 2026-08-04T16:59:38.704313
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 240,136 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Tue Aug  4 16:59:38 EDT 2026 ===
+
+=== Daily Update: Wed Aug  5 16:55:23 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+Prices updated: 54 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=+0.34%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=-0.01%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=-0.73%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+0.85%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=+0.33%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=-0.15%
+
+  NAV: $10,001,350 (+0.01%)
+  Cash: 58.0%
+  Marked at: 2026-08-05T16:55:36.367779
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 241,239 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Wed Aug  5 16:55:36 EDT 2026 ===
+
+=== Daily Update: Thu Aug  6 16:55:12 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+Prices updated: 52 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=-0.30%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=-0.48%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=-0.35%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+1.00%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=-0.32%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=+0.06%
+
+  NAV: $9,998,230 (-0.02%)
+  Cash: 58.0%
+  Marked at: 2026-08-06T16:55:28.936605
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 242,332 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Thu Aug  6 16:55:29 EDT 2026 ===
+
+=== Daily Update: Fri Aug  7 16:50:05 EDT 2026 ===
+Updating prices...
+/Users/akashpandya/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: RSPI"}}}
+$RSPI: possibly delisted; no timezone found
+
+1 Failed download:
+['RSPI']: possibly delisted; no timezone found
+Prices updated: 52 rows
+Marking to market...
+Marking 6 active position(s) to market...
+
+  XOM/RSPG  long  entry=$154.77  now=$152.65  P&L=+0.18%
+  NFLX/RSPC  long  entry=$73.38  now=$73.38  P&L=-0.28%
+  BKNG/RSPD  long  entry=$197.32  now=$197.32  P&L=-1.12%
+  WMT/RSPS  long  entry=$113.54  now=$113.54  P&L=+0.82%
+  DVN/RSPG  long  entry=$42.61  now=$42.61  P&L=+0.17%
+  V/RSPF  long  entry=$368.79  now=$368.79  P&L=+0.16%
+
+  NAV: $9,999,035 (-0.01%)
+  Cash: 58.0%
+  Marked at: 2026-08-07T16:50:18.503180
+Syncing desk files...
+desk/positions.md synced — 6 active positions.
+Regenerating dashboard...
+Dashboard written to: /Users/akashpandya/AgenticTradingResearch/dashboard.html
+  Also: /Users/akashpandya/AgenticTradingResearch/index.html (for GitHub Pages)
+  Size: 243,426 bytes
+
+  To use interactively, run:  python3 serve.py
+  Then open:  http://127.0.0.1:5100/
+=== Done: Fri Aug  7 16:50:18 EDT 2026 ===
+

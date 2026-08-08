@@ -43,14 +43,10 @@ MEMOS_DIR = PROJECT_ROOT / "memos"
 STATE_FILE = MEMOS_DIR / "state" / "book.json"
 LOG_DIR = MEMOS_DIR / "logs"
 
-# Load .env if present
-_env_file = PROJECT_ROOT / ".env"
-if _env_file.exists():
-    for line in _env_file.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            key, val = line.split("=", 1)
-            os.environ.setdefault(key.strip(), val.strip())
+# Load secrets from ~/.openclaw/.env per TOOLS.md security model
+sys.path.insert(0, str(PROJECT_ROOT))
+from src.data_platform.env_loader import load_secrets
+load_secrets()
 
 # POC Universe tickers
 POC_TICKERS = [
@@ -256,8 +252,13 @@ def phase_1_data_refresh() -> None:
         log("  Price update returned no result (may already be current)", "WARN")
 
 
-def phase_2_blind_proposals(dry_run: bool = False) -> list[str]:
-    """Phase 2: Blind first pass — each research agent generates proposals independently."""
+def phase_2_blind_proposals(dry_run: bool = False, agent_filter: list[str] | None = None) -> list[str]:
+    """Phase 2: Blind first pass — each research agent generates proposals independently.
+
+    Args:
+        dry_run: If True, print commands without executing.
+        agent_filter: Optional list of agent IDs to run. If None or empty, all agents run.
+    """
     log("═══ PHASE 2: BLIND FIRST PASS (Proposals) ═══")
 
     # Read current book state for context
@@ -266,6 +267,12 @@ def phase_2_blind_proposals(dry_run: bool = False) -> list[str]:
 
     # Discover all research agents dynamically
     agents = discover_research_agents()
+
+    # Apply agent filter if provided
+    if agent_filter:
+        agents = {k: v for k, v in agents.items() if k in agent_filter}
+        log(f"  Agent filter active: running {len(agents)} of {len(discover_research_agents())} agent(s)")
+
     log(f"  Discovered {len(agents)} research agent(s): {', '.join(agents.keys())}")
 
     proposals = []
@@ -789,10 +796,15 @@ def main():
     parser.add_argument("--phase", type=int, help="Run only a specific phase (1-8)")
     parser.add_argument("--skip-data", action="store_true", help="Skip price data refresh")
     parser.add_argument("--dry-run", action="store_true", help="Print commands without executing")
+    parser.add_argument("--agents", type=str, default="",
+        help="Comma-separated list of agent IDs to run (e.g., fund_energy,macro_commodities)")
     args = parser.parse_args()
 
     ensure_dirs()
     dry_run = args.dry_run
+
+    # Parse agent filter (comma-separated string → list, or None if empty)
+    agent_filter = [a.strip() for a in args.agents.split(",") if a.strip()] or None
 
     log("╔══════════════════════════════════════════════╗")
     log("║   AGENTIC TRADING POC — PIPELINE CYCLE      ║")
@@ -804,7 +816,7 @@ def main():
         if args.phase == 1:
             phase_1_data_refresh()
         elif args.phase == 2:
-            phase_2_blind_proposals(dry_run)
+            phase_2_blind_proposals(dry_run, agent_filter)
         elif args.phase == 3:
             phase_3_debate([], dry_run)
         elif args.phase == 5:
@@ -822,7 +834,7 @@ def main():
     if not args.skip_data:
         phase_1_data_refresh()
 
-    proposals = phase_2_blind_proposals(dry_run)
+    proposals = phase_2_blind_proposals(dry_run, agent_filter)
     debated = phase_3_debate(proposals, dry_run)
     survivors = phase_4_conviction_check(debated)
 

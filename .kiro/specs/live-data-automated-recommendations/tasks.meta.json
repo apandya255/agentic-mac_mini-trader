@@ -1,0 +1,726 @@
+{
+  "pbtResults": {
+    "1.3 Write property tests for market calendar (Property 1 & 4)": {
+      "status": "passed",
+      "lastRunTimestamp": 1786212902205
+    },
+    "1.4 Write property tests for book operations (Property 2 & 6)": {
+      "status": "passed",
+      "lastRunTimestamp": 1786212999570
+    },
+    "3.6 Write property test for staleness detection (Property 5)": {
+      "status": "passed",
+      "lastRunTimestamp": 1786213922501
+    },
+    "6.4 Write property test for daily sweep agent selection (Property 3)": {
+      "status": "passed",
+      "lastRunTimestamp": 1786213923174
+    }
+  },
+  "executionHistory": {
+    "1.1 Implement `src/data_platform/market_calendar.py`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465469
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212472727
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212729673
+      }
+    ],
+    "1.2 Implement `src/data_platform/book_ops.py`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465505
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212473444
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212730392
+      }
+    ],
+    "1.3 Write property tests for market calendar (Property 1 & 4)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465535
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212733817
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213012739
+      }
+    ],
+    "1.4 Write property tests for book operations (Property 2 & 6)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465561
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212734479
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213013565
+      }
+    ],
+    "2. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465589
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216402769
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216484656
+      }
+    ],
+    "3.1 Create `scripts/price_poller.py` — main loop structure": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465620
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213021641
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213209577
+      }
+    ],
+    "3.2 Add trail breach detection and auto-execution to price poller": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465647
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213214812
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213738728
+      }
+    ],
+    "3.3 Add target touch detection and near-trail warning to price poller": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465677
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213215616
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213737816
+      }
+    ],
+    "3.4 Add Two-Sigma interrupt detection to price poller": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465704
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213216349
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213739435
+      }
+    ],
+    "3.5 Add stale/garbage quote rejection to price poller": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465731
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213217309
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213736073
+      }
+    ],
+    "3.6 Write property test for staleness detection (Property 5)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465763
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213822294
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213990803
+      }
+    ],
+    "4. Checkpoint - Ensure price poller tests pass": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465797
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216488437
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216492537
+      }
+    ],
+    "5.1 Create `src/telegram_bot.py`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465828
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212735221
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213014555
+      }
+    ],
+    "5.2 Write unit tests for Telegram bot": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465852
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213022295
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213208699
+      }
+    ],
+    "6.1 Modify `run_cycle.py` to add `--agents` filter flag": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465877
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213023250
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213210643
+      }
+    ],
+    "6.2 Create `scripts/daily_sweep.py`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465901
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213217942
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213736785
+      }
+    ],
+    "6.3 Create `scripts/full_desk_run.py`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465927
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213746850
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213818573
+      }
+    ],
+    "6.4 Write property test for daily sweep agent selection (Property 3)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465952
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213823085
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213991655
+      }
+    ],
+    "7. Checkpoint - Ensure sweep and desk run work": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212465979
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216495900
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216499279
+      }
+    ],
+    "8.1 Create `scripts/install_scheduler.sh`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466008
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213998188
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214389241
+      }
+    ],
+    "8.2 Create `scripts/uninstall_scheduler.sh`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466034
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213998955
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214390109
+      }
+    ],
+    "9.1 Add stale-data indicator to `serve.py` API": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466060
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213823924
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213992430
+      }
+    ],
+    "9.2 Add stale-data warning banner to `dashboard.html`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466086
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213999754
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214390742
+      }
+    ],
+    "9.3 Add alerts feed to dashboard": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466113
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214000503
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214391608
+      }
+    ],
+    "9.4 Add `/api/logs` endpoint to `serve.py`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466144
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213824744
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213993326
+      }
+    ],
+    "10.1 Create logging utility in `src/data_platform/cycle_logger.py`": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466170
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212736059
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213015445
+      }
+    ],
+    "11. Checkpoint - Ensure all components integrated": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466208
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216502570
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216505852
+      }
+    ],
+    "12.1 Add hourly headline scan script (`scripts/headline_scan.py`)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466234
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214396044
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214787760
+      }
+    ],
+    "12.2 Add Asia open note script (`scripts/asia_note.py`)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466261
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214396862
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214788619
+      }
+    ],
+    "12.3 Add morning brief script (`scripts/morning_brief.py`)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466292
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214397574
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214789363
+      }
+    ],
+    "12.4 Add post-close wrap script (`scripts/post_close_wrap.py`)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466317
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214398433
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214790286
+      }
+    ],
+    "12.5 Add coverage digest script (`scripts/coverage_digest.py`)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466343
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214399250
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214791121
+      }
+    ],
+    "12.6 Add Sunday week-ahead script (`scripts/week_ahead.py`)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466369
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214795405
+      }
+    ],
+    "12.7 Add CB decision monitoring to price poller": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466400
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214796070
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786215108554
+      }
+    ],
+    "12.8 Update `scripts/install_scheduler.sh` to include all scheduled report plists": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466427
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786215113599
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216393785
+      }
+    ],
+    "13.1 Add empty-book guards throughout the system": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466457
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786215114233
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216394720
+      }
+    ],
+    "13.2 Verify all configuration reads from environment": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466485
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786215115030
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216395335
+      }
+    ],
+    "14. Final checkpoint - Full integration verification": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786212466511
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216509195
+      },
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216594881
+      }
+    ],
+    "1. Create market calendar module and book operations core": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213013598
+      }
+    ],
+    "10. Implement structured logging for all automated cycles": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213015482
+      }
+    ],
+    "5. Implement Telegram bot and notification delivery": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213208739
+      }
+    ],
+    "3. Implement price poller with trail/target detection": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213990839
+      }
+    ],
+    "6. Implement daily sweep and full desk run scripts": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786213991690
+      }
+    ],
+    "8. Implement launchd scheduling and install/uninstall scripts": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214390168
+      }
+    ],
+    "9. Dashboard enhancements — stale data warning and alerts": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786214391667
+      }
+    ],
+    "12. LLM-driven scheduled reports (Mac Mini deployment)": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216393821
+      }
+    ],
+    "13. Wire empty-book behavior and configuration": [
+      {
+        "executionId": "ac1b19a0-ce0b-4476-9baa-8bcb97d5ecd3",
+        "chatSessionId": "sess_347ce735-3e99-478e-9bd6-e026cf7725f3",
+        "timestamp": 1786216395369
+      }
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "nav": 10000050.437014759,
+  "nav": 9999035.00141975,
   "initial_nav": 10000000,
   "cash_pct": 0.58,
   "positions": [
@@ -14,15 +14,15 @@
       "entry_price": 154.77000427246094,
       "hedge_entry_price": 104.66000366210938,
       "current_price": 152.64999389648438,
-      "hedge_current_price": 103.19999694824219,
+      "hedge_current_price": 102.84500122070312,
       "entry_date": "2026-07-28",
       "status": "active",
       "stop_loss_method": "trailing 2.5% from peak",
       "take_profit": "5% triggers review (take is default)",
       "proposal_id": "fund_energy_2026-07-27T22-37-12",
       "unrealized_pnl_pct": -0.013697811704162286,
-      "hedge_unrealized_pnl_pct": 0.013949996777955031,
-      "combined_pnl_pct": 0.00012609253689637237,
+      "hedge_unrealized_pnl_pct": 0.01734189162906885,
+      "combined_pnl_pct": 0.0018220399624532821,
       "price_history": [
         {
           "date": "2026-07-28",
@@ -30,9 +30,80 @@
           "hedge_price": 103.19999694824219,
           "combined_pnl_pct": 0.00012609253689637237,
           "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-29",
+          "price": 152.64999389648438,
+          "hedge_price": 103.19999694824219,
+          "combined_pnl_pct": 0.00012609253689637237,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-30",
+          "price": 152.64999389648438,
+          "hedge_price": 105.30999755859375,
+          "combined_pnl_pct": -0.009954169915432671,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-31",
+          "price": 152.64999389648438,
+          "hedge_price": 106.83999633789062,
+          "combined_pnl_pct": -0.017263546591151195,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-01",
+          "price": 152.64999389648438,
+          "hedge_price": 106.83999633789062,
+          "combined_pnl_pct": -0.017263546591151195,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-02",
+          "price": 152.64999389648438,
+          "hedge_price": 106.83999633789062,
+          "combined_pnl_pct": -0.017263546591151195,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-03",
+          "price": 152.64999389648438,
+          "hedge_price": 105.36000061035156,
+          "combined_pnl_pct": -0.010193053204216252,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-04",
+          "price": 152.64999389648438,
+          "hedge_price": 104.91000366210938,
+          "combined_pnl_pct": -0.008043249399054039,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-05",
+          "price": 152.64999389648438,
+          "hedge_price": 102.51499938964844,
+          "combined_pnl_pct": 0.0033985821920909072,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-06",
+          "price": 152.64999389648438,
+          "hedge_price": 103.86000061035156,
+          "combined_pnl_pct": -0.003026991922378875,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-07",
+          "price": 152.64999389648438,
+          "hedge_price": 102.84500122070312,
+          "combined_pnl_pct": 0.0018220399624532821,
+          "daily_change_pct": 0.0
         }
       ],
-      "daily_change_pct": 0.0
+      "daily_change_pct": 0.0,
+      "peak_pnl": 0.0018220399624532821
     },
     {
       "ticker": "NFLX",
@@ -45,21 +116,91 @@
       "entry_price": 73.37999725341797,
       "hedge_entry_price": 36.19499969482422,
       "current_price": 73.37999725341797,
-      "hedge_current_price": 36.19499969482422,
+      "hedge_current_price": 36.4010009765625,
       "entry_date": "2026-07-28",
       "status": "active",
       "stop_loss_method": "trailing 2.5% from peak",
       "take_profit": "5% triggers review (take is default)",
       "proposal_id": "fund_commsvcs_2026-07-28T13-09-23",
       "unrealized_pnl_pct": 0.0,
-      "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
+      "hedge_unrealized_pnl_pct": -0.005691429298940949,
+      "combined_pnl_pct": -0.0028457146494704744,
       "price_history": [
         {
           "date": "2026-07-28",
           "price": 73.37999725341797,
           "hedge_price": 36.19499969482422,
           "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-29",
+          "price": 73.37999725341797,
+          "hedge_price": 36.19499969482422,
+          "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-30",
+          "price": 73.37999725341797,
+          "hedge_price": 35.52880096435547,
+          "combined_pnl_pct": 0.009202911121505196,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-31",
+          "price": 73.37999725341797,
+          "hedge_price": 35.56999969482422,
+          "combined_pnl_pct": 0.008633789270198188,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-01",
+          "price": 73.37999725341797,
+          "hedge_price": 35.56999969482422,
+          "combined_pnl_pct": 0.008633789270198188,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-02",
+          "price": 73.37999725341797,
+          "hedge_price": 35.56999969482422,
+          "combined_pnl_pct": 0.008633789270198188,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-03",
+          "price": 73.37999725341797,
+          "hedge_price": 36.1692008972168,
+          "combined_pnl_pct": 0.00035638621114715785,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-04",
+          "price": 73.37999725341797,
+          "hedge_price": 36.57609939575195,
+          "combined_pnl_pct": -0.005264535213992978,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-05",
+          "price": 73.37999725341797,
+          "hedge_price": 36.20220184326172,
+          "combined_pnl_pct": -9.949093104329942e-05,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-06",
+          "price": 73.37999725341797,
+          "hedge_price": 36.54499816894531,
+          "combined_pnl_pct": -0.0048349009127238995,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-07",
+          "price": 73.37999725341797,
+          "hedge_price": 36.4010009765625,
+          "combined_pnl_pct": -0.0028457146494704744,
           "daily_change_pct": 0.0
         }
       ],
@@ -76,21 +217,91 @@
       "entry_price": 197.32000732421875,
       "hedge_entry_price": 57.369998931884766,
       "current_price": 197.32000732421875,
-      "hedge_current_price": 57.369998931884766,
+      "hedge_current_price": 58.650001525878906,
       "entry_date": "2026-07-28",
       "status": "active",
       "stop_loss_method": "trailing 2.5% from peak",
       "take_profit": "5% triggers review (take is default)",
       "proposal_id": "fund_consdisc_2026-07-28T13-11-21",
       "unrealized_pnl_pct": 0.0,
-      "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
+      "hedge_unrealized_pnl_pct": -0.022311358163242846,
+      "combined_pnl_pct": -0.011155679081621423,
       "price_history": [
         {
           "date": "2026-07-28",
           "price": 197.32000732421875,
           "hedge_price": 57.369998931884766,
           "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-29",
+          "price": 197.32000732421875,
+          "hedge_price": 57.369998931884766,
+          "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-30",
+          "price": 197.32000732421875,
+          "hedge_price": 57.099998474121094,
+          "combined_pnl_pct": 0.002353150277065916,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-31",
+          "price": 197.32000732421875,
+          "hedge_price": 56.83000183105469,
+          "combined_pnl_pct": 0.004706267307684763,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-01",
+          "price": 197.32000732421875,
+          "hedge_price": 56.83000183105469,
+          "combined_pnl_pct": 0.004706267307684763,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-02",
+          "price": 197.32000732421875,
+          "hedge_price": 56.83000183105469,
+          "combined_pnl_pct": 0.004706267307684763,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-03",
+          "price": 197.32000732421875,
+          "hedge_price": 57.43000030517578,
+          "combined_pnl_pct": -0.0005229333659414486,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-04",
+          "price": 197.32000732421875,
+          "hedge_price": 57.61000061035156,
+          "combined_pnl_pct": -0.002091700217318726,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-05",
+          "price": 197.32000732421875,
+          "hedge_price": 58.209999084472656,
+          "combined_pnl_pct": -0.007320900890944938,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-06",
+          "price": 197.32000732421875,
+          "hedge_price": 57.77000045776367,
+          "combined_pnl_pct": -0.00348615594671552,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-07",
+          "price": 197.32000732421875,
+          "hedge_price": 58.650001525878906,
+          "combined_pnl_pct": -0.011155679081621423,
           "daily_change_pct": 0.0
         }
       ],
@@ -107,15 +318,15 @@
       "entry_price": 113.54000091552734,
       "hedge_entry_price": 31.6200008392334,
       "current_price": 113.54000091552734,
-      "hedge_current_price": 31.6200008392334,
+      "hedge_current_price": 31.100000381469727,
       "entry_date": "2026-07-28",
       "status": "active",
       "stop_loss_method": "trailing 2.5% from peak",
       "take_profit": "5% triggers review (take is default)",
       "proposal_id": "fund_consstaples_2026-07-28T13-12-41",
       "unrealized_pnl_pct": 0.0,
-      "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
+      "hedge_unrealized_pnl_pct": 0.016445301833087456,
+      "combined_pnl_pct": 0.008222650916543728,
       "price_history": [
         {
           "date": "2026-07-28",
@@ -123,9 +334,80 @@
           "hedge_price": 31.6200008392334,
           "combined_pnl_pct": 0.0,
           "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-29",
+          "price": 113.54000091552734,
+          "hedge_price": 31.6200008392334,
+          "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-30",
+          "price": 113.54000091552734,
+          "hedge_price": 31.09000015258789,
+          "combined_pnl_pct": 0.008380782298840022,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-31",
+          "price": 113.54000091552734,
+          "hedge_price": 30.884700775146484,
+          "combined_pnl_pct": 0.01162713542965138,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-01",
+          "price": 113.54000091552734,
+          "hedge_price": 30.884700775146484,
+          "combined_pnl_pct": 0.01162713542965138,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-02",
+          "price": 113.54000091552734,
+          "hedge_price": 30.884700775146484,
+          "combined_pnl_pct": 0.01162713542965138,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-03",
+          "price": 113.54000091552734,
+          "hedge_price": 30.8799991607666,
+          "combined_pnl_pct": 0.011701481006107678,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-04",
+          "price": 113.54000091552734,
+          "hedge_price": 31.139999389648438,
+          "combined_pnl_pct": 0.0075901555478358135,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-05",
+          "price": 113.54000091552734,
+          "hedge_price": 31.079999923706055,
+          "combined_pnl_pct": 0.008538913681136316,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-06",
+          "price": 113.54000091552734,
+          "hedge_price": 30.985000610351562,
+          "combined_pnl_pct": 0.010041116572235219,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-07",
+          "price": 113.54000091552734,
+          "hedge_price": 31.100000381469727,
+          "combined_pnl_pct": 0.008222650916543728,
+          "daily_change_pct": 0.0
         }
       ],
-      "daily_change_pct": 0.0
+      "daily_change_pct": 0.0,
+      "peak_pnl": 0.008222650916543728
     },
     {
       "ticker": "DVN",
@@ -138,15 +420,15 @@
       "entry_price": 42.61000061035156,
       "hedge_entry_price": 103.19999694824219,
       "current_price": 42.61000061035156,
-      "hedge_current_price": 103.19999694824219,
+      "hedge_current_price": 102.84500122070312,
       "entry_date": "2026-07-28",
       "status": "active",
       "stop_loss_method": "trailing 2.5% from peak",
       "take_profit": "5% triggers review (take is default)",
       "proposal_id": "fund_energy_2026-07-28T13-14-41",
       "unrealized_pnl_pct": 0.0,
-      "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
+      "hedge_unrealized_pnl_pct": 0.003439881182526616,
+      "combined_pnl_pct": 0.001719940591263308,
       "price_history": [
         {
           "date": "2026-07-28",
@@ -154,9 +436,80 @@
           "hedge_price": 103.19999694824219,
           "combined_pnl_pct": 0.0,
           "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-29",
+          "price": 42.61000061035156,
+          "hedge_price": 103.19999694824219,
+          "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-30",
+          "price": 42.61000061035156,
+          "hedge_price": 105.30999755859375,
+          "combined_pnl_pct": -0.010222871476487492,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-31",
+          "price": 42.61000061035156,
+          "hedge_price": 106.83999633789062,
+          "combined_pnl_pct": -0.01763565647910825,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-01",
+          "price": 42.61000061035156,
+          "hedge_price": 106.83999633789062,
+          "combined_pnl_pct": -0.01763565647910825,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-02",
+          "price": 42.61000061035156,
+          "hedge_price": 106.83999633789062,
+          "combined_pnl_pct": -0.01763565647910825,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-03",
+          "price": 42.61000061035156,
+          "hedge_price": 105.36000061035156,
+          "combined_pnl_pct": -0.010465134331315339,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-04",
+          "price": 42.61000061035156,
+          "hedge_price": 104.91000366210938,
+          "combined_pnl_pct": -0.008284916494352252,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-05",
+          "price": 42.61000061035156,
+          "hedge_price": 102.51499938964844,
+          "combined_pnl_pct": 0.0033187867192345766,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-06",
+          "price": 42.61000061035156,
+          "hedge_price": 103.86000061035156,
+          "combined_pnl_pct": -0.003197692255942537,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-07",
+          "price": 42.61000061035156,
+          "hedge_price": 102.84500122070312,
+          "combined_pnl_pct": 0.001719940591263308,
+          "daily_change_pct": 0.0
         }
       ],
-      "daily_change_pct": 0.0
+      "daily_change_pct": 0.0,
+      "peak_pnl": 0.001719940591263308
     },
     {
       "ticker": "V",
@@ -169,15 +522,15 @@
       "entry_price": 368.7900085449219,
       "hedge_entry_price": 84.58039855957031,
       "current_price": 368.7900085449219,
-      "hedge_current_price": 84.58039855957031,
+      "hedge_current_price": 84.30999755859375,
       "entry_date": "2026-07-28",
       "status": "active",
       "stop_loss_method": "trailing 2.5% from peak",
       "take_profit": "5% triggers review (take is default)",
       "proposal_id": "fund_financials_2026-07-28T13-16-41",
       "unrealized_pnl_pct": 0.0,
-      "hedge_unrealized_pnl_pct": 0.0,
-      "combined_pnl_pct": 0.0,
+      "hedge_unrealized_pnl_pct": 0.0031969700495809083,
+      "combined_pnl_pct": 0.0015984850247904542,
       "price_history": [
         {
           "date": "2026-07-28",
@@ -185,9 +538,80 @@
           "hedge_price": 84.58039855957031,
           "combined_pnl_pct": 0.0,
           "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-29",
+          "price": 368.7900085449219,
+          "hedge_price": 84.58039855957031,
+          "combined_pnl_pct": 0.0,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-30",
+          "price": 368.7900085449219,
+          "hedge_price": 83.58000183105469,
+          "combined_pnl_pct": 0.005913880435376771,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-07-31",
+          "price": 368.7900085449219,
+          "hedge_price": 83.34770202636719,
+          "combined_pnl_pct": 0.00728712889863561,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-01",
+          "price": 368.7900085449219,
+          "hedge_price": 83.34770202636719,
+          "combined_pnl_pct": 0.00728712889863561,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-02",
+          "price": 368.7900085449219,
+          "hedge_price": 83.34770202636719,
+          "combined_pnl_pct": 0.00728712889863561,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-03",
+          "price": 368.7900085449219,
+          "hedge_price": 84.08000183105469,
+          "combined_pnl_pct": 0.0029581128549730916,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-04",
+          "price": 368.7900085449219,
+          "hedge_price": 84.81880187988281,
+          "combined_pnl_pct": -0.001409329610480563,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-05",
+          "price": 368.7900085449219,
+          "hedge_price": 84.83779907226562,
+          "combined_pnl_pct": -0.0015216321812081808,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-06",
+          "price": 368.7900085449219,
+          "hedge_price": 84.48200225830078,
+          "combined_pnl_pct": 0.0005816731946482278,
+          "daily_change_pct": 0.0
+        },
+        {
+          "date": "2026-08-07",
+          "price": 368.7900085449219,
+          "hedge_price": 84.30999755859375,
+          "combined_pnl_pct": 0.0015984850247904542,
+          "daily_change_pct": 0.0
         }
       ],
-      "daily_change_pct": 0.0
+      "daily_change_pct": 0.0,
+      "peak_pnl": 0.0015984850247904542
     }
   ],
   "trade_journal": [
@@ -510,5 +934,5 @@
       "timestamp": "2026-07-28T14:04:40.487029"
     }
   ],
-  "last_marked": "2026-07-28T18:38:04.744526"
+  "last_marked": "2026-08-08T14:11:43.048768"
 }

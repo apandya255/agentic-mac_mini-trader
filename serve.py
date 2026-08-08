@@ -29,6 +29,7 @@ from flask import Flask, jsonify, request, send_file
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from data_platform.prices import PriceService
+from data_platform.market_calendar import is_market_open
 
 # --- Paths ---
 BASE_DIR = Path(__file__).parent
@@ -41,6 +42,11 @@ SCORES_DIR = BASE_DIR / "memos" / "scores"
 LOGS_DIR = BASE_DIR / "memos" / "logs"
 HISTORY_PATH = BASE_DIR / "memos" / "state" / "pnl_history.json"
 DASHBOARD_PATH = BASE_DIR / "dashboard.html"
+CALENDAR_PATH = BASE_DIR / "desk" / "calendar.md"
+FACTORS_PATH = BASE_DIR / "memos" / "state" / "factors.json"
+
+# --- Configuration ---
+POLL_INTERVAL_MINUTES = int(os.environ.get("POLL_INTERVAL_MINUTES", "5"))
 
 app = Flask(__name__)
 price_service = PriceService()
@@ -227,6 +233,27 @@ def api_book():
     book = load_book()
     book = mark_positions_to_market(book)
     save_book(book)
+
+    # Add leverage regime from latest risk assessment
+    book["leverage_regime"] = None
+    if RISK_DIR.exists():
+        risk_files = sorted(RISK_DIR.glob("*.json"))
+        if risk_files:
+            try:
+                latest_risk = json.loads(risk_files[-1].read_text())
+                book["leverage_regime"] = latest_risk.get("leverage_regime", None)
+            except (json.JSONDecodeError, KeyError):
+                pass
+
+    # Add staleness indicator
+    last_marked = book.get("last_marked")
+    if last_marked and is_market_open():
+        age_minutes = (datetime.now() - datetime.fromisoformat(last_marked)).total_seconds() / 60
+        book["_stale"] = age_minutes > (POLL_INTERVAL_MINUTES + 0.5)
+        book["_last_poll_age_minutes"] = round(age_minutes, 1)
+    else:
+        book["_stale"] = False
+
     return jsonify(book)
 
 
@@ -481,31 +508,120 @@ def api_scores():
     return jsonify({"scores": scores})
 
 
+@app.route("/api/calendar")
+def api_calendar():
+    """Parse desk/calendar.md and return structured JSON."""
+    if not CALENDAR_PATH.exists():
+        return jsonify({"empty": True, "macro": [], "cb": [], "earnings": [], "holidays": []})
+    
+    content = CALENDAR_PATH.read_text()
+    result = {"empty": True, "macro": [], "cb": [], "earnings": [], "holidays": []}
+    
+    # Split by ### headers
+    current_section = None
+    for line in content.split('\n'):
+        if line.startswith('### '):
+            header = line[4:].strip().lower()
+            if 'macro' in header:
+                current_section = 'macro'
+            elif 'cb' in header or 'decision' in header:
+                current_section = 'cb'
+            elif 'earning' in header:
+                current_section = 'earnings'
+            elif 'holiday' in header:
+                current_section = 'holidays'
+            else:
+                current_section = None
+        elif current_section and line.strip().startswith('|') and '—' not in line and '---' not in line:
+            # Parse table row
+            cells = [c.strip() for c in line.split('|')[1:-1]]
+            if len(cells) >= 2 and cells[0] and not all(c == '' or c.startswith('-') for c in cells):
+                if current_section == 'macro' and len(cells) >= 3:
+                    result['macro'].append({"raw": line.strip()})
+                    result['empty'] = False
+                elif current_section == 'cb' and len(cells) >= 2:
+                    result['cb'].append({"raw": line.strip()})
+                    result['empty'] = False
+                elif current_section == 'earnings' and len(cells) >= 2:
+                    result['earnings'].append({"raw": line.strip()})
+                    result['empty'] = False
+                elif current_section == 'holidays' and len(cells) >= 2:
+                    result['holidays'].append({"raw": line.strip()})
+                    result['empty'] = False
+    
+    return jsonify(result)
+
+
+@app.route("/api/factors")
+def api_factors():
+    """Return book-level factor betas. Reads from memos/state/factors.json if available."""
+    if not FACTORS_PATH.exists():
+        return jsonify({"available": False, "computed_at": None, "factors": {}})
+    try:
+        data = json.loads(FACTORS_PATH.read_text())
+        return jsonify({
+            "available": True,
+            "computed_at": data.get("computed_at"),
+            "factors": data.get("factors", {})
+        })
+    except (json.JSONDecodeError, KeyError):
+        return jsonify({"available": False, "computed_at": None, "factors": {}})
+
+
 @app.route("/api/logs")
 def api_logs():
-    """Return cycle logs."""
+    """Return all cycle logs from memos/logs/ sorted by timestamp descending."""
     logs = []
     if LOGS_DIR.exists():
-        for f in sorted(LOGS_DIR.glob("cycle_*.json")):
+        for f in LOGS_DIR.glob("*.json"):
             try:
-                logs.append(json.loads(f.read_text()))
-            except (json.JSONDecodeError, KeyError):
+                log_entry = json.loads(f.read_text())
+                logs.append(log_entry)
+            except (json.JSONDecodeError, OSError):
                 continue
-    return jsonify({"logs": logs})
+
+    # Sort by timestamp descending (most recent first)
+    logs.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+    return jsonify(logs)
+
+
+@app.route("/api/alerts")
+def api_alerts():
+    """Return alerts (trail breaches, target touches, 2σ interrupts, telegram deliveries) and system health."""
+    if not LOGS_DIR.exists():
+        return jsonify({"alerts": [], "health": []})
+
+    alerts = []
+    health = []
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    for log_file in LOGS_DIR.glob("*.json"):
+        try:
+            entry = json.loads(log_file.read_text())
+            cycle_type = entry.get("cycle_type", "")
+            timestamp = entry.get("timestamp", "")
+
+            # Alerts: telegram deliveries (these contain trail/target/2σ/feed outage messages)
+            if cycle_type == "telegram_delivery":
+                alerts.append(entry)
+            # Health: price_poll, daily_sweep, full_desk_run from today
+            elif timestamp.startswith(today):
+                health.append(entry)
+        except (json.JSONDecodeError, OSError):
+            continue
+
+    alerts.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+    health.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+    return jsonify({"alerts": alerts[:50], "health": health[:50]})
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 # CHAT AGENT
 # ──────────────────────────────────────────────────────────────────────────────
 
-# Load .env for API key
-_env_file = BASE_DIR / ".env"
-if _env_file.exists():
-    for line in _env_file.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            key, val = line.split("=", 1)
-            os.environ.setdefault(key.strip(), val.strip())
+# Load secrets from ~/.openclaw/.env per TOOLS.md security model
+from src.data_platform.env_loader import load_secrets
+load_secrets()
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 CHAT_MODEL = "anthropic/claude-sonnet-4"

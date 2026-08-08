@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/sizing.py
+# hypothesis_version: 6.141.1
+
+[0.0, 0.02, 0.03, 0.04, 0.05, 0.08, 1.0, 650000000, 'HC (8+)', 'adjusted_pct', 'base_pct', 'conviction', 'dollars', 'high_conviction', 'slots_available', 'standard']

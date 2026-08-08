@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/valuations.py
+# hypothesis_version: 6.141.1
+
+[0.3, 0.7, 1.0, 1000000, 'cheap', 'currentPrice', 'currentRatio', 'debtToEquity', 'dividendYield', 'earningsGrowth', 'enterpriseToEbitda', 'expensive', 'fair', 'forwardEps', 'forwardPE', 'freeCashflow', 'grossMargins', 'iloc', 'marketCap', 'operatingMargins', 'priceToBook', 'profitMargins', 'recommendationKey', 'regularMarketPrice', 'returnOnEquity', 'revenueGrowth', 'targetHighPrice', 'targetLowPrice', 'targetMeanPrice', 'trailingPE', 'unknown']

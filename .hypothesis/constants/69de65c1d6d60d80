@@ -1,0 +1,4 @@
+# file: /Users/akashpandya/AgenticTradingResearch/src/data_platform/circuit_breaker.py
+# hypothesis_version: 6.141.1
+
+[0.0, 0.04, 0.06, 0.3, 0.8, 1.0, 3.0, 650000000, 'breaker', 'current_nav', 'drawdown_dollars', 'drawdown_pct', 'initial_nav', 'last_updated', 'max_leverage', 'normal', 'peak_nav', 'pnl_inception_pct', 'recovery_eligible', 'sizing_multiplier', 'status', 'warning']

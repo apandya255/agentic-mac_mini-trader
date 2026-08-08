@@ -1,0 +1,315 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Add `/api/calendar` endpoint that parses `desk/calendar.md`": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774039
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890784293
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786211205851
+      }
+    ],
+    "1.2 Add `/api/factors` endpoint for factor beta data": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774067
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890785053
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786211206659
+      }
+    ],
+    "1.3 Add `leverage_regime` field to `/api/book` response": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774092
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890785890
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786211207477
+      }
+    ],
+    "2.1 Implement `computeDerivedMetrics(state)` function and helper utilities": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774118
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786211212426
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786211996317
+      }
+    ],
+    "2.2 Implement classification functions": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774150
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212000527
+      }
+    ],
+    "3. Checkpoint - Ensure backend endpoints work and computation module is correct": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774184
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212017651
+      }
+    ],
+    "4.1 Add pair-ratio columns and P&L-from-ratio to position table": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774214
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212033746
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212427693
+      }
+    ],
+    "4.2 Add trail proximity highlights and conviction badges to position rows": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774241
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212428506
+      }
+    ],
+    "4.3 Add flip condition and conviction memo to expanded position detail": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774269
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212429258
+      }
+    ],
+    "5.1 Add factor beta exposure table to Risk tab": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774294
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212034539
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212429956
+      }
+    ],
+    "5.2 Add concentration limits table to Risk tab": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774335
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212430864
+      }
+    ],
+    "6.1 Add leverage regime badge to Overview tab": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774359
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212035492
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212435261
+      }
+    ],
+    "6.2 Add factor warnings summary and total loss-at-trail KPI to Overview tab": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774379
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212436013
+      }
+    ],
+    "6.3 Add compact calendar widget to Overview tab": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774401
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212436794
+      }
+    ],
+    "7.1 Rewrite pending order rendering to use full pitch telegram format": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774425
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212036203
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212437633
+      }
+    ],
+    "8.1 Add Calendar tab/section to sidebar navigation and panel": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774446
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212036923
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212438747
+      }
+    ],
+    "9. Checkpoint - Verify full integration": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774477
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212443466
+      }
+    ],
+    "11. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1785890774507
+      },
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212444478
+      }
+    ],
+    "1. Backend API additions (`serve.py`)": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786211207503
+      }
+    ],
+    "2. Client-side computation module (JavaScript in `dashboard.py`)": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212000554
+      }
+    ],
+    "4. Position table enhancements (`renderPositions` in `dashboard.py`)": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212429282
+      }
+    ],
+    "5. Risk tab enhancements (`renderRisk` in `dashboard.py`)": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212430892
+      }
+    ],
+    "6. Overview tab enhancements (`renderOverview` in `dashboard.py`)": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212436819
+      }
+    ],
+    "7. Pending orders tab — full pitch format (`renderPending` in `dashboard.py`)": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212437659
+      }
+    ],
+    "8. Calendar section — full view": [
+      {
+        "executionId": "a1a176f5-bc80-40f8-ae73-575af8efe387",
+        "chatSessionId": "sess_0f6cffcd-d52a-4784-b626-12e48409955e",
+        "timestamp": 1786212438778
+      }
+    ]
+  }
+}
