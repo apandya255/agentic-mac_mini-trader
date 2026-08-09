@@ -1,0 +1,462 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "Replace KPI grid cards with a single-row numeric strip (NAV, P&L daily/MTD/YTD, gross, net, longs, shorts, drawdown)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461170
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233480307
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233795384
+      }
+    ],
+    "Add sector exposure table (one row per active sector: net %, # names, daily P&L contribution)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461242
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233798379
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233943463
+      }
+    ],
+    "Add factor beta row as colored chips": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461268
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233946435
+      }
+    ],
+    "Remove equity curve from overview (move to Book tab)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461304
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234095944
+      }
+    ],
+    "Remove Action Required panel redundancy (recommendations have their own tab)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461329
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234163762
+      }
+    ],
+    "Remove Agent Consensus widget (IC Debate tab covers this)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461367
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234224096
+      }
+    ],
+    "Already implemented this session — verify format after full run": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461387
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234321010
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234398743
+      }
+    ],
+    "Add sort-by-conviction default": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461413
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234401812
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234481223
+      }
+    ],
+    "Add sector filter dropdown": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461439
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234483980
+      }
+    ],
+    "Simplify to pure table (remove portfolio P&L chart above — move to separate equity sub-section)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461458
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234715699
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234853564
+      }
+    ],
+    "Ensure columns are: Pair, Dir, Entry Ratio, Current Ratio, Peak, Pair P&L%, Dist-Peak%, Trail%, Days, Size%, Sector": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461481
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786234857061
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235120998
+      }
+    ],
+    "Add summary row (totals: gross, net, avg P&L)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461502
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235124421
+      }
+    ],
+    "Add equity curve below table (moved from overview)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461523
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235209317
+      }
+    ],
+    "Tighten row height and padding for density": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461541
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235335816
+      }
+    ],
+    "Already stores debate/tech/risk in journal entries (implemented this session)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461558
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235510632
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235585833
+      }
+    ],
+    "Add date grouping headers": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461576
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235588847
+      }
+    ],
+    "Show Tech Score badge and Risk Decision badge inline on each row": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461603
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235719720
+      }
+    ],
+    "Add cumulative P&L column for closed trades": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461633
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235812278
+      }
+    ],
+    "Reduce metric-card padding from 20px to 14px globally": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461654
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235904453
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235947416
+      }
+    ],
+    "Enforce font-variant-numeric: tabular-nums on all number cells": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461672
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786235950631
+      }
+    ],
+    "Remove hover translateY effects on data tables (keep on action cards only)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461698
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236037194
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236114159
+      }
+    ],
+    "Tighten section-title margin from 16px to 10px": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461716
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236117107
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236145918
+      }
+    ],
+    "Reduce .pending-card padding from 24px to 18px": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461737
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236149876
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236177647
+      }
+    ],
+    "Make all timestamps show HH:MM ET format (not full ISO)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461757
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236180518
+      }
+    ],
+    "Verify loading overlay updates live with phase progress": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461772
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236345679
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236422266
+      }
+    ],
+    "Confirm proposals → debate → tech → risk → orders pipeline populates all tabs": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461792
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236425801
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236511977
+      }
+    ],
+    "Test approve/pass flow end-to-end": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461815
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236514777
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236604692
+      }
+    ],
+    "Regenerate dashboard.py with all changes": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461838
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236608178
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236641376
+      }
+    ],
+    "Verify serve.py regeneration produces correct output": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461858
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236644246
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236704913
+      }
+    ],
+    "Test mobile layout (functional, not primary)": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461881
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236708161
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236848893
+      }
+    ],
+    "Push to git": [
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786233461901
+      },
+      {
+        "executionId": "407113d9-43e6-404c-aaf9-248f24d4d0ba",
+        "chatSessionId": "sess_d249980b-7ccf-4a57-a374-ec2a2d00eb2b",
+        "timestamp": 1786236851907
+      }
+    ]
+  }
+}
