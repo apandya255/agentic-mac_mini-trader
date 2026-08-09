@@ -43,4 +43,4 @@
 - [x] Regenerate dashboard.py with all changes
 - [x] Verify serve.py regeneration produces correct output
 - [x] Test mobile layout (functional, not primary)
-- [-] Push to git
+- [x] Push to git

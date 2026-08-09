@@ -9,7 +9,7 @@ Serves the interactive dashboard with API endpoints for:
   - Tracking NAV history over time
 
 Usage:
-    python3 serve.py              # starts on port 5100
+    python3 serve.py              # starts on port 8080
     python3 serve.py --port 8080  # custom port
 """
 
@@ -201,7 +201,7 @@ def mark_positions_to_market(book: dict) -> dict:
         pos["daily_change_pct"] = daily_chg
 
     # Update NAV based on positions P&L
-    initial_nav = book.get("initial_nav", 10_000_000)
+    initial_nav = book.get("initial_nav", book.get("nav", 0))
     total_pnl_dollars = 0
     for pos in book.get("positions", []):
         combined = pos.get("combined_pnl_pct")
@@ -342,12 +342,50 @@ def api_accept(order_id: str):
     book = load_book()
     book["positions"].append(position)
     book["cash_pct"] -= position["size_pct_nav"] * 2  # both legs
+
+    # Gather all pipeline data linked to this proposal for the journal
+    pid = target.get("proposal_id", "")
+    linked_debates = []
+    if DEBATE_DIR.exists():
+        for f in DEBATE_DIR.glob("*.json"):
+            try:
+                d = json.loads(f.read_text())
+                if d.get("proposal_id") == pid:
+                    linked_debates.append(d)
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+    linked_tech = None
+    if SCORES_DIR.exists():
+        for f in SCORES_DIR.glob("*.json"):
+            try:
+                s = json.loads(f.read_text())
+                if s.get("proposal_id") == pid and s.get("technical_score") is not None:
+                    linked_tech = s
+                    break
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+    linked_risk = None
+    if RISK_DIR.exists():
+        for f in RISK_DIR.glob("*.json"):
+            try:
+                r = json.loads(f.read_text())
+                if r.get("proposal_id") == pid and r.get("decision"):
+                    linked_risk = r
+                    break
+            except (json.JSONDecodeError, KeyError):
+                continue
+
     book["trade_journal"].append({
         "action": "open",
         "order": target,
         "timestamp": datetime.now().isoformat(),
         "entry_price": entry_price,
         "hedge_entry_price": hedge_entry_price,
+        "debates": linked_debates,
+        "tech_score": linked_tech,
+        "risk_decision": linked_risk,
     })
     save_book(book)
 
@@ -460,6 +498,73 @@ def api_mark():
     save_book(book)
     record_nav_snapshot(book)
     return jsonify({"status": "marked", "nav": book["nav"], "last_marked": book.get("last_marked")})
+
+
+@app.route("/api/run-cycle", methods=["POST"])
+def api_run_cycle():
+    """Trigger a full agent cycle (run_cycle.py) in the background with status tracking."""
+    import subprocess
+    import threading
+
+    # Status file for progress tracking
+    status_path = BASE_DIR / "memos" / "state" / "cycle_status.json"
+
+    def _run():
+        status_path.write_text(json.dumps({"running": True, "phase": "Starting...", "started_at": datetime.now().isoformat(), "progress": 0}))
+        try:
+            proc = subprocess.Popen(
+                [sys.executable, "-u", str(BASE_DIR / "run_cycle.py"), "--skip-data"],
+                cwd=str(BASE_DIR),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+            )
+            for line in proc.stdout:
+                line = line.strip()
+                # Parse phase markers from run_cycle.py output
+                if "PHASE 1" in line:
+                    status_path.write_text(json.dumps({"running": True, "phase": "Phase 1: Refreshing market data...", "progress": 5}))
+                elif "PHASE 2" in line:
+                    status_path.write_text(json.dumps({"running": True, "phase": "Phase 2: Agents generating proposals...", "progress": 15}))
+                elif "PHASE 3" in line:
+                    status_path.write_text(json.dumps({"running": True, "phase": "Phase 3: Agent debate in progress...", "progress": 40}))
+                elif "PHASE 4" in line:
+                    status_path.write_text(json.dumps({"running": True, "phase": "Phase 4: Conviction check...", "progress": 60}))
+                elif "PHASE 5" in line:
+                    status_path.write_text(json.dumps({"running": True, "phase": "Phase 5: Technical scoring...", "progress": 70}))
+                elif "PHASE 6" in line:
+                    status_path.write_text(json.dumps({"running": True, "phase": "Phase 6: Risk gate evaluation...", "progress": 80}))
+                elif "PHASE 7" in line:
+                    status_path.write_text(json.dumps({"running": True, "phase": "Phase 7: PM sizing decisions...", "progress": 90}))
+                elif "PHASE 8" in line or "Cycle complete" in line:
+                    status_path.write_text(json.dumps({"running": True, "phase": "Phase 8: Finalizing orders...", "progress": 95}))
+                elif "Invoking" in line:
+                    agent_name = line.split("Invoking")[-1].split("(")[0].strip()
+                    current = json.loads(status_path.read_text())
+                    current["detail"] = f"Running: {agent_name}"
+                    status_path.write_text(json.dumps(current))
+
+            proc.wait(timeout=900)
+            status_path.write_text(json.dumps({"running": False, "phase": "Complete", "progress": 100, "finished_at": datetime.now().isoformat()}))
+        except Exception as e:
+            status_path.write_text(json.dumps({"running": False, "phase": f"Error: {str(e)[:100]}", "progress": 0}))
+
+    thread = threading.Thread(target=_run, daemon=True)
+    thread.start()
+    return jsonify({"status": "started", "message": "Agent cycle started. Watch progress on the dashboard."})
+
+
+@app.route("/api/cycle-status")
+def api_cycle_status():
+    """Return current cycle run status for the progress overlay."""
+    status_path = BASE_DIR / "memos" / "state" / "cycle_status.json"
+    if not status_path.exists():
+        return jsonify({"running": False, "phase": "Idle", "progress": 0})
+    try:
+        return jsonify(json.loads(status_path.read_text()))
+    except (json.JSONDecodeError, OSError):
+        return jsonify({"running": False, "phase": "Idle", "progress": 0})
 
 
 @app.route("/api/history")
@@ -624,7 +729,7 @@ from src.data_platform.env_loader import load_secrets
 load_secrets()
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-CHAT_MODEL = "anthropic/claude-sonnet-4"
+# Chat routes directly through OpenClaw main agent session
 
 
 def gather_system_context() -> str:
@@ -716,71 +821,82 @@ ALERTS_PATH = BASE_DIR / "memos" / "state" / "alerts.json"
 
 @app.route("/api/chat", methods=["POST"])
 def api_chat():
-    """Chat with the portfolio assistant. Sends user question + full system context to LLM."""
-    if not OPENROUTER_API_KEY:
-        return jsonify({"error": "OPENROUTER_API_KEY not set in .env"}), 500
-
+    """Chat directly with the OpenClaw main agent session.
+    
+    Messages go to the persistent 'main' agent via `openclaw agent`,
+    so the agent has memory, tools, skills, and any instruction you give
+    persists in the session and influences future behaviour.
+    """
     data = request.get_json()
     if not data or not data.get("message"):
         return jsonify({"error": "No message provided"}), 400
 
     user_message = data["message"]
-    system_context = gather_system_context()
 
-    system_prompt = f"""You are the Portfolio Assistant for an agentic AI trading system. You have complete visibility into the portfolio state, positions, alerts, proposals, debates, and trade history.
+    import subprocess
 
-Your role:
-- Answer questions about current positions, P&L, and portfolio state
-- Explain why trades were proposed, debated, and approved/denied
-- Summarize risk alerts and what they mean
-- Explain the system's architecture and how agents interact
-- Provide market context for positions using the data available
-- Be concise, direct, and data-driven in your answers
+    cmd = [
+        "openclaw", "agent",
+        "--agent", "main",
+        "--message", user_message,
+        "--json",
+    ]
 
-LIVE SYSTEM STATE:
-{system_context}
-
-SYSTEM ARCHITECTURE:
-- 6 research agents (4 fundamental sector analysts + 2 macro) generate proposals
-- Proposals go through multi-round debate between agents
-- Technical scoring agent evaluates chart setup
-- Risk management agent (different model family) gates all trades
-- Portfolio Manager makes final execute/deny decision
-- Dashboard allows human to accept/deny pending orders
-- mark_to_market.py runs daily at 4:05pm to update prices
-- monitor.py checks risk thresholds and auto-closes stopped positions
-
-Answer the user's question based on this context. If you don't have enough data to answer precisely, say so."""
-
-    # Call OpenRouter
     try:
-        resp = http_requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": CHAT_MODEL,
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_message},
-                ],
-                "max_tokens": 1024,
-                "temperature": 0.3,
-            },
-            timeout=30,
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
-        resp.raise_for_status()
-        result = resp.json()
-        answer = result["choices"][0]["message"]["content"]
-        return jsonify({"answer": answer})
-    except http_requests.exceptions.Timeout:
-        return jsonify({"error": "LLM request timed out"}), 504
-    except http_requests.exceptions.RequestException as e:
-        return jsonify({"error": f"LLM request failed: {str(e)}"}), 502
-    except (KeyError, IndexError):
-        return jsonify({"error": "Unexpected LLM response format"}), 502
+
+        if result.returncode != 0:
+            stderr = result.stderr.strip()[:300] if result.stderr else "Unknown error"
+            return jsonify({"error": f"OpenClaw agent failed: {stderr}"}), 502
+
+        # Parse JSON response
+        import json as json_mod
+        try:
+            # OpenClaw may print debug lines before JSON — find the JSON start
+            stdout = result.stdout
+            json_start = stdout.find("{")
+            if json_start < 0:
+                return jsonify({"answer": stdout.strip()[:2000] or "No response"})
+            stdout = stdout[json_start:]
+            
+            response_data = json_mod.loads(stdout)
+            answer = ""
+
+            # Try payloads at top level (openclaw agent --json format)
+            if "payloads" in response_data and response_data["payloads"]:
+                answer = "\n".join(
+                    p.get("text", "") for p in response_data["payloads"] if p.get("text")
+                )
+            # Try nested under result
+            elif "result" in response_data:
+                r = response_data["result"]
+                if "payloads" in r and r["payloads"]:
+                    answer = "\n".join(
+                        p.get("text", "") for p in r["payloads"] if p.get("text")
+                    )
+                elif r.get("finalAssistantVisibleText"):
+                    answer = r["finalAssistantVisibleText"]
+            # Try top-level fields
+            elif response_data.get("finalAssistantVisibleText"):
+                answer = response_data["finalAssistantVisibleText"]
+
+            if not answer:
+                answer = "Agent returned no text response."
+
+            return jsonify({"answer": answer})
+        except json_mod.JSONDecodeError:
+            # If not JSON, return raw output
+            return jsonify({"answer": result.stdout.strip()[:2000] or "No response"})
+
+    except subprocess.TimeoutExpired:
+        return jsonify({"error": "Agent timed out (120s)"}), 504
+    except Exception as e:
+        return jsonify({"error": f"Failed to reach OpenClaw: {str(e)}"}), 502
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -811,7 +927,7 @@ def record_nav_snapshot(book: dict) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Agentic Trading Dashboard Server")
-    parser.add_argument("--port", type=int, default=5100, help="Port to run on (default: 5100)")
+    parser.add_argument("--port", type=int, default=8080, help="Port to run on (default: 8080)")
     parser.add_argument("--host", default="127.0.0.1", help="Host to bind to")
     args = parser.parse_args()
 

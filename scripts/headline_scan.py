@@ -63,9 +63,8 @@ logger = logging.getLogger("headline_scan")
 BRAVE_API_KEY = os.environ.get("BRAVE_API_KEY", "")
 BRAVE_SEARCH_URL = "https://api.search.brave.com/res/v1/web/search"
 
-# OpenRouter API — optional, enables LLM-based materiality evaluation
+# OpenRouter API — routed through OpenClaw (see src/data_platform/llm.py)
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Material keyword patterns — used when LLM is unavailable
 MATERIAL_KEYWORDS = [
@@ -341,23 +340,17 @@ def assess_materiality_llm(
     flip_condition: str,
 ) -> tuple[bool, str]:
     """
-    LLM-based materiality assessment using OpenRouter.
+    LLM-based materiality assessment using OpenClaw gateway.
 
     Asks the LLM whether a headline is material to the position thesis
     and whether it threatens the flip condition.
-
-    Args:
-        headline: The headline text.
-        ticker: The ticker symbol.
-        position_thesis: The investment thesis for the position.
-        flip_condition: The stated condition that would invalidate the thesis.
 
     Returns:
         Tuple of (is_material, reason).
         Falls back to keyword-based assessment if LLM call fails.
     """
-    if not OPENROUTER_API_KEY:
-        return assess_materiality_keywords(headline, ticker)
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
+    from data_platform.llm import call_llm
 
     prompt = (
         f"You are a trading desk analyst. Evaluate whether this headline is "
@@ -373,33 +366,18 @@ def assess_materiality_llm(
         f"Be conservative — when in doubt, flag as material."
     )
 
-    try:
-        payload = json.dumps({
-            "model": "anthropic/claude-sonnet-4-20250514",
-            "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 100,
-            "temperature": 0.0,
-        }).encode("utf-8")
+    reply = call_llm(message=prompt, timeout=30)
 
-        req = urllib.request.Request(OPENROUTER_URL, data=payload, method="POST")
-        req.add_header("Content-Type", "application/json")
-        req.add_header("Authorization", f"Bearer {OPENROUTER_API_KEY}")
-        req.add_header("HTTP-Referer", "https://agentictrading.local")
-
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-
-        reply = data.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
-
+    if reply:
+        reply = reply.strip()
         if reply.upper().startswith("MATERIAL"):
             reason = reply.split(":", 1)[1].strip() if ":" in reply else "LLM flagged"
             return True, reason
         else:
             return False, "immaterial (LLM assessed)"
 
-    except Exception as e:
-        logger.warning(f"LLM materiality check failed for {ticker}: {e}. Falling back to keywords.")
-        return assess_materiality_keywords(headline, ticker)
+    logger.warning(f"LLM materiality check failed for {ticker}. Falling back to keywords.")
+    return assess_materiality_keywords(headline, ticker)
 
 
 # ---------------------------------------------------------------------------

@@ -220,36 +220,17 @@ Current market data:
 Write in terse desk-note style. No headers, no bullet symbols. Each line should be a complete thought.
 Keep it to 8 lines maximum. Start directly with content — no greeting or sign-off."""
 
-    # Call OpenRouter API
-    model = os.environ.get("OPENROUTER_MODEL", "anthropic/claude-sonnet-4")
-    url = "https://openrouter.ai/api/v1/chat/completions"
+    # Call LLM through OpenClaw gateway
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
+    from data_platform.llm import call_llm
 
-    payload = json.dumps({
-        "model": model,
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
-        "max_tokens": 500,
-        "temperature": 0.3,
-    }).encode("utf-8")
+    content = call_llm(message=prompt, timeout=60)
 
-    req = Request(url, data=payload, method="POST")
-    req.add_header("Content-Type", "application/json")
-    req.add_header("Authorization", f"Bearer {api_key}")
-    req.add_header("HTTP-Referer", "https://github.com/agentictrading")
-
-    try:
-        with urlopen(req, timeout=60) as response:
-            result = json.loads(response.read().decode("utf-8"))
-            content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
-            if content:
-                # Enforce 8-line limit
-                lines = content.strip().split("\n")
-                return "\n".join(lines[:8])
-            return None
-    except (HTTPError, URLError, OSError, json.JSONDecodeError, KeyError) as e:
-        logger.warning(f"LLM call failed: {e}")
-        return None
+    if content:
+        # Enforce 8-line limit
+        lines = content.strip().split("\n")
+        return "\n".join(lines[:8])
+    return None
 
 
 # ---------------------------------------------------------------------------

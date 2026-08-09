@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-08-08T18:14:29.142394+00:00",
-  "cycle_type": "telegram_delivery",
-  "trigger_source": "heartbeat",
-  "status": "failure",
-  "attempt": 2,
-  "message_preview": "Position 54: TICKER_54 | Entry: $123.54 | Current: $145.54 | P&L: +54.54% Positi",
-  "error": "Retry also failed"
-}

@@ -4217,7 +4217,7 @@ def main():
     print(f"  Also: {index_path} (for GitHub Pages)")
     print(f"  Size: {len(html):,} bytes")
     print(f"\n  To use interactively, run:  python3 serve.py")
-    print(f"  Then open:  http://127.0.0.1:5100/")
+    print(f"  Then open:  http://127.0.0.1:8080/")
 
     if not args.no_open:
         subprocess.run(["open", str(OUTPUT_PATH)])

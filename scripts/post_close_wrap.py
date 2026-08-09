@@ -53,8 +53,7 @@ logger = logging.getLogger("post_close_wrap")
 # ---------------------------------------------------------------------------
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "anthropic/claude-sonnet-4")
+# LLM calls routed through OpenClaw — see src/data_platform/llm.py
 
 # Email mirror log path (for downstream email integration)
 EMAIL_MIRROR_DIR = PROJECT_ROOT / "memos" / "logs" / "email_mirror"
@@ -319,13 +318,13 @@ def _generate_llm_wrap(
     leverage: dict,
     factor_alerts: list[dict],
 ) -> str:
-    """Generate wrap using OpenRouter/OpenClaw LLM.
+    """Generate wrap using OpenClaw LLM gateway.
 
     Constructs a prompt with the data and requests a 12-line-max summary.
     Falls back to template if LLM call fails.
     """
-    from urllib.error import HTTPError, URLError
-    from urllib.request import Request, urlopen
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
+    from data_platform.llm import call_llm
 
     today = _get_today_str()
 
@@ -353,49 +352,25 @@ DATA:
 
 Generate the 12-line-max wrap now:"""
 
-    payload = json.dumps(
-        {
-            "model": OPENROUTER_MODEL,
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "You are a portfolio manager's desk assistant. "
-                    "Generate concise, number-dense trading wraps. "
-                    "Never exceed the line limit. Use financial shorthand.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            "max_tokens": 500,
-            "temperature": 0.3,
-        }
-    ).encode("utf-8")
+    system_prompt = (
+        "You are a portfolio manager's desk assistant. "
+        "Generate concise, number-dense trading wraps. "
+        "Never exceed the line limit. Use financial shorthand."
+    )
 
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-    }
+    content = call_llm(message=prompt, system_prompt=system_prompt, timeout=60)
 
-    req = Request(OPENROUTER_API_URL, data=payload, method="POST")
-    for k, v in headers.items():
-        req.add_header(k, v)
+    if content:
+        # Enforce 12-line limit
+        content_lines = content.strip().split("\n")
+        if len(content_lines) > 12:
+            content = "\n".join(content_lines[:12])
+        return content
 
-    try:
-        with urlopen(req, timeout=30) as response:
-            result = json.loads(response.read().decode("utf-8"))
-            content = result["choices"][0]["message"]["content"].strip()
-
-            # Enforce 12-line limit
-            content_lines = content.split("\n")
-            if len(content_lines) > 12:
-                content = "\n".join(content_lines[:12])
-
-            return content
-
-    except (HTTPError, URLError, OSError, KeyError, IndexError) as e:
-        logger.warning(f"LLM call failed ({e}), falling back to template wrap.")
-        return _generate_template_wrap(
-            book_pnl, entries_exits, movers, leverage, factor_alerts
-        )
+    logger.warning("LLM call failed, falling back to template wrap.")
+    return _generate_template_wrap(
+        book_pnl, entries_exits, movers, leverage, factor_alerts
+    )
 
 
 # ---------------------------------------------------------------------------

@@ -57,7 +57,7 @@ from src.data_platform.env_loader import load_secrets
 load_secrets()
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
+# LLM calls routed through OpenClaw — see src/data_platform/llm.py
 BRAVE_API_KEY = os.environ.get("BRAVE_API_KEY", "")
 
 # Model for week-ahead generation
@@ -226,42 +226,13 @@ def brave_search(query: str) -> str | None:
 
 
 def _call_llm(system_prompt: str, user_prompt: str) -> str | None:
-    """
-    Call OpenRouter LLM.
+    """Call LLM through OpenClaw gateway.
 
     Returns the response text, or None on failure.
     """
-    if not OPENROUTER_API_KEY:
-        return None
-
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://agentictrading.local",
-        "X-Title": "Agentic Trading Week Ahead",
-    }
-
-    payload = json.dumps({
-        "model": LLM_MODEL,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-        "max_tokens": 3000,
-        "temperature": 0.3,
-    }).encode("utf-8")
-
-    req = Request(OPENROUTER_API_URL, data=payload, method="POST")
-    for k, v in headers.items():
-        req.add_header(k, v)
-
-    try:
-        with urlopen(req, timeout=120) as response:
-            data = json.loads(response.read().decode("utf-8"))
-            return data["choices"][0]["message"]["content"]
-    except (HTTPError, URLError, OSError, KeyError, json.JSONDecodeError) as e:
-        logger.error(f"LLM call failed: {e}")
-        return None
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
+    from data_platform.llm import call_llm
+    return call_llm(message=user_prompt, system_prompt=system_prompt, timeout=120)
 
 
 # ---------------------------------------------------------------------------

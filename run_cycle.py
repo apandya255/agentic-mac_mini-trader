@@ -102,18 +102,26 @@ POC_TICKERS = [
     "UUP", "IEF", "VIXY", "HYG",
 ]
 
-# Models per agent (risk on different family)
-# Using OpenRouter format: provider/model-name
-# Default model for research agents; risk_management uses a different family per spec
-DEFAULT_RESEARCH_MODEL = "openrouter/anthropic/claude-sonnet-4"
+# Models per agent — reliable setup using proven OpenAI + Anthropic models
+#
+# Strategy: GPT-4o-mini for all research/debate (cheap, excellent JSON compliance,
+# strong instruction-following, proven tool-use support). Anthropic Haiku for the
+# risk gate to satisfy cross-family independence rule.
+#
+# Cost estimate: ~$1.50-3.00 per full 17-agent run
+#   gpt-4o-mini: $0.15/$0.60 per M — workhorse for structured agentic tasks
+#   claude-3.5-haiku: $0.80/$4.00 per M — different family for risk gate
+#
+# Cross-family rule (per AGENTS.md): risk gate runs on a DIFFERENT model family
+# than the originating research agents. Research = OpenAI, Risk = Anthropic.
+DEFAULT_RESEARCH_MODEL = "openrouter/openai/gpt-4o-mini"
 AGENT_MODELS = {
-    "risk_management": "openrouter/openai/gpt-4o",  # DIFFERENT MODEL FAMILY per spec
-    "portfolio_manager": "openrouter/anthropic/claude-sonnet-4",
-    "tech_equity": "openrouter/anthropic/claude-sonnet-4",
+    "risk_management": "openrouter/anthropic/claude-3.5-haiku-20241022",  # DIFFERENT FAMILY (Anthropic)
+    "portfolio_manager": "openrouter/openai/gpt-4o-mini",
+    "tech_equity": "openrouter/openai/gpt-4o-mini",
 }
 
-# OpenRouter configuration
-OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+# OpenRouter configuration (routed through OpenClaw — see src/data_platform/llm.py)
 
 
 def get_model_for_agent(agent_id: str) -> str:
@@ -179,9 +187,10 @@ def invoke_agent(agent_id: str, task_prompt: str, dry_run: bool = False) -> str 
     Invoke an OpenClaw agent session with a specific task prompt.
 
     The agent reads its mandate (system prompt) and the task prompt,
-    uses tools (skills) to gather data, and writes output to a file.
+    uses tools (skills) to gather data, and returns structured output.
 
-    Returns the path to the output file, or None if dry_run.
+    Returns the parsed JSON dict from the agent's response, or None on failure.
+    Also writes the output to memos/raw/ for audit.
     """
     mandate_file = MANDATES_DIR / f"{agent_id}.md"
     model = get_model_for_agent(agent_id)
@@ -194,9 +203,7 @@ def invoke_agent(agent_id: str, task_prompt: str, dry_run: bool = False) -> str 
         log(f"  Task: {task_prompt[:100]}...")
         return None
 
-    # Build the OpenClaw command
-    # Using `openclaw agent --local` — runs embedded agent with shell tool access
-    # System prompt comes from the mandate .md, task via --message-file
+    # Build the prompt: mandate as system context + task
     prompt_file = output_file.with_suffix(".prompt")
     prompt_content = f"""SYSTEM INSTRUCTIONS (read from {mandate_file.name}):
 {mandate_file.read_text()}
@@ -206,10 +213,7 @@ TASK:
 {task_prompt}
 
 ---
-IMPORTANT: Write your JSON output to the file: {output_file}
-Use the exec tool to run: cat > {output_file} << 'JSONEOF'
-<your JSON here>
-JSONEOF"""
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object."""
     prompt_file.write_text(prompt_content)
 
     cmd = [
@@ -217,23 +221,91 @@ JSONEOF"""
         "--model", model,
         "--session-key", f"trading-{agent_id}-{timestamp()}",
         "--message-file", str(prompt_file),
+        "--json",
     ]
 
     log(f"Invoking {agent_id} (model={model})...")
 
     try:
         result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=120,
+            cmd, capture_output=True, text=True, timeout=180,
             env={**os.environ, "OPENCLAW_WORKSPACE": str(SRC_DIR)},
         )
-        if result.returncode == 0:
-            log(f"  {agent_id} completed successfully → {output_file.name}")
-            return str(output_file)
-        else:
+        if result.returncode != 0:
             log(f"  {agent_id} failed: {result.stderr[:200]}", "ERROR")
             return None
+
+        # Parse the OpenClaw JSON wrapper to get the agent's response text
+        response_text = ""
+        try:
+            # OpenClaw may print debug lines before JSON — find the JSON start
+            stdout = result.stdout
+            json_start = stdout.find("{")
+            if json_start < 0:
+                log(f"  {agent_id} returned no JSON in output", "ERROR")
+                return None
+            stdout = stdout[json_start:]
+            
+            oc_response = json.loads(stdout)
+            
+            # Path 1: payloads[].text (primary)
+            if "payloads" in oc_response:
+                payloads = oc_response["payloads"]
+                texts = [p.get("text", "") for p in payloads if p.get("text")]
+                if texts:
+                    response_text = "\n".join(texts)
+            
+            # Path 2: meta.finalAssistantVisibleText (fallback)
+            if not response_text:
+                meta = oc_response.get("meta", {})
+                response_text = meta.get("finalAssistantVisibleText", "") or meta.get("finalAssistantRawText", "")
+            
+            # Path 3: nested under result (older format)
+            if not response_text and "result" in oc_response:
+                r = oc_response["result"]
+                if "payloads" in r:
+                    texts = [p.get("text", "") for p in r["payloads"] if p.get("text")]
+                    if texts:
+                        response_text = "\n".join(texts)
+                if not response_text:
+                    response_text = r.get("finalAssistantVisibleText", "") or r.get("finalAssistantRawText", "")
+
+        except json.JSONDecodeError:
+            # If JSON parsing fails entirely, try to extract text from raw output
+            response_text = result.stdout
+
+        if not response_text:
+            log(f"  {agent_id} returned empty response", "ERROR")
+            return None
+
+        # Extract JSON from the response (handle markdown code fences)
+        json_text = response_text.strip()
+        if json_text.startswith("```"):
+            # Strip markdown code fences
+            lines = json_text.split("\n")
+            lines = [l for l in lines if not l.strip().startswith("```")]
+            json_text = "\n".join(lines)
+        
+        # Try to find JSON object in the text
+        start = json_text.find("{")
+        end = json_text.rfind("}") + 1
+        if start >= 0 and end > start:
+            json_text = json_text[start:end]
+
+        try:
+            parsed = json.loads(json_text)
+            # Write to raw for audit
+            output_file.write_text(json.dumps(parsed, indent=2))
+            log(f"  {agent_id} completed → {output_file.name}")
+            return parsed
+        except json.JSONDecodeError:
+            # Save raw text for debugging
+            output_file.with_suffix(".txt").write_text(response_text)
+            log(f"  {agent_id} response was not valid JSON, saved as .txt", "WARN")
+            return None
+
     except subprocess.TimeoutExpired:
-        log(f"  {agent_id} timed out (120s)", "ERROR")
+        log(f"  {agent_id} timed out (180s)", "ERROR")
         return None
 
 
@@ -293,10 +365,18 @@ Current book state:
 
 Instructions:
 1. Use your tools to check returns, valuations, technicals, and news for your coverage universe.
-2. Identify the single best opportunity (long or short) you see right now.
-3. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "agent_id": "{agent_id}", "rationale": "why nothing looks good"}}.
-4. If you have a trade idea, output your TradeProposal JSON per your mandate format.
-5. Write your output to: {MEMOS_DIR}/proposals/{agent_id}_{timestamp()}.json
+2. Identify the single best PAIR TRADE opportunity you see right now.
+3. ALL trades must be expressed as a RATIO: single name vs equal-weight sector ETF.
+   - Long trades: long NAME / short sector ETF (e.g. long XOM / short RSPG)
+   - Short trades: short NAME / long sector ETF (e.g. short NKE / long RSPD)
+4. Your thesis, entry, stop, and target must be based on the PAIR RATIO (name_price / hedge_price), NOT individual legs.
+5. Include in your JSON:
+   - "entry_ratio": current name_price / hedge_price
+   - "target_ratio": where you expect the ratio to move
+   - "stop_ratio": where the ratio invalidates the thesis
+   - "ratio_percentile": where the current ratio sits vs 52-week range (0-100)
+6. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "agent_id": "{agent_id}", "rationale": "why nothing looks good"}}.
+7. If you have a trade idea, output your TradeProposal JSON per your mandate format with the ratio fields above.
 
 You are in BLIND mode — you cannot see what other agents are proposing. Form your own independent view."""
 
@@ -308,18 +388,35 @@ Current book state:
 
 Instructions:
 1. Use your tools to check relevant prices, macro indicators, yields, FX, and credit conditions.
-2. Form your macro view and identify the best trade expression (ETF, commodity vehicle, or pass).
-3. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "agent_id": "{agent_id}", "rationale": "why nothing looks good"}}.
-4. If you have a trade idea, output your MacroTradeProposal JSON per your mandate format.
-5. Write your output to: {MEMOS_DIR}/proposals/{agent_id}_{timestamp()}.json
+2. Form your macro view and identify the best PAIR TRADE expression.
+3. ALL trades must be expressed as a RATIO: region/factor ETF vs broad benchmark.
+   - Long trades: long region ETF / short benchmark (e.g. long EWG / short EFA)
+   - Short trades: short region ETF / long benchmark (e.g. short EWZ / long EEM)
+4. Your thesis, entry, stop, and target must be based on the PAIR RATIO (etf_price / hedge_price), NOT individual legs.
+5. Include in your JSON:
+   - "entry_ratio": current etf_price / hedge_price
+   - "target_ratio": where you expect the ratio to move
+   - "stop_ratio": where the ratio invalidates the thesis
+   - "ratio_percentile": where the current ratio sits vs 52-week range (0-100)
+6. If nothing is compelling (conviction < 6), output {{"no_proposal": true, "agent_id": "{agent_id}", "rationale": "why nothing looks good"}}.
+7. If you have a trade idea, output your MacroTradeProposal JSON per your mandate format with the ratio fields above.
 
 You are in BLIND mode — you cannot see what other agents are proposing. Form your own independent view."""
         else:
             continue
 
         out = invoke_agent(agent_id, task, dry_run)
-        if out:
+        if out and isinstance(out, dict):
+            # Add metadata if missing
+            if "proposal_id" not in out:
+                out["proposal_id"] = f"{agent_id}_{timestamp()}"
+            if "agent_id" not in out:
+                out["agent_id"] = agent_id
+            # Write to proposals dir
+            proposal_path = MEMOS_DIR / "proposals" / f"{agent_id}_{timestamp()}.json"
+            proposal_path.write_text(json.dumps(out, indent=2))
             proposals.append(out)
+            log(f"  → Proposal: {out.get('ticker', '?')} {out.get('direction', '?')} conv={out.get('conviction', '?')}")
 
     log(f"  {len(proposals)} proposal(s) generated")
     return proposals
@@ -383,10 +480,16 @@ Instructions:
   "stance": "support" | "challenge" | "neutral",
   "argument": "Your detailed response with specific data points",
   "revised_conviction": null  // only if you were the originator
-}}
-5. Write to: {MEMOS_DIR}/debate/{opponent}_re_{agent_id}_{timestamp()}.json"""
+}}"""
 
-            invoke_agent(opponent, debate_task, dry_run)
+            debate_result = invoke_agent(opponent, debate_task, dry_run)
+            if debate_result and isinstance(debate_result, dict):
+                debate_result.setdefault("proposal_id", proposal.get("proposal_id", "unknown"))
+                debate_result.setdefault("agent_id", opponent)
+                debate_result.setdefault("round", 1)
+                debate_path = MEMOS_DIR / "debate" / f"{opponent}_re_{agent_id}_{timestamp()}.json"
+                debate_path.write_text(json.dumps(debate_result, indent=2))
+                log(f"    {opponent} → {debate_result.get('stance', '?')}")
 
     # Round 2: Originators respond to challenges
     debate_files = list((MEMOS_DIR / "debate").glob("*.json"))
@@ -423,10 +526,19 @@ Instructions:
   "stance": "defend",
   "argument": "Your response to the challenges with evidence",
   "revised_conviction": 8  // your updated conviction (1-10)
-}}
-5. Write to: {MEMOS_DIR}/debate/{agent_id}_response_{timestamp()}.json"""
+}}"""
 
-            invoke_agent(agent_id, response_task, dry_run)
+            response_result = invoke_agent(agent_id, response_task, dry_run)
+            if response_result and isinstance(response_result, dict):
+                response_result.setdefault("proposal_id", proposal.get("proposal_id", "unknown"))
+                response_result.setdefault("agent_id", agent_id)
+                response_result.setdefault("round", 2)
+                response_path = MEMOS_DIR / "debate" / f"{agent_id}_response_{timestamp()}.json"
+                response_path.write_text(json.dumps(response_result, indent=2))
+                # Update proposal conviction if revised
+                if response_result.get("revised_conviction") is not None:
+                    proposal["conviction"] = response_result["revised_conviction"]
+                log(f"    {agent_id} defends → conv={response_result.get('revised_conviction', '?')}")
 
     return loaded_proposals
 
@@ -481,14 +593,29 @@ PROPOSAL:
 {json.dumps(proposal, indent=2)}
 
 Instructions:
-1. Run a full technical scan on {ticker} using your tools.
-2. Evaluate whether technicals SUPPORT or OPPOSE the proposed {direction} direction.
-3. Score the technical setup 1-10 per your methodology.
-4. Provide key levels (support, resistance, Fibonacci), entry, stop, and target.
-5. Output your TechnicalScore JSON per your mandate format.
-6. Write to: {MEMOS_DIR}/scores/tech_{pid}_{timestamp()}.json"""
+1. Evaluate whether technicals SUPPORT or OPPOSE the proposed {direction} direction for {ticker}.
+2. Score the technical setup 1-10.
+3. Provide key levels (support, resistance), suggested entry, stop, and target.
+4. Respond with a JSON object containing:
+   - "proposal_id": "{pid}"
+   - "agent_id": "tech_equity"
+   - "technical_score": number 1-10
+   - "trend_alignment": "aligned"/"opposed"/"neutral"
+   - "momentum_regime": string
+   - "suggested_entry": number
+   - "suggested_stop_loss": number
+   - "suggested_take_profit": number
+   - "trailing_stop_method": string
+   - "timing_recommendation": "now"/"wait"/"avoid"
+   - "timing_rationale": string"""
 
-        invoke_agent("tech_equity", tech_task, dry_run)
+        tech_result = invoke_agent("tech_equity", tech_task, dry_run)
+        if tech_result and isinstance(tech_result, dict):
+            tech_result.setdefault("proposal_id", pid)
+            score_path = MEMOS_DIR / "scores" / f"tech_{pid}_{timestamp()}.json"
+            score_path.write_text(json.dumps(tech_result, indent=2))
+            proposal["_tech_score"] = tech_result
+            log(f"  {ticker}: score {tech_result.get('technical_score', '?')}/10")
 
     return survivors
 
@@ -528,35 +655,39 @@ CURRENT BOOK STATE:
 {json.dumps(book_state, indent=2)}
 
 Instructions:
-1. Check circuit breaker status (current NAV = {book_state.get('nav', 10000000)}).
-2. Check if adding this position would breach any factor beta limits.
-3. Check correlation with existing positions.
-4. Verify hedge is correct (use universe hedge tool).
-5. Verify sizing is within limits for this conviction level.
-6. Output your RiskDecision JSON per your mandate format.
-7. Write to: {MEMOS_DIR}/risk/risk_{pid}_{timestamp()}.json
+1. Check if adding this position would breach factor beta or concentration limits.
+2. Verify hedge is appropriate for the direction.
+3. Verify sizing is within limits for this conviction level.
+4. Respond with a JSON object containing:
+   - "proposal_id": "{pid}"
+   - "decision": "approved" or "rejected"
+   - "rationale": one sentence
+   - "position_size_ok": true/false
+   - "hedge_present_and_valid": true/false
+   - "sector_concentration_ok": true/false
+   - "risk_warnings": list of strings (or empty list)
 
 You are running on a DIFFERENT MODEL than the originating agent. Be independent.
 Reject ONLY with quantitative justification. If numbers pass, approve."""
 
-        invoke_agent("risk_management", risk_task, dry_run)
+        risk_result = invoke_agent("risk_management", risk_task, dry_run)
 
-    # Read risk decisions
-    for proposal in survivors:
-        pid = proposal.get("proposal_id", "unknown")
-        for rf in (MEMOS_DIR / "risk").glob(f"risk_{pid}_*.json"):
-            try:
-                decision = json.loads(rf.read_text())
-                if decision.get("decision") in ("approved", "approved_with_modifications"):
-                    proposal["risk_decision"] = decision
-                    approved.append(proposal)
-                    log(f"  ✓ {pid}: APPROVED by risk")
-                else:
-                    log(f"  ✗ {pid}: REJECTED — {decision.get('rationale', 'unknown')}")
-            except (json.JSONDecodeError, KeyError):
-                # If we can't read the decision, assume approved for now (POC)
+        if risk_result and isinstance(risk_result, dict):
+            risk_result.setdefault("proposal_id", pid)
+            risk_path = MEMOS_DIR / "risk" / f"risk_{pid}_{timestamp()}.json"
+            risk_path.write_text(json.dumps(risk_result, indent=2))
+
+            if risk_result.get("decision") in ("approved", "approved_with_modifications"):
+                proposal["risk_decision"] = risk_result
                 approved.append(proposal)
-                log(f"  ? {pid}: Risk decision file unreadable, passing through (POC mode)")
+                log(f"  ✓ {pid}: APPROVED by risk")
+            else:
+                log(f"  ✗ {pid}: REJECTED — {risk_result.get('rationale', 'unknown')[:80]}")
+        else:
+            # If risk agent fails, auto-approve (fail-open for POC)
+            log(f"  ⚠ {pid}: Risk agent returned no valid response — auto-approving")
+            proposal["risk_decision"] = {"decision": "approved", "rationale": "risk agent unavailable — auto-approved"}
+            approved.append(proposal)
 
     log(f"  {len(approved)} proposal(s) approved by risk")
     return approved
@@ -602,186 +733,111 @@ CURRENT BOOK STATE:
 
 Instructions:
 1. Decide: execute or pass?
-2. If execute: size the position using your conviction-based model.
-3. Set entry approach, trailing stop method, and review date.
-4. Consider how this fits the overall book (portfolio construction).
-5. Output your TradeOrder JSON per your mandate format.
-6. Write to: {MEMOS_DIR}/orders/order_{pid}_{timestamp()}.json"""
+2. If execute: size the position (1-5% NAV based on conviction).
+3. Set trailing stop method and review date.
+4. Respond with a JSON object containing these fields:
+   - "execute": true/false
+   - "ticker": the ticker
+   - "direction": "long" or "short"
+   - "hedge_ticker": the hedge ETF
+   - "hedge_direction": "short" or "long"
+   - "size_pct_nav": decimal (e.g. 0.03 for 3%)
+   - "conviction": number
+   - "stop_loss_method": string
+   - "take_profit": string
+   - "pm_rationale": one-sentence reason
+   - "portfolio_thesis": the thesis summary
+   - "expected_holding_period": string
+   - "review_date": ISO date string"""
 
-        invoke_agent("portfolio_manager", pm_task, dry_run)
+        pm_result = invoke_agent("portfolio_manager", pm_task, dry_run)
 
-    # Read orders
-    for of in (MEMOS_DIR / "orders").glob("order_*.json"):
-        try:
-            order = json.loads(of.read_text())
-            if order.get("execute"):
-                orders.append(order)
-                log(f"  ✓ EXECUTE: {order.get('ticker', '?')} {order.get('direction', '?')} @ {order.get('size_pct_nav', 0)*100:.1f}% NAV")
+        if pm_result and isinstance(pm_result, dict):
+            if pm_result.get("execute"):
+                # Ensure required fields
+                pm_result["proposal_id"] = pid
+                pm_result["order_id"] = f"order_{pid}_{timestamp()}"
+                pm_result.setdefault("ticker", proposal.get("ticker", ""))
+                pm_result.setdefault("direction", proposal.get("direction", "long"))
+                pm_result.setdefault("hedge_ticker", proposal.get("hedge_ticker", ""))
+                pm_result.setdefault("hedge_direction", proposal.get("hedge_direction", "short"))
+                pm_result.setdefault("size_pct_nav", 0.03)
+                pm_result.setdefault("conviction", proposal.get("conviction", 7))
+                pm_result.setdefault("stop_loss_method", "trailing 2.5% from peak")
+                pm_result.setdefault("take_profit", "5% triggers review")
+                pm_result.setdefault("pm_rationale", "PM approved")
+
+                # Write order file
+                order_path = MEMOS_DIR / "orders" / f"{pm_result['order_id']}.json"
+                order_path.write_text(json.dumps(pm_result, indent=2))
+                orders.append(pm_result)
+                log(f"  ✓ EXECUTE: {pm_result.get('ticker', '?')} {pm_result.get('direction', '?')} @ {pm_result.get('size_pct_nav', 0)*100:.1f}% NAV")
             else:
-                log(f"  ✗ PASS: {order.get('pm_rationale', 'no rationale')[:80]}")
-        except (json.JSONDecodeError, KeyError):
-            continue
+                log(f"  ✗ PASS: {pm_result.get('pm_rationale', 'no rationale')[:80]}")
+        else:
+            # If PM agent failed to return valid JSON, auto-approve with defaults from proposal
+            log(f"  PM response invalid for {pid}, auto-creating order from proposal")
+            auto_order = {
+                "execute": True,
+                "order_id": f"order_{pid}_{timestamp()}",
+                "proposal_id": pid,
+                "ticker": proposal.get("ticker", ""),
+                "direction": proposal.get("direction", "long"),
+                "hedge_ticker": proposal.get("hedge_ticker", ""),
+                "hedge_direction": proposal.get("hedge_direction", "short"),
+                "size_pct_nav": min(proposal.get("conviction", 7) * 0.005, 0.04),
+                "conviction": proposal.get("conviction", 7),
+                "stop_loss_method": "trailing 2.5% from peak",
+                "take_profit": "5% triggers review",
+                "pm_rationale": proposal.get("thesis_summary", "Auto-approved from proposal"),
+                "portfolio_thesis": proposal.get("thesis_detail", proposal.get("thesis_summary", "")),
+            }
+            order_path = MEMOS_DIR / "orders" / f"{auto_order['order_id']}.json"
+            order_path.write_text(json.dumps(auto_order, indent=2))
+            orders.append(auto_order)
+            log(f"  ✓ AUTO-EXECUTE: {auto_order['ticker']} {auto_order['direction']} @ {auto_order['size_pct_nav']*100:.1f}% NAV")
 
     log(f"  {len(orders)} trade order(s) generated")
     return orders
 
 def phase_8_update_book(orders: list[dict]) -> None:
-    """Phase 8: Update book state with new orders and print blotter."""
-    log("═══ PHASE 8: BOOK UPDATE & BLOTTER ═══")
+    """Phase 8: Log results. Orders stay as PENDING for human approval via dashboard."""
+    log("═══ PHASE 8: ORDERS READY FOR REVIEW ═══")
 
-    book = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {
-        "nav": 10_000_000, "initial_nav": 10_000_000,
-        "cash_pct": 1.0, "positions": [], "trade_journal": [],
-    }
+    if not orders:
+        log("  No orders generated this cycle.")
+        print("\n" + "═" * 60)
+        print("          CYCLE COMPLETE — NO NEW ORDERS")
+        print("═" * 60)
+        return
+
+    print("\n" + "═" * 60)
+    print("          CYCLE COMPLETE — PENDING ORDERS")
+    print("═" * 60)
+    print(f"  {len(orders)} order(s) awaiting human approval on the dashboard.\n")
 
     for order in orders:
-        if not order.get("execute"):
-            continue
+        if order.get("execute"):
+            t = order.get("ticker", "?")
+            h = order.get("hedge_ticker", "?")
+            d = order.get("direction", "?").upper()
+            s = order.get("size_pct_nav", 0)
+            c = order.get("conviction", 0)
+            print(f"  {t:6s} {d:5s} vs {h:5s} | {s*100:.1f}% NAV | Conv {c}/10")
+            print(f"         {order.get('pm_rationale', '')[:70]}")
+            print()
 
-        position = {
-            "ticker": order.get("ticker"),
-            "direction": order.get("direction"),
-            "hedge_ticker": order.get("hedge_ticker"),
-            "hedge_direction": order.get("hedge_direction", "short"),
-            "size_pct_nav": order.get("size_pct_nav", 0.02),
-            "conviction": order.get("conviction", 7),
-            "entry_date": datetime.now().strftime("%Y-%m-%d"),
-            "status": "active",
-            "proposal_id": order.get("proposal_id"),
-        }
-        book["positions"].append(position)
-        book["cash_pct"] -= position["size_pct_nav"] * 2  # both legs
-        book["trade_journal"].append({
-            "action": "open",
-            "order": order,
-            "timestamp": datetime.now().isoformat(),
-        })
-
-    # Write updated book
-    STATE_FILE.write_text(json.dumps(book, indent=2))
-
-    # Print blotter
-    print("\n" + "═" * 60)
-    print("          DAILY CYCLE COMPLETE")
+    print("  → Open http://127.0.0.1:8080/ to Approve or Reject")
     print("═" * 60)
-    print(f"NAV: ${book['nav']:,.0f}")
-    print(f"Cash: {book['cash_pct']*100:.1f}%")
-    print(f"Positions: {len(book['positions'])}")
-    print()
-
-    if book["positions"]:
-        print("BLOTTER:")
-        for pos in book["positions"]:
-            t = pos.get("ticker", "?")
-            h = pos.get("hedge_ticker", "?")
-            d = pos.get("direction", "?")
-            s = pos.get("size_pct_nav", 0)
-            c = pos.get("conviction", 0)
-            print(f"  {t}/{h}  {d} {s*100:.1f}%  [{c}/10]  {pos.get('status', '?')}")
-    else:
-        print("  (no active positions)")
-
-    if orders:
-        print("\nNEW ORDERS THIS CYCLE:")
-        for order in orders:
-            if order.get("execute"):
-                # Format as PM one-pager
-                sys.path.insert(0, str(SRC_DIR))
-                from data_platform.formatter import format_recommendation, format_recommendation_html
-                # Load matching proposal + score + risk
-                pid = order.get("proposal_id", "")
-                proposal = None
-                for pf in (MEMOS_DIR / "proposals").glob("*.json"):
-                    try:
-                        p = json.loads(pf.read_text())
-                        if p.get("proposal_id") == pid:
-                            proposal = p
-                            break
-                    except (json.JSONDecodeError, KeyError):
-                        continue
-                tech_score = None
-                for sf in (MEMOS_DIR / "scores").glob(f"*{pid}*"):
-                    try:
-                        tech_score = json.loads(sf.read_text())
-                        break
-                    except (json.JSONDecodeError, KeyError):
-                        continue
-                risk_dec = None
-                for rf in (MEMOS_DIR / "risk").glob(f"*{pid}*"):
-                    try:
-                        risk_dec = json.loads(rf.read_text())
-                        break
-                    except (json.JSONDecodeError, KeyError):
-                        continue
-
-                # Print plain text recommendation
-                print()
-                print(format_recommendation(order, proposal, tech_score, risk_dec))
-
-                # Save HTML version
-                html = format_recommendation_html(order, proposal, tech_score, risk_dec)
-                html_file = MEMOS_DIR / "orders" / f"recommendation_{pid}.html"
-                html_file.write_text(html)
-    else:
-        print("\n  (no new orders this cycle)")
-
-    print("═" * 60 + "\n")
-
-    # Send email report
-    sys.path.insert(0, str(SRC_DIR))
-    from data_platform.emailer import send_cycle_report
-    from data_platform.formatter import format_recommendation_html, format_recommendation
-
-    if orders:
-        for order in orders:
-            if order.get("execute"):
-                pid = order.get("proposal_id", "")
-                # Load matching data
-                proposal = None
-                for pf in (MEMOS_DIR / "proposals").glob("*.json"):
-                    try:
-                        p = json.loads(pf.read_text())
-                        if p.get("proposal_id") == pid:
-                            proposal = p
-                            break
-                    except (json.JSONDecodeError, KeyError):
-                        continue
-                tech_score = None
-                for sf in (MEMOS_DIR / "scores").glob(f"*{pid}*"):
-                    try:
-                        tech_score = json.loads(sf.read_text())
-                        break
-                    except (json.JSONDecodeError, KeyError):
-                        continue
-                risk_dec = None
-                for rf in (MEMOS_DIR / "risk").glob(f"*{pid}*"):
-                    try:
-                        risk_dec = json.loads(rf.read_text())
-                        break
-                    except (json.JSONDecodeError, KeyError):
-                        continue
-
-                html = format_recommendation_html(order, proposal, tech_score, risk_dec)
-                plain = format_recommendation(order, proposal, tech_score, risk_dec)
-                send_cycle_report(
-                    html_body=html,
-                    plain_text=plain,
-                    ticker=order.get("ticker", ""),
-                    direction=order.get("direction", ""),
-                )
-    else:
-        send_cycle_report(
-            html_body="<p>No trade recommendations this cycle. All positions in cash.</p>",
-            plain_text="No trade recommendations this cycle. All positions in cash.",
-        )
 
     # Write cycle log
+    book = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {}
     cycle_log = {
         "timestamp": datetime.now().isoformat(),
         "proposals_generated": len(list((MEMOS_DIR / "proposals").glob("*.json"))),
         "orders_executed": len(orders),
-        "book_positions": len(book["positions"]),
-        "nav": book["nav"],
+        "book_positions": len(book.get("positions", [])),
+        "nav": book.get("nav", 0),
     }
     log_file = LOG_DIR / f"cycle_{timestamp()}.json"
     log_file.write_text(json.dumps(cycle_log, indent=2))

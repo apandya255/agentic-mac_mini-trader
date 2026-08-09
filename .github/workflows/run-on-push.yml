@@ -1,0 +1,33 @@
+name: Run trading cycle on push
+
+on:
+  push:
+    branches:
+      - jimothy
+
+jobs:
+  run-cycle:
+    runs-on: ubuntu-latest
+
+    env:
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Install OpenClaw
+        run: |
+          curl -fsSL https://openclaw.ai/install.sh | bash
+          echo "$HOME/.openclaw/bin" >> $GITHUB_PATH
+
+      - name: Run trading cycle
+        run: python run_cycle.py --dry-run

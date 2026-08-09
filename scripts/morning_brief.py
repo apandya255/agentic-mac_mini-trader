@@ -64,8 +64,7 @@ from src.data_platform.env_loader import load_secrets
 load_secrets()
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
-BRIEFING_MODEL = "anthropic/claude-sonnet-4"
+# LLM calls routed through OpenClaw — see src/data_platform/llm.py
 
 # Benchmarks always included in the brief
 BENCHMARK_TICKERS = ["SPY", "RSP", "EFA", "EEM", "USO", "GLD"]
@@ -195,41 +194,22 @@ def parse_macro_releases() -> list[str]:
 
 
 def call_openrouter(prompt: str) -> str | None:
-    """Call OpenRouter API to generate the prose briefing."""
-    if not OPENROUTER_API_KEY:
-        return None
+    """Call LLM through OpenClaw gateway to generate the prose briefing."""
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
+    from data_platform.llm import call_llm
 
-    url = f"{OPENROUTER_BASE_URL}/chat/completions"
-    payload = json.dumps({
-        "model": BRIEFING_MODEL,
-        "messages": [
-            {
-                "role": "system",
-                "content": (
-                    "You are a concise macro trading desk briefing writer. "
-                    "Generate a pre-open morning brief in EXACTLY 12 lines or fewer. "
-                    "Be factual, use numbers, no fluff. Each line should convey one "
-                    "distinct piece of information. Format as plain text, no headers."
-                ),
-            },
-            {"role": "user", "content": prompt},
-        ],
-        "max_tokens": 600,
-        "temperature": 0.3,
-    }).encode("utf-8")
+    system_prompt = (
+        "You are a concise macro trading desk briefing writer. "
+        "Generate a pre-open morning brief in EXACTLY 12 lines or fewer. "
+        "Be factual, use numbers, no fluff. Each line should convey one "
+        "distinct piece of information. Format as plain text, no headers."
+    )
 
-    req = Request(url, data=payload, method="POST")
-    req.add_header("Content-Type", "application/json")
-    req.add_header("Authorization", f"Bearer {OPENROUTER_API_KEY}")
-
-    try:
-        with urlopen(req, timeout=60) as response:
-            data = json.loads(response.read().decode("utf-8"))
-            content = data["choices"][0]["message"]["content"]
-            return content.strip()
-    except (HTTPError, URLError, OSError, KeyError, IndexError) as e:
-        logger.warning(f"OpenRouter call failed: {e}")
-        return None
+    result = call_llm(message=prompt, system_prompt=system_prompt, timeout=60)
+    if result:
+        return result.strip()
+    logger.warning("OpenClaw LLM call failed")
+    return None
 
 
 def generate_llm_briefing(data_context: dict) -> str | None:

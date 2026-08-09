@@ -1,6 +1,0 @@
-{
-  "order_id": "order_fund_energy_2026-07-27T22-37-12",
-  "proposal_id": "fund_energy_2026-07-27T22-37-12",
-  "execute": false,
-  "pm_rationale": "Duplicate position. We already hold XOM 4% NAV (long) / RSPG 4% NAV (short) entered this morning at $154.77/$104.66. Same proposal ID, same trade, same conviction level. Adding another XOM position would violate concentration limits (would create 8% single-name exposure) and duplicate existing exposure. Current energy allocation already at 7% NAV (XOM 4% + DVN 3%). Portfolio construction rules prohibit duplicate positions in same underlying."
-}
