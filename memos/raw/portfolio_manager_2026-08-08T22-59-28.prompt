@@ -1,0 +1,461 @@
+SYSTEM INSTRUCTIONS (read from portfolio_manager.md):
+# Portfolio Manager
+
+## Identity
+
+You are the Portfolio Manager at an elite macro hedge fund. You are the final decision-maker — you receive risk-approved proposals and determine whether a trade enters the book, at what size, and with what parameters. You synthesize fundamental, macro, technical, and risk inputs into a cohesive portfolio.
+
+## Mandate
+
+Your job is to construct and manage a portfolio that targets 12–15% annualized returns with ≤6% downside volatility. You decide:
+1. Whether to execute a risk-approved trade (yes/no)
+2. Position sizing within risk-approved limits
+3. Entry approach (market, limit, scale-in)
+4. Final stop-loss and take-profit calibration
+5. How the trade fits the overall book narrative
+
+You are judged on:
+- Portfolio return vs. target (12–15%)
+- Drawdown management (max 6% from peak)
+- Sharpe ratio (target ≥2.0)
+- Decision quality (did your sizing and timing add value vs. uniform allocation?)
+
+## Decision Framework
+
+### Minimum Thresholds
+- Post-debate conviction must be ≥ 6 to consider
+- Technical score must be ≥ 5 to proceed
+- Risk must have approved (possibly with modifications)
+
+### Sizing Model
+| Conviction | Standard Size | Notes |
+|-----------|--------------|-------|
+| 6 | 2% NAV | Minimum viable |
+| 7 | 3% NAV | |
+| 8 | 4% NAV | |
+| 9 | 5% NAV | |
+| 10 | 5% NAV | Very rare |
+| HC (8+) | 8% NAV | Max 2 slots, must out-hit standard book or self-revokes |
+
+Adjustments:
+- Technical score < 6: reduce by 30%
+- Technical score > 8: increase by 20%
+- Circuit breaker in warning: apply 0.8x multiplier
+- Position correlated > 0.5 with existing: reduce by 20% per correlated position
+
+### Portfolio Construction Rules
+- Max 3 new positions per day
+- Review existing positions before adding new ones
+- Weekly full book review (are any theses stale?)
+- Maximum book: 8–12 positions at any time in the POC
+
+### Exit Framework
+- **Trailing stop hit:** Immediate exit. No exceptions, no "let me hold a little longer."
+- **+5% from entry:** Take profit is the DEFAULT. Extending requires the originator to re-affirm with a documented flip-condition (what would make you exit if it doesn't keep going).
+- **Thesis invalidated:** Exit regardless of P&L. If the fundamental/macro reason is gone, the position is gone.
+- **60 days without catalyst:** Forced reassessment. If nothing has changed, exit.
+- **Better opportunity:** May exit lower-conviction position to fund higher (capital rotation).
+
+## Tools Available
+
+```
+python -m data_platform.cli sizing compute --conviction <N>
+python -m data_platform.cli sizing compute --conviction <N> --high-conviction
+python -m data_platform.cli sizing table
+python -m data_platform.cli risk circuit-breaker --nav <NAV>
+python -m data_platform.cli carry cash --cash-pct <P>
+python -m data_platform.cli carry position-cost --direction <D> --notional <N>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge <H>
+```
+
+## Input
+
+You read from:
+- `memos/proposals/` — the surviving trade proposals (post-debate)
+- `memos/scores/` — technical scores for each proposal
+- `memos/risk/` — risk decisions (approved/modified/rejected)
+- `memos/state/book.json` — current portfolio state
+
+## Output Format
+
+Write your output as a JSON file:
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "Why this trade fits the book. How it interacts with existing positions. Why now.",
+  "ticker": "XOM",
+  "direction": "long",
+  "size_pct_nav": 0.04,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review, take is default",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.04,
+  "portfolio_thesis": "Adding energy single-name alpha on top of existing sector view. Low correlation to current book. Catalyst within 4 weeks.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-10",
+  "priority": "normal"
+}
+```
+
+For a pass (no execution):
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "execute": false,
+  "pm_rationale": "Technical setup is weak (score 5) and we already have sector exposure via XLE position. Adding single-name doesn't improve the book risk/reward."
+}
+```
+
+## Constraints
+
+- You can ONLY execute risk-approved proposals (you cannot override a risk rejection)
+- If risk approved with modifications (e.g., max size 2%), you must respect that limit
+- You read the full pipeline output before deciding — don't ignore the debate or technical score
+- You manage the book as a whole — every position should have a role in the portfolio narrative
+- Cash is a position. If nothing looks good, stay in cash. Cash earns SOFR.
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-trade (adding positions because "something should always be on")
+- Tendency to hold losers too long ("it'll come back")
+- Tendency to size winners too small and losers too large (disposition effect)
+- Discipline: let the rules work. Trailing stop hit = exit. +5% = take. No exceptions without documented re-affirmed flip-condition.
+
+
+---
+TASK:
+Decide whether to execute this risk-approved trade.
+
+PROPOSAL (post-debate, conviction = 6):
+{
+  "proposal_id": "macro_commodities_2026-08-08T21:50",
+  "agent_id": "macro_commodities",
+  "ticker": "XLE",
+  "direction": "long",
+  "hedge_ticker": "RSP",
+  "hedge_direction": "short",
+  "macro_regime": "post-disruption rebalance with tight prompt market",
+  "thesis_summary": "Crude is in backwardation (WTI prompt 78.18 vs Dec-26 74.64, ~$3.5/bbl) with US crude inventories below normal, yet consensus (JPM: Brent $86 Q3 fading to $78 year-end) is positioned for a Q4 fade on OPEC+ supply adds and Asian demand losses. Energy equities have lagged the crude recovery \u2014 XLE at 57.50 is 7.4% below its 52w high of 62.11 while WTI rallied 8.5% in a month \u2014 leaving catch-up room in the ratio. Long XLE / short RSP expresses tightening prompt fundamentals against a mid-range ratio (57th percentile) with defined invalidation if the curve flips toward contango.",
+  "thesis_detail": "Prices as of 2026-08-07 close: WTI 78.18, Brent 83.55, DXY 99.60. The tape tells a rebalance story: the spring Middle East disruption spike (WTI ~102 three months ago) unwound on trade-flow adjustment and Asian demand destruction (EIA STEO, Aug 2026: demand reduction concentrated in Asia's Middle East-import-reliant economies), bottoming near 72 a month ago. Since then WTI is +8.5% and the curve sits ~$3.5/bbl backwardated to Dec-26 \u2014 prompt tightness inconsistent with the glut narrative. OPEC+ has added barrels for five straight months (+188kbpd for August) and the market absorbed them without breaking; US crude inventories remain below seasonal norms per EIA. OPEC's own MOMR pegs 2026 DoC call at 42.3 mb/d, flat vs 2025 \u2014 the supply wave is fully telegraphed. What's priced: consensus is a fade (JPM Brent $86 Q3, $80 Q4, $78 YE), so the bear case is the base case for the street; variant perception is that demand destruction proves transitory as Asian buyers re-route and rebuild, and backwardation persists. Equity expression: XLE 57.50, above both 50dma (56.48) and 200dma (52.43), momentum positive, XLE/RSP ratio 0.2613 at the 57th percentile of its 52-week range \u2014 not stretched, well below the 0.2915 level of three months ago. DXY at 99.60 is mid-range and no headwind. Key admission: if the August/September OPEC+ tranches land on top of renewed Asian demand weakness, the curve flips and this thesis is wrong \u2014 that is the stop condition.",
+  "key_data_points": [
+    "WTI prompt 78.18 vs CLZ26 74.64 vs CLF27 73.50: ~$3.5-4.7/bbl backwardation (2026-08-07)",
+    "WTI +8.5% in one month (72.08 -> 78.18); down from 102.27 three months ago post-disruption unwind",
+    "US crude inventories below seasonal normal (EIA, via July STEO commentary)",
+    "OPEC+ fifth consecutive monthly output increase: +188kbpd for August; absorbed without curve damage",
+    "JPM forecast Brent $86 Q3'26 / $80 Q4 / $78 YE \u2014 consensus fade from spot 83.55",
+    "OPEC MOMR: 2026 DoC call 42.3 mb/d, flat y/y, revised down 0.2 mb/d",
+    "XLE 57.50 vs 52w high 62.11 (-7.4%); above 50dma 56.48 and 200dma 52.43",
+    "XLE/RSP ratio 0.2613, 57th percentile of 52w range (0.2246-0.3309); 0.2915 three months ago",
+    "DXY 99.60, mid-range \u2014 no USD headwind",
+    "Gold 4340, off the 5050 high \u2014 no crisis-premium bid competing with the energy trade"
+  ],
+  "base_case": "Backwardation holds as OPEC+ adds are absorbed by steady non-Asian demand and inventory normalization; Brent ranges 80-88 through Q3, XLE closes the lag vs crude and the XLE/RSP ratio grinds to ~0.277 (+6%).",
+  "base_case_probability": 0.5,
+  "bull_case": "Asian demand re-accelerates as trade-flow re-routing completes and SPR-style restocking resumes; a seasonal inventory draw forces the curve deeper into backwardation, Brent re-tests 95+, XLE re-rates toward its 62.11 high and the ratio exceeds 0.29 (+11%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "OPEC+ September tranche lands on renewed Asian demand weakness; prompt spread collapses through flat into contango, WTI round-trips to 68-70, XLE breaks the 200dma and the ratio falls to ~0.248. Thesis invalidated on curve flip \u2014 that is the stop.",
+  "bear_case_probability": 0.25,
+  "entry_ratio": 0.2613,
+  "target_ratio": 0.277,
+  "stop_ratio": 0.2548,
+  "ratio_percentile": 57,
+  "target_return_pct": 0.06,
+  "stop_loss_pct": 0.025,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "OPEC+ compliance erodes faster than telegraphed \u2014 fiscal-pressure cheating adds unpriced supply (acknowledged bias: I tend to assume compliance holds)",
+    "Asian demand losses prove structural rather than disruption-transitory (EIA flagged the demand side as the rebalancing mechanism)",
+    "Curve flips to contango before equities re-rate \u2014 the stop is ratio-based and may lag the fundamental signal",
+    "Geopolitical premium evaporates on a formal Middle East de-escalation, removing the residual backwardation support"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-12",
+      "event": "EIA Short-Term Energy Outlook (September edition)",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-08-13",
+      "event": "IEA/OPEC monthly oil market reports (mid-August window)",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-09-01",
+      "event": "OPEC+ JMMC/ministerial \u2014 September output tranche decision",
+      "impact": "high"
+    },
+    {
+      "date": "2026-08-19",
+      "event": "EIA weekly petroleum status \u2014 inventory trend confirmation",
+      "impact": "medium"
+    }
+  ],
+  "final_conviction": 6,
+  "_tech_score": {
+    "proposal_id": "macro_commodities_2026-08-08T21:50",
+    "agent_id": "tech_equity",
+    "technical_score": 5,
+    "trend_alignment": "aligned",
+    "momentum_regime": "weak_trend_consolidation",
+    "support_levels": [
+      56.94,
+      56.48,
+      56.22,
+      55.92,
+      52.62
+    ],
+    "resistance_levels": [
+      58.14,
+      59.22,
+      60.07,
+      60.45,
+      61.26
+    ],
+    "fibonacci_levels": {
+      "23.6%": 59.22,
+      "38.2%": 57.96,
+      "50%": 56.94,
+      "61.8%": 55.92,
+      "127.2% ext": 63.61
+    },
+    "suggested_entry": 58.2,
+    "suggested_stop_loss": 55.68,
+    "suggested_take_profit": 61.25,
+    "trailing_stop_method": "2x ATR trail \u2014 ATR(14) $1.26, so trail $2.52 below the position peak once triggered; initial stop 55.68 sits under the 61.8% retrace (55.92) and Bollinger lower band (56.22).",
+    "active_signals": [
+      {
+        "signal": "golden_cross",
+        "strength": "strong",
+        "note": "50dma 56.48 > 200dma 52.43; price above both"
+      },
+      {
+        "signal": "bollinger_squeeze",
+        "strength": "moderate",
+        "note": "BB width 6.6% \u2014 consolidation, expansion pending directionally"
+      },
+      {
+        "signal": "not_overbought",
+        "strength": "moderate",
+        "note": "RSI 49.9 neutral after -3.4% 1W pullback; no overbought constraint on long entry"
+      }
+    ],
+    "warning_signals": [
+      {
+        "signal": "macd_bearish",
+        "note": "MACD 0.553 below signal 0.722, histogram -0.169 \u2014 short-term momentum rolling over"
+      },
+      {
+        "signal": "kst_bearish_crossover",
+        "note": "KST crossed below signal"
+      },
+      {
+        "signal": "adx_weak",
+        "note": "ADX 15.9 \u2014 no confirmed trend; signal is noise-grade until trend strength builds"
+      },
+      {
+        "signal": "below_20dma",
+        "note": "Close 57.50 below 20dma 58.14 and BB midline \u2014 short-term structure not yet aligned with long"
+      },
+      {
+        "signal": "volume_unconfirmed",
+        "note": "Volume 0.73x 20-day avg, OBV flat \u2014 no accumulation confirmation"
+      },
+      {
+        "signal": "pair_relative_strength_against",
+        "note": "XLE vs RSP relative strength -4.3% over 63d; ratio 0.2613 at 56th percentile with z-score +0.20 \u2014 no statistical edge, and RSP's own tape is bullish (score 8, RSI 64.9, above all MAs), which works against the short hedge leg"
+      }
+    ],
+    "volume_confirmation": false,
+    "timing_recommendation": "wait",
+    "timing_rationale": "Long-term structure supports the long (golden cross, above 50/200dma, +4.9% 1M), but the entry trigger is not there: price closed below the 20dma in a Bollinger squeeze with MACD/KST negative, ADX 15.9 showing no real trend, volume 0.73x average, and XLE/RSP relative strength negative over the past quarter with the ratio mid-range (56th percentile) \u2014 no mean-reversion or momentum edge at current levels. The proposal's 'momentum positive' claim is not confirmed by the tape. Enter on a reclaim of 58.14-58.20 (20dma/BB midline) with volume >1.2x average; that also improves reward/risk toward 61.25. A break below 55.92-55.68 (61.8% retrace / 2x ATR) invalidates the structure. Do not chase here."
+  },
+  "risk_decision": {
+    "proposal_id": "risk_macro_commodities_2026-08-08T21:50",
+    "agent_id": "risk_management",
+    "decision": "approved_with_modifications",
+    "rationale": "Hedge (RSP short) is valid per AGENTS.md doctrine for sector ETFs. Position approved at 3% notional ($19.5M) to cap CL1 factor contribution at +0.36, remaining comfortably within the \u00b10.60 hard limit; original proposal size unspecified, so mid-range for conviction-6 is applied. Sector concentration, leverage, and correlation checks pass. Technical score (5/10, WAIT signal) does not constitute a risk breach but reflects weak entry mechanics.",
+    "position_size_ok": true,
+    "hedge_present_and_valid": true,
+    "sector_concentration_ok": true,
+    "correlation_to_existing": 0.0,
+    "projected_factor_betas": {
+      "CL1": 0.36,
+      "DXY": -0.15,
+      "SPX": -0.105,
+      "VIX": -0.03,
+      "USGG10Yr": -0.075,
+      "Growth_Value": 0.12,
+      "Large_Small": 0.0,
+      "CDX_HY_5Y": 0.0,
+      "XAU": 0.0
+    },
+    "factor_breach": false,
+    "projected_gross_leverage": 1.03,
+    "max_allowed_size_pct": 0.03,
+    "risk_warnings": [
+      "CL1 factor beta +0.36 at approved 3% size; oil exposure is primary driver \u2014 limited factor headroom remains if book adds additional oil/commodity bets",
+      "Technical score recommends waiting for entry above 58.14 with volume >1.2x; entry at 57.50 lacks confirmation (MACD/KST bearish, ADX 15.9 weak, volume 0.73x avg) \u2014 timing risk acknowledged",
+      "Proposal lacked explicit factor beta projections; sizing assumed at mid-range for conviction-6 (2\u20135% band); verify final size confirms this range"
+    ],
+    "modifications": {
+      "size_capped_at_pct": 0.03,
+      "size_notional_usd": 19500000,
+      "reason": "CL1 factor constraint; at 5% would contribute +0.60 to portfolio beta (at hard limit); 3% provides buffer and preserves factor capacity for additional opportunities"
+    }
+  }
+}
+
+TECHNICAL SCORE:
+{
+  "proposal_id": "macro_commodities_2026-08-08T21:50",
+  "agent_id": "tech_equity",
+  "technical_score": 5,
+  "trend_alignment": "aligned",
+  "momentum_regime": "weak_trend_consolidation",
+  "support_levels": [
+    56.94,
+    56.48,
+    56.22,
+    55.92,
+    52.62
+  ],
+  "resistance_levels": [
+    58.14,
+    59.22,
+    60.07,
+    60.45,
+    61.26
+  ],
+  "fibonacci_levels": {
+    "23.6%": 59.22,
+    "38.2%": 57.96,
+    "50%": 56.94,
+    "61.8%": 55.92,
+    "127.2% ext": 63.61
+  },
+  "suggested_entry": 58.2,
+  "suggested_stop_loss": 55.68,
+  "suggested_take_profit": 61.25,
+  "trailing_stop_method": "2x ATR trail \u2014 ATR(14) $1.26, so trail $2.52 below the position peak once triggered; initial stop 55.68 sits under the 61.8% retrace (55.92) and Bollinger lower band (56.22).",
+  "active_signals": [
+    {
+      "signal": "golden_cross",
+      "strength": "strong",
+      "note": "50dma 56.48 > 200dma 52.43; price above both"
+    },
+    {
+      "signal": "bollinger_squeeze",
+      "strength": "moderate",
+      "note": "BB width 6.6% \u2014 consolidation, expansion pending directionally"
+    },
+    {
+      "signal": "not_overbought",
+      "strength": "moderate",
+      "note": "RSI 49.9 neutral after -3.4% 1W pullback; no overbought constraint on long entry"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "macd_bearish",
+      "note": "MACD 0.553 below signal 0.722, histogram -0.169 \u2014 short-term momentum rolling over"
+    },
+    {
+      "signal": "kst_bearish_crossover",
+      "note": "KST crossed below signal"
+    },
+    {
+      "signal": "adx_weak",
+      "note": "ADX 15.9 \u2014 no confirmed trend; signal is noise-grade until trend strength builds"
+    },
+    {
+      "signal": "below_20dma",
+      "note": "Close 57.50 below 20dma 58.14 and BB midline \u2014 short-term structure not yet aligned with long"
+    },
+    {
+      "signal": "volume_unconfirmed",
+      "note": "Volume 0.73x 20-day avg, OBV flat \u2014 no accumulation confirmation"
+    },
+    {
+      "signal": "pair_relative_strength_against",
+      "note": "XLE vs RSP relative strength -4.3% over 63d; ratio 0.2613 at 56th percentile with z-score +0.20 \u2014 no statistical edge, and RSP's own tape is bullish (score 8, RSI 64.9, above all MAs), which works against the short hedge leg"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "wait",
+  "timing_rationale": "Long-term structure supports the long (golden cross, above 50/200dma, +4.9% 1M), but the entry trigger is not there: price closed below the 20dma in a Bollinger squeeze with MACD/KST negative, ADX 15.9 showing no real trend, volume 0.73x average, and XLE/RSP relative strength negative over the past quarter with the ratio mid-range (56th percentile) \u2014 no mean-reversion or momentum edge at current levels. The proposal's 'momentum positive' claim is not confirmed by the tape. Enter on a reclaim of 58.14-58.20 (20dma/BB midline) with volume >1.2x average; that also improves reward/risk toward 61.25. A break below 55.92-55.68 (61.8% retrace / 2x ATR) invalidates the structure. Do not chase here."
+}
+
+RISK DECISION:
+{
+  "proposal_id": "risk_macro_commodities_2026-08-08T21:50",
+  "agent_id": "risk_management",
+  "decision": "approved_with_modifications",
+  "rationale": "Hedge (RSP short) is valid per AGENTS.md doctrine for sector ETFs. Position approved at 3% notional ($19.5M) to cap CL1 factor contribution at +0.36, remaining comfortably within the \u00b10.60 hard limit; original proposal size unspecified, so mid-range for conviction-6 is applied. Sector concentration, leverage, and correlation checks pass. Technical score (5/10, WAIT signal) does not constitute a risk breach but reflects weak entry mechanics.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_factor_betas": {
+    "CL1": 0.36,
+    "DXY": -0.15,
+    "SPX": -0.105,
+    "VIX": -0.03,
+    "USGG10Yr": -0.075,
+    "Growth_Value": 0.12,
+    "Large_Small": 0.0,
+    "CDX_HY_5Y": 0.0,
+    "XAU": 0.0
+  },
+  "factor_breach": false,
+  "projected_gross_leverage": 1.03,
+  "max_allowed_size_pct": 0.03,
+  "risk_warnings": [
+    "CL1 factor beta +0.36 at approved 3% size; oil exposure is primary driver \u2014 limited factor headroom remains if book adds additional oil/commodity bets",
+    "Technical score recommends waiting for entry above 58.14 with volume >1.2x; entry at 57.50 lacks confirmation (MACD/KST bearish, ADX 15.9 weak, volume 0.73x avg) \u2014 timing risk acknowledged",
+    "Proposal lacked explicit factor beta projections; sizing assumed at mid-range for conviction-6 (2\u20135% band); verify final size confirms this range"
+  ],
+  "modifications": {
+    "size_capped_at_pct": 0.03,
+    "size_notional_usd": 19500000,
+    "reason": "CL1 factor constraint; at 5% would contribute +0.60 to portfolio beta (at hard limit); 3% provides buffer and preserves factor capacity for additional opportunities"
+  }
+}
+
+CURRENT BOOK STATE:
+{
+  "nav": 650000000,
+  "initial_nav": 650000000,
+  "cash_pct": 1.0,
+  "positions": [],
+  "trade_journal": [],
+  "last_marked": "2026-08-08T22:57:33.857956"
+}
+
+Instructions:
+1. Decide: execute or pass?
+2. If execute: size the position (1-5% NAV based on conviction).
+3. Set trailing stop method and review date.
+4. Respond with a JSON object containing these fields:
+   - "execute": true/false
+   - "ticker": the ticker
+   - "direction": "long" or "short"
+   - "hedge_ticker": the hedge ETF
+   - "hedge_direction": "short" or "long"
+   - "size_pct_nav": decimal (e.g. 0.03 for 3%)
+   - "conviction": number
+   - "stop_loss_method": string
+   - "take_profit": string
+   - "pm_rationale": one-sentence reason
+   - "portfolio_thesis": the thesis summary
+   - "expected_holding_period": string
+   - "review_date": ISO date string
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

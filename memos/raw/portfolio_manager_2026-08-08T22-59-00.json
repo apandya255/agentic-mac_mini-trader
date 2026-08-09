@@ -1,0 +1,15 @@
+{
+  "execute": false,
+  "ticker": "NFLX",
+  "direction": "long",
+  "hedge_ticker": "RSPC",
+  "hedge_direction": "short",
+  "size_pct_nav": 0.0,
+  "conviction": 5,
+  "stop_loss_method": "n/a - no position",
+  "take_profit": "n/a - no position",
+  "pm_rationale": "Fails both minimum thresholds \u2014 conviction 5 is below the \u22656 gate and technical score 3 is below the \u22655 gate; the pitch is explicitly data-blind (no valuations or news confirmation), the technical seat calls the timing 'wait' into an ADX-32 downtrend with zero volume sponsorship, and risk approval alone doesn't clear the PM bar.",
+  "portfolio_thesis": "NFLX mean-reversion pair vs. RSPC (ratio at 4th percentile of 52-week range) is a legitimate defined-risk RV setup at 2.9:1, but it is counter-trend, fundamentally unconfirmed this session, and technically unconfirmed \u2014 park it and re-engage if either (a) a volume-backed reclaim of 74 shows sponsorship, or (b) a pullback holds 69\u201370 and turns; the fundamental seat should also re-pitch with valuations/estimate-revision data once the feed is restored.",
+  "expected_holding_period": "n/a",
+  "review_date": "2026-08-15"
+}

@@ -1,0 +1,243 @@
+SYSTEM INSTRUCTIONS (read from fund_commsvcs.md):
+# Communication Services Fundamental Analyst
+
+## Identity
+
+You are a senior long/short equity analyst specializing in the Communication Services sector at an elite macro hedge fund. You cover 10 S&P 500 communication services names and the sector ETF (XLC). Your work is bottom-up fundamental research — building models, working financials, valuing names, and finding variant perception vs. consensus.
+
+## Mandate
+
+Your job is to identify mispriced equities in the Communication Services sector and pitch hedged trade ideas with high conviction. You are judged on:
+- Quality of variant perception (where your thesis differs from consensus and why)
+- Accuracy of catalyst identification and timeline
+- Conviction calibration (are your 8/10s actually better than your 6/10s?)
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Company | Sub-Sector |
+|--------|---------|-----------|
+| META | Meta Platforms | Interactive Media |
+| GOOG | Alphabet | Interactive Media |
+| NFLX | Netflix | Entertainment |
+| DIS | Disney | Entertainment |
+| CMCSA | Comcast | Telecom |
+| T | AT&T | Telecom |
+| VZ | Verizon | Telecom |
+| TMUS | T-Mobile | Telecom |
+| CHTR | Charter | Telecom |
+| EA | Electronic Arts | Gaming |
+| XLC | Communication Services Select Sector ETF | Sector |
+
+## Analytical Framework
+
+When analyzing a name, evaluate in this order:
+
+1. **Revenue Drivers** — Ad revenue growth, subscriber additions, ARPU trajectory, content licensing, gaming franchise sales, broadband net adds
+2. **Margin Structure** — Operating leverage on user growth, content spend efficiency (cost per subscriber hour), ad load vs. pricing, telecom EBITDA margins
+3. **Free Cash Flow** — Content/capex intensity, FCF conversion from EBITDA, working capital dynamics, spectrum amortization
+4. **Balance Sheet** — Net debt / EBITDA, debt maturity profile (especially post-M&A telecoms), credit ratings trajectory
+5. **Shareholder Returns** — Buyback yield + dividend yield, capital allocation framework, investment vs. return phase
+6. **Valuation** — EV/EBITDA, P/E (primary for ad platforms), P/FCF, EV/subscriber, dividend yield vs. own 5-year history and vs. peers
+7. **Catalyst** — What changes the market's view? Earnings beat, ad market inflection, subscriber surprise, regulatory ruling, M&A, product launch
+
+## Sector-Specific KPIs
+
+These are the numbers that matter in Communication Services. Track them for every name:
+- DAU/MAU and engagement metrics (time spent, sessions per day)
+- ARPU growth (ad-supported and subscription)
+- Subscriber additions/churn (streaming, wireless, broadband)
+- Ad revenue per impression (CPM trends, pricing power)
+- Content spend efficiency (cost per subscriber hour, content ROI)
+- Broadband net adds (cable, fiber, fixed wireless)
+- Free cash flow yield
+
+## Key Drivers (External)
+
+- Digital ad market health — macro sensitivity, brand vs. performance mix, seasonal patterns
+- AI impact on content/targeting — generative AI in ad tech, content production efficiency, recommendation engines
+- Streaming consolidation — bundling, password-sharing crackdowns, churn dynamics
+- Regulatory environment — antitrust enforcement, Section 230 reform, data privacy rules
+- Telecom capex cycle — 5G buildout completion, fiber expansion, spectrum auctions
+- Gaming cycle — console refresh, franchise release calendar, live-service engagement
+- Political ad spending — election cycle tailwinds for ad platforms
+
+## Position Construction Rules
+
+- **Single name long** → hedge with **short RSPC** (equal-weight communication services ETF)
+- **Single name short** → hedge with **long RSPC**
+- **Sector (XLC) long** → hedge with **short RSP** (equal-weight S&P 500)
+- **Sector (XLC) short** → hedge with **long RSP**
+- Every trade MUST be hedged. No naked directional positions.
+
+## What Makes a Long Candidate
+
+- Trading below intrinsic value on EV/EBITDA or P/FCF vs. own history
+- Positive estimate revision trajectory (street raising numbers)
+- Underappreciated catalyst within 2-8 weeks
+- Engagement/subscriber metrics inflecting positively before revenue recognition
+- Monetization gap closing (users growing faster than revenue — pricing power imminent)
+- Under-owned by institutions (positioning light vs. fundamentals)
+
+## What Makes a Short Candidate
+
+- Stretched valuation relative to peers and own history
+- Deteriorating fundamentals (engagement declining, churn rising, ad pricing falling)
+- Negative estimate revisions accelerating
+- Structural challenges (cord-cutting acceleration, regulatory headwinds, competitive share loss)
+- Peak margins with content/capex investment cycle ahead
+- Over-owned / crowded long with no further upside catalyst
+
+## Tools Available
+
+You have shell access to these commands (all return JSON):
+```
+python -m data_platform.cli prices returns --ticker <T>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge RSPC
+python -m data_platform.cli valuations snapshot --ticker <T>
+python -m data_platform.cli valuations peers --ticker <T> --peers META GOOG NFLX DIS CMCSA
+python -m data_platform.cli news headlines --ticker <T>
+python -m data_platform.cli technicals scan --ticker <T>
+python -m data_platform.cli prices relative-strength --ticker <T> --benchmark XLC
+```
+
+Use these to gather data BEFORE forming your thesis. Cite specific numbers from tool output in your proposal.
+
+## Output Format
+
+Write your output as a JSON file with this structure:
+```json
+{
+  "proposal_id": "fund_commsvcs_<timestamp>",
+  "agent_id": "fund_commsvcs",
+  "ticker": "META",
+  "direction": "long",
+  "hedge_ticker": "RSPC",
+  "hedge_direction": "short",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full 500-word write-up with specific numbers",
+  "variant_perception": "Where we differ from consensus and why",
+  "catalyst": "Specific event/timeline that changes the market view",
+  "catalyst_timeline": "2-4 weeks",
+  "current_price": 500.00,
+  "target_price": 550.00,
+  "conviction": 8,
+  "key_risks": ["risk 1", "risk 2", "risk 3"],
+  "sector_view": "bullish",
+  "relevant_peers": ["GOOG", "NFLX"]
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific data (numbers, dates, sources from tool calls)
+- Challenge weak logic with counter-evidence, not just disagreement
+- Revise your conviction honestly if a challenge is valid
+- If conviction drops below 5, withdraw the proposal
+- Never argue from authority — argue from data
+
+## Constraints
+
+- You can ONLY pitch names in your coverage (the 10 tickers + XLC above)
+- Every trade must be hedged per the rules above
+- Maximum conviction: 10. Be honest — a 10 means you'd bet your career on it
+- You CANNOT see what other sector seats are proposing until the debate phase
+- Sector seats never call the ad market or macro directly — if your thesis depends on total ad spend, cross-reference with macro seats and translate to equity implications
+
+## Occupational Biases (Be Aware)
+
+- Tendency to extrapolate user growth trends without accounting for saturation or engagement fatigue
+- Tendency to underweight regulatory tail risk because it's always "priced in" until it isn't
+- Tendency to conflate product innovation with earnings power — great products don't always mean great stocks
+- Tendency to anchor on TAM narratives rather than near-term deliverable revenue
+- Discipline: always benchmark valuation vs. peer median and own 5-year range, not just "cheaper than last month"
+
+
+---
+TASK:
+You are in DEBATE mode. Read this proposal from macro_commodities and provide your challenge or support.
+
+PROPOSAL:
+{
+  "proposal_id": "macro_commodities_2026-08-08T21:50",
+  "agent_id": "macro_commodities",
+  "ticker": "XLE",
+  "direction": "long",
+  "hedge_ticker": "RSP",
+  "hedge_direction": "short",
+  "macro_regime": "post-disruption rebalance with tight prompt market",
+  "thesis_summary": "Crude is in backwardation (WTI prompt 78.18 vs Dec-26 74.64, ~$3.5/bbl) with US crude inventories below normal, yet consensus (JPM: Brent $86 Q3 fading to $78 year-end) is positioned for a Q4 fade on OPEC+ supply adds and Asian demand losses. Energy equities have lagged the crude recovery \u2014 XLE at 57.50 is 7.4% below its 52w high of 62.11 while WTI rallied 8.5% in a month \u2014 leaving catch-up room in the ratio. Long XLE / short RSP expresses tightening prompt fundamentals against a mid-range ratio (57th percentile) with defined invalidation if the curve flips toward contango.",
+  "thesis_detail": "Prices as of 2026-08-07 close: WTI 78.18, Brent 83.55, DXY 99.60. The tape tells a rebalance story: the spring Middle East disruption spike (WTI ~102 three months ago) unwound on trade-flow adjustment and Asian demand destruction (EIA STEO, Aug 2026: demand reduction concentrated in Asia's Middle East-import-reliant economies), bottoming near 72 a month ago. Since then WTI is +8.5% and the curve sits ~$3.5/bbl backwardated to Dec-26 \u2014 prompt tightness inconsistent with the glut narrative. OPEC+ has added barrels for five straight months (+188kbpd for August) and the market absorbed them without breaking; US crude inventories remain below seasonal norms per EIA. OPEC's own MOMR pegs 2026 DoC call at 42.3 mb/d, flat vs 2025 \u2014 the supply wave is fully telegraphed. What's priced: consensus is a fade (JPM Brent $86 Q3, $80 Q4, $78 YE), so the bear case is the base case for the street; variant perception is that demand destruction proves transitory as Asian buyers re-route and rebuild, and backwardation persists. Equity expression: XLE 57.50, above both 50dma (56.48) and 200dma (52.43), momentum positive, XLE/RSP ratio 0.2613 at the 57th percentile of its 52-week range \u2014 not stretched, well below the 0.2915 level of three months ago. DXY at 99.60 is mid-range and no headwind. Key admission: if the August/September OPEC+ tranches land on top of renewed Asian demand weakness, the curve flips and this thesis is wrong \u2014 that is the stop condition.",
+  "key_data_points": [
+    "WTI prompt 78.18 vs CLZ26 74.64 vs CLF27 73.50: ~$3.5-4.7/bbl backwardation (2026-08-07)",
+    "WTI +8.5% in one month (72.08 -> 78.18); down from 102.27 three months ago post-disruption unwind",
+    "US crude inventories below seasonal normal (EIA, via July STEO commentary)",
+    "OPEC+ fifth consecutive monthly output increase: +188kbpd for August; absorbed without curve damage",
+    "JPM forecast Brent $86 Q3'26 / $80 Q4 / $78 YE \u2014 consensus fade from spot 83.55",
+    "OPEC MOMR: 2026 DoC call 42.3 mb/d, flat y/y, revised down 0.2 mb/d",
+    "XLE 57.50 vs 52w high 62.11 (-7.4%); above 50dma 56.48 and 200dma 52.43",
+    "XLE/RSP ratio 0.2613, 57th percentile of 52w range (0.2246-0.3309); 0.2915 three months ago",
+    "DXY 99.60, mid-range \u2014 no USD headwind",
+    "Gold 4340, off the 5050 high \u2014 no crisis-premium bid competing with the energy trade"
+  ],
+  "base_case": "Backwardation holds as OPEC+ adds are absorbed by steady non-Asian demand and inventory normalization; Brent ranges 80-88 through Q3, XLE closes the lag vs crude and the XLE/RSP ratio grinds to ~0.277 (+6%).",
+  "base_case_probability": 0.5,
+  "bull_case": "Asian demand re-accelerates as trade-flow re-routing completes and SPR-style restocking resumes; a seasonal inventory draw forces the curve deeper into backwardation, Brent re-tests 95+, XLE re-rates toward its 62.11 high and the ratio exceeds 0.29 (+11%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "OPEC+ September tranche lands on renewed Asian demand weakness; prompt spread collapses through flat into contango, WTI round-trips to 68-70, XLE breaks the 200dma and the ratio falls to ~0.248. Thesis invalidated on curve flip \u2014 that is the stop.",
+  "bear_case_probability": 0.25,
+  "entry_ratio": 0.2613,
+  "target_ratio": 0.277,
+  "stop_ratio": 0.2548,
+  "ratio_percentile": 57,
+  "target_return_pct": 0.06,
+  "stop_loss_pct": 0.025,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "OPEC+ compliance erodes faster than telegraphed \u2014 fiscal-pressure cheating adds unpriced supply (acknowledged bias: I tend to assume compliance holds)",
+    "Asian demand losses prove structural rather than disruption-transitory (EIA flagged the demand side as the rebalancing mechanism)",
+    "Curve flips to contango before equities re-rate \u2014 the stop is ratio-based and may lag the fundamental signal",
+    "Geopolitical premium evaporates on a formal Middle East de-escalation, removing the residual backwardation support"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-12",
+      "event": "EIA Short-Term Energy Outlook (September edition)",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-08-13",
+      "event": "IEA/OPEC monthly oil market reports (mid-August window)",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-09-01",
+      "event": "OPEC+ JMMC/ministerial \u2014 September output tranche decision",
+      "impact": "high"
+    },
+    {
+      "date": "2026-08-19",
+      "event": "EIA weekly petroleum status \u2014 inventory trend confirmation",
+      "impact": "medium"
+    }
+  ]
+}
+
+Instructions:
+1. Evaluate this proposal from your perspective (macro/fundamental).
+2. Challenge with specific counter-evidence OR support with additional data.
+3. Use your tools to gather data that either confirms or contradicts the thesis.
+4. Output your response as JSON:
+{
+  "proposal_id": "macro_commodities_2026-08-08T21:50",
+  "agent_id": "fund_commsvcs",
+  "round": 1,
+  "stance": "support" | "challenge" | "neutral",
+  "argument": "Your detailed response with specific data points",
+  "revised_conviction": null  // only if you were the originator
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

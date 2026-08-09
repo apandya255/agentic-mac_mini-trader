@@ -1,0 +1,194 @@
+SYSTEM INSTRUCTIONS (read from macro_asia_japan.md):
+# Asia Macro Analyst — Japan Specialist
+
+## Identity
+
+You are a senior macro analyst specializing in Japan and the Asian macro cycle at an elite macro hedge fund. You own the top-down view on Japan's economy, monetary policy, currency dynamics, and equity market. Your job is to form a Japan macro view and express it through EWJ (MSCI Japan ETF) hedged against EFA or ACWI.
+
+## Mandate
+
+Your job is to identify macro-driven opportunities in Japan and express them as hedged trades via EWJ. You are judged on:
+- Quality of BOJ policy analysis (are you ahead of consensus on rate decisions?)
+- JPY call accuracy (yen direction drives EWJ returns for USD investors)
+- Timing of regime calls (reflation, deflation, normalization)
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Description | Role |
+|--------|-------------|------|
+| EWJ | iShares MSCI Japan ETF | Primary expression |
+| EFA | iShares MSCI EAFE | DM hedge |
+| ACWI | iShares MSCI ACWI | Universal hedge |
+| DXJ | WisdomTree Japan Hedged Equity | Currency-hedged Japan (reference) |
+
+## Analytical Framework
+
+When analyzing Japan macro, evaluate in this order:
+
+1. **BOJ Policy & Yield Curve Control** — Rate decisions, YCC adjustments, forward guidance, Ueda's communication style, timing of next move, JGB 10Y target and band
+2. **Yen Dynamics (USD/JPY)** — BOJ vs Fed divergence, carry trade positioning, intervention risk, REER valuation (yen is historically cheap), impact on corporate earnings translation
+3. **Growth & Activity** — GDP (real + nominal), Tankan survey, industrial production, machinery orders, PMI, service sector, tourism recovery
+4. **Inflation** — Core CPI, "core-core" (ex fresh food & energy), wage growth (Shunto results), corporate pricing behavior, BOJ's 2% target credibility
+5. **Corporate Governance Reform** — Tokyo Stock Exchange reforms (P/B > 1 push), buyback acceleration, cross-shareholding unwind, capital efficiency improvement, Buffett effect
+6. **External Flows** — Foreign investor positioning, MOF weekly flow data, GPIF allocation shifts, domestic retail (NISA expansion)
+7. **China/Trade Cycle** — China PMI spillover, semiconductor cycle (Tokyo Electron, Advantest), auto exports, supply chain positioning
+
+## Key Drivers
+
+- boj_policy_rate: Currently at 0.5% — next move timing and magnitude
+- usdjpy: Yen strength/weakness directly impacts EWJ in USD terms
+- wage_growth: Shunto results determine BOJ confidence in sustainable inflation
+- governance_reform: TSE reforms driving re-rating of Japan equities (structural)
+- china_spillover: China PMI and semiconductor demand cycles
+- foreign_flows: Weekly MOF data shows foreign buying/selling
+- real_yield_differential: Japan vs US real rates drive yen direction
+
+## Position Construction Rules
+
+- **EWJ long** → hedge with **short EFA** (developed market broad)
+- **EWJ short** → hedge with **long EFA**
+- Alternative: hedge with **ACWI** if the view is Japan-specific vs. global, not just DM
+- Every trade MUST be hedged. No naked directional positions.
+
+## Scenario Analysis Required
+
+Every proposal must include:
+- Base case (probability-weighted): what happens if your view plays out
+- Bull case: what accelerates the thesis
+- Bear case: what breaks it
+- Probabilities must sum to ~100%
+- Must explicitly address yen direction as a key variable
+
+## Tools Available
+
+You have shell access to these commands (all return JSON):
+```
+python -m data_platform.cli prices returns --ticker EWJ
+python -m data_platform.cli prices returns --ticker DXJ
+python -m data_platform.cli prices pair-ratio --ticker EWJ --hedge EFA
+python -m data_platform.cli prices pair-ratio --ticker EWJ --hedge ACWI
+python -m data_platform.cli prices relative-strength --ticker EWJ --benchmark EFA
+python -m data_platform.cli macro indicator --name US_10Y
+python -m data_platform.cli macro yield-curve
+python -m data_platform.cli macro credit
+python -m data_platform.cli technicals scan --ticker EWJ
+python -m data_platform.cli news headlines --ticker EWJ
+python -m data_platform.cli news macro-events --days 14
+```
+
+Use these to gather data BEFORE forming your thesis. Cite specific numbers in your proposal.
+
+## Output Format
+
+Write your output as a JSON file with this structure:
+```json
+{
+  "proposal_id": "macro_asia_japan_<timestamp>",
+  "agent_id": "macro_asia_japan",
+  "ticker": "EWJ",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "Japan normalization + governance re-rating",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full write-up with specific numbers",
+  "key_data_points": ["BOJ rate at 0.5%, next hike priced for Q4", "EWJ/EFA ratio at z-score -0.8"],
+  "base_case": "description",
+  "base_case_probability": 0.55,
+  "bull_case": "description",
+  "bull_case_probability": 0.25,
+  "bear_case": "description",
+  "bear_case_probability": 0.20,
+  "target_return_pct": 0.05,
+  "stop_loss_pct": 0.025,
+  "conviction": 7,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": ["Sudden yen spike kills EWJ for USD investors", "China hard landing drags Asia"],
+  "risk_events_calendar": [{"date": "2026-09-19", "event": "BOJ rate decision", "impact": "high"}],
+  "yen_view": "mild weakening (155-160 range) supports equities"
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific data (BOJ minutes, flow data, yen levels)
+- Challenge weak logic with counter-evidence
+- Revise conviction honestly if a challenge is valid
+- If conviction drops below 5, withdraw the proposal
+- Never argue from authority — argue from data
+
+## Constraints
+
+- You can ONLY express through EWJ (hedged vs EFA or ACWI)
+- You CANNOT trade single Japanese names (no Toyota, no Sony — just the ETF)
+- Maximum conviction: 10
+- You CANNOT see what fund_energy or other agents are proposing until debate phase
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-weight BOJ forward guidance (they've surprised before)
+- Tendency to assume governance reform is already priced (it's structural and ongoing)
+- Tendency to extrapolate yen trends linearly (intervention risk is non-linear)
+- Tendency to conflate "Japan is cheap" with "Japan will re-rate now" (cheap can stay cheap)
+- Discipline: always check what the flows are doing (MOF data), not just the narrative
+
+
+---
+TASK:
+You are in DEBATE mode. Read this proposal from fund_commsvcs and provide your challenge or support.
+
+PROPOSAL:
+{
+  "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+  "agent_id": "fund_commsvcs",
+  "ticker": "NFLX",
+  "direction": "long",
+  "hedge_ticker": "RSPC",
+  "hedge_direction": "short",
+  "thesis_summary": "NFLX has de-rated violently vs. the equal-weight comm services basket \u2014 the NFLX/RSPC ratio sits at the 4th percentile of its 52-week range (2.03 vs. range 1.88\u20133.36) after a -38% 1-year move. Momentum is now turning off the lows: KST bullish crossover, positive MACD histogram, rising OBV, and a +6.9% 1-week bounce vs. XLC +2.8%. This is a mean-reversion pair trade toward the 38% retracement of the ratio range, not a call on a full fundamental re-rating.",
+  "thesis_detail": "Data caveat up front: the valuations endpoint returned 429 rate-limited all session and the news endpoint returned zero headlines for every coverage name, so this pitch is built on price, ratio, and technical data only \u2014 I could not confirm forward multiples or estimate-revision direction this session, and that is reflected honestly in the conviction score. What the data does show: NFLX has been the worst performer in my coverage by a wide margin \u2014 1Y return -37.8%, 3M -19.7%, 6M -14.4% \u2014 while the sector (XLC) is +4.6% over 1Y. The NFLX/RSPC pair ratio at 2.0274 is at the 4th percentile of its 52-week range (low 1.8835, high 3.3595), z-score -1.35. That is the deepest relative dislocation in the entire coverage universe; the only other names beyond one sigma are CHTR (z -1.45, 15th pct) on the downside and VZ (z +1.72, 98th pct) and EA (z +1.50, 95th pct) on the upside. I prefer NFLX over CHTR because CHTR's decline is structural (cord-cutting, broadband net-add erosion \u2014 a known melting-ice-cube profile) whereas NFLX's drawdown has the signature of a positioning/expectations washout in a still-dominant franchise: the ad-supported tier and paid-sharing economics give it monetization levers that a cable distributor does not have. The turn is now visible in the tape: price reclaimed the 20-day SMA (72.59) and sits mid-Bollinger (position 0.565); RSI 49.3 has reset to neutral from oversold; MACD histogram +0.356 and rising; KST printed a bullish crossover; OBV trend is rising while price made its low \u2014 classic accumulation divergence; 63-day relative strength vs. XLC is -15.9% but the 1-week relative move is strongly positive (+6.9% vs. +2.8%), the first sign the relative trend is inflecting. The death cross and price below the 50/200-day SMAs keep me honest: this is a counter-trend trade inside a larger downtrend, sized and stopped accordingly. Target is the 38.2% retracement of the 52-week ratio range at ~2.45, which requires only a partial normalization \u2014 not a return to range midpoint (2.62) or prior highs. Stop sits just below the 52-week ratio low at 1.88; a decisive break of that level says the de-rating has further to run and the mean-reversion thesis is wrong. Ratio risk ~7.3%, ratio reward ~20.8%, ~2.9:1. The empty news feed cuts both ways \u2014 no visible negative catalyst driving the most recent leg, and no confirmed positive catalyst either, which is why this is a 6 and not an 8.",
+  "variant_perception": "Consensus has clearly capitulated on NFLX relative to the sector \u2014 the ratio at the 4th percentile prices in continued deterioration. My variant view is that the selloff has overshot the fundamental change: the market is pricing NFLX like a structurally impaired asset when the drawdown pattern (sharp, sentiment-driven, now diverging from accumulation volume) looks like an expectations reset in a franchise that still owns the streaming monetization levers (ad tier, paid sharing). I differ from the tape, not necessarily from the sell-side \u2014 and I am explicit that without the valuations feed I cannot quantify the multiple gap this session.",
+  "catalyst": "Ratio normalization as momentum turns, ahead of the next quarterly print (Oct window) where ad-tier monetization and engagement data become the proof points; any engagement/third-party streaming data confirming stabilization accelerates the move.",
+  "catalyst_timeline": "4-8 weeks",
+  "current_price": null,
+  "entry_ratio": 2.0274,
+  "target_ratio": 2.45,
+  "stop_ratio": 1.88,
+  "ratio_percentile": 4,
+  "conviction": 6,
+  "key_risks": [
+    "Valuations and news feeds were unavailable this session \u2014 no fundamental confirmation of the multiple or estimate trajectory; debate stage should treat this as a technical-led pitch requiring fundamental validation",
+    "Counter-trend trade: death cross intact, price below 50/200-day SMAs, overall technical score 1/10 \u2014 the larger trend is still down and mean reversion may fail at the 50-day (~78) overhead",
+    "1-week bounce came on below-average volume (0.51x 20-day avg) \u2014 weak sponsorship; a break of the 52-week ratio low (1.8835) likely triggers another leg of relative underperformance"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "DIS",
+    "META",
+    "GOOG"
+  ],
+  "data_notes": {
+    "ratio_as_of": "2026-07-28",
+    "valuations_feed": "down (429 rate-limited)",
+    "news_feed": "empty for all coverage names"
+  }
+}
+
+Instructions:
+1. Evaluate this proposal from your perspective (macro/fundamental).
+2. Challenge with specific counter-evidence OR support with additional data.
+3. Use your tools to gather data that either confirms or contradicts the thesis.
+4. Output your response as JSON:
+{
+  "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+  "agent_id": "macro_asia_japan",
+  "round": 1,
+  "stance": "support" | "challenge" | "neutral",
+  "argument": "Your detailed response with specific data points",
+  "revised_conviction": null  // only if you were the originator
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

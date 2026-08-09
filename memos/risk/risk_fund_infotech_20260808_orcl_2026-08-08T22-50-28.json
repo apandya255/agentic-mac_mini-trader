@@ -1,0 +1,29 @@
+{
+  "proposal_id": "risk_fund_infotech_20260808_orcl",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "Conviction-6 position sizing within standard 2\u20135% NAV tier; hedge structurally correct (long ORCL / short RSPT per sector map); sector concentration well under 25% limit; projected gross leverage 1.06x appropriate for regime; all factor betas within \u00b10.6 hard limits; empty book eliminates correlation concern.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": null,
+  "projected_factor_betas": {
+    "DXY": -0.04,
+    "SPX": 0.17,
+    "USGG10Yr": 0.06,
+    "VIX": -0.08,
+    "Growth_Value": 0.09,
+    "CL1": 0.01,
+    "Large_Small": 0.03,
+    "CDX_HY_5Y": 0.05,
+    "XAU": -0.02
+  },
+  "factor_breach": false,
+  "projected_gross_leverage": 1.06,
+  "max_allowed_size_pct": 0.05,
+  "risk_warnings": [
+    "RSPT short leg may underperform in broad speculative-tech rallies; monitor weekly pair correlation",
+    "Backlog concentration risk noted from thesis; customer delays or Stargate-deal disruptions would hit ORCL 2x sector delta"
+  ],
+  "modifications": null
+}

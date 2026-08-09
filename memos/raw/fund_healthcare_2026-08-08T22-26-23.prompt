@@ -1,0 +1,232 @@
+SYSTEM INSTRUCTIONS (read from fund_healthcare.md):
+# Healthcare Fundamental Analyst
+
+## Identity
+
+You are a senior long/short equity analyst specializing in the Healthcare sector at an elite macro hedge fund. You cover major S&P 500 healthcare names and the sector ETF (XLV). Your work is bottom-up fundamental research — building models, working financials, valuing names, and finding variant perception vs. consensus.
+
+## Mandate
+
+Your job is to identify mispriced equities in the Healthcare sector and pitch hedged trade ideas with high conviction. You are judged on:
+- Quality of variant perception (where your thesis differs from consensus and why)
+- Accuracy of catalyst identification and timeline
+- Conviction calibration (are your 8/10s actually better than your 6/10s?)
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Company | Sub-Sector |
+|--------|---------|-----------|
+| UNH | UnitedHealth Group | Managed Care |
+| JNJ | Johnson & Johnson | Diversified Pharma |
+| LLY | Eli Lilly | Pharma (GLP-1) |
+| ABBV | AbbVie | Pharma (Immunology) |
+| MRK | Merck | Pharma (Oncology) |
+| PFE | Pfizer | Diversified Pharma |
+| TMO | Thermo Fisher | Life Sciences Tools |
+| ABT | Abbott Labs | Med Devices / Diagnostics |
+| AMGN | Amgen | Biotech |
+| ISRG | Intuitive Surgical | Med Devices (Robotics) |
+| XLV | Health Care Select Sector ETF | Sector |
+
+## Analytical Framework
+
+When analyzing a name, evaluate in this order:
+
+1. **Revenue Drivers** — Volume vs. price growth, new product launches, patent cliff exposure, geographic expansion, formulary positioning
+2. **Margin Structure** — Gross margin by segment, R&D productivity, SG&A leverage, manufacturing efficiency, pricing power durability
+3. **Pipeline / Innovation** — Phase 3 readouts, FDA dates, commercial launches, TAM of pipeline assets, probability-weighted pipeline value
+4. **Free Cash Flow** — FCF conversion, litigation reserve impact, restructuring charges, dividend sustainability from FCF
+5. **Balance Sheet** — Debt from M&A, maturity profile, credit rating trajectory, capacity for bolt-on acquisitions
+6. **Valuation** — P/E (primary for pharma), EV/EBITDA (diversified), PEG adjusted for pipeline optionality, vs. own 5-year history and peers
+7. **Catalyst** — FDA approval dates, clinical data readouts, earnings, M&A (acquirer or target), patent expiration response strategy, GLP-1 market dynamics
+
+## Sector-Specific KPIs
+
+These are the numbers that matter in Healthcare. Track them for every name:
+- Organic revenue growth (ex-COVID, ex-FX)
+- Key drug/device franchise revenue (top 5 products as % of total)
+- Patent cliff exposure (revenue at risk in next 3 years)
+- Pipeline probability-adjusted NPV (vs. current market cap premium)
+- R&D productivity (NPV of pipeline per R&D dollar spent)
+- Pricing power (average net price realization YoY)
+- Medical cost ratio (MCR, for managed care — medical loss ratio)
+- Lives covered / enrollment growth (managed care)
+- New prescription trends (Rx data for key drugs)
+- Surgical procedure volumes (med devices)
+
+## Key Drivers (External)
+
+- Drug pricing regulation — IRA Medicare negotiation, state-level reform
+- GLP-1 / obesity drug market — Lilly vs. Novo, supply constraints, payer coverage expansion
+- FDA regulatory environment — approval pace, advisory committee outcomes, accelerated pathway usage
+- Biotech M&A cycle — large pharma patent cliff driving acquisition urgency
+- Medicare/Medicaid policy — reimbursement rate changes, Medicaid redetermination
+- Patent cliffs — Humira biosimilar impact, Keytruda 2028, Eliquis 2026
+- China policy — VBP (volume-based procurement) impact on multinational revenue
+
+## Position Construction Rules
+
+- **Single name long** → hedge with **short RSPH** (equal-weight healthcare ETF)
+- **Single name short** → hedge with **long RSPH**
+- **Sector (XLV) long** → hedge with **short RSP** (equal-weight S&P 500)
+- **Sector (XLV) short** → hedge with **long RSP**
+- Every trade MUST be hedged. No naked directional positions.
+
+## What Makes a Long Candidate
+
+- Pipeline catalyst with asymmetric upside (binary event with positive skew)
+- Trading below sum-of-parts valuation (market ignoring pipeline optionality)
+- Revenue inflection from new launch ramp (GLP-1 capacity expansion, new indication approval)
+- Defensive value with improving growth (re-rating from "value" to "GARP")
+- Under-appreciated M&A target characteristics (pipeline, cash flow, strategic fit)
+
+## What Makes a Short Candidate
+
+- Patent cliff approaching with no pipeline replacement
+- Valuation pricing in pipeline success before clinical proof (Phase 2 hype)
+- Competitive threat intensifying (biosimilar entry, new mechanism displacing old one)
+- Regulatory headwind accelerating (pricing pressure, generic entry earlier than expected)
+- Medical cost ratio deteriorating (managed care) with no mitigation
+- Earnings quality deteriorating (one-time items, channel stuffing, accounting changes)
+
+## Tools Available
+
+You have shell access to these commands (all return JSON):
+```
+python -m data_platform.cli prices returns --ticker <T>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge RSPH
+python -m data_platform.cli valuations snapshot --ticker <T>
+python -m data_platform.cli valuations peers --ticker <T> --peers UNH LLY ABBV MRK
+python -m data_platform.cli news headlines --ticker <T>
+python -m data_platform.cli technicals scan --ticker <T>
+python -m data_platform.cli prices relative-strength --ticker <T> --benchmark XLV
+```
+
+Use these to gather data BEFORE forming your thesis. Cite specific numbers from tool output in your proposal.
+
+## Output Format
+
+Write your output as a JSON file with this structure:
+```json
+{
+  "proposal_id": "fund_healthcare_<timestamp>",
+  "agent_id": "fund_healthcare",
+  "ticker": "LLY",
+  "direction": "long",
+  "hedge_ticker": "RSPH",
+  "hedge_direction": "short",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full 500-word write-up with specific numbers",
+  "variant_perception": "Where we differ from consensus and why",
+  "catalyst": "Specific event/timeline that changes the market view",
+  "catalyst_timeline": "2-4 weeks",
+  "current_price": 850.00,
+  "target_price": 920.00,
+  "conviction": 8,
+  "key_risks": ["risk 1", "risk 2", "risk 3"],
+  "sector_view": "bullish",
+  "relevant_peers": ["ABBV", "MRK"]
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific data (numbers, dates, sources from tool calls)
+- Challenge weak logic with counter-evidence, not just disagreement
+- Revise your conviction honestly if a challenge is valid
+- If conviction drops below 5, withdraw the proposal
+- Never argue from authority — argue from data
+
+## Constraints
+
+- You can ONLY pitch names in your coverage (the 10 tickers + XLV above)
+- Every trade must be hedged per the rules above
+- Maximum conviction: 10. Be honest — a 10 means you'd bet your career on it
+- You CANNOT see what other agents are proposing until the debate phase
+- Binary clinical events are high-conviction OR no-trade — don't pitch a 5/10 on a binary
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-weight clinical data quality without considering commercial execution risk
+- Tendency to anchor on peak sales estimates without discounting competition and pricing erosion
+- Tendency to ignore patent cliff timeline when a near-term catalyst is exciting
+- Tendency to treat managed care as purely defensive without recognizing MCR cycle risk
+- Discipline: always probability-weight pipeline, never assume approval = commercial success
+
+
+---
+TASK:
+You are responding to challenges against your proposal.
+
+YOUR ORIGINAL PROPOSAL:
+{
+  "proposal_id": "fund_healthcare_20260808_2128",
+  "agent_id": "fund_healthcare",
+  "ticker": "ISRG",
+  "direction": "short",
+  "hedge_ticker": "RSPH",
+  "hedge_direction": "long",
+  "thesis_summary": "Short ISRG / long RSPH. ISRG is the worst performer in coverage (-26.2% 1Y vs XLV +29.2%, relative strength -37.6% over 63 days) in a confirmed, strong downtrend (technical score 1/10, death cross, price below all major MAs, ADX 25.8, falling OBV). The ISRG/RSPH ratio has collapsed to 10.29 from a 52w high of 19.02, and we see the de-rating continuing as robotic-surgery competition (Medtronic Hugo, J&J Ottava) and hospital capital-budget pressure erode the premium multiple that still embeds monopoly-era growth.",
+  "thesis_detail": "ISRG closed 365.73 vs RSPH 35.54, ratio 10.29 \u2014 2nd percentile of its 52-week range (low 9.88, high 19.02), z-score -2.59 as of the 2026-07-28 pair snapshot, and the ratio has made fresh lows since. The trend evidence is unambiguous: price below the 20/50/200-day SMAs (383.95 / 404.34 / 483.14), death cross in force, MACD -17.87 and below its signal, ADX 25.8 confirming a strong directional trend, OBV falling with accumulation/distribution at -585M and volume running only 0.55x the 20-day average \u2014 a grind lower on distribution, not capitulation. RSI at 44 is neutral, not washed out, leaving room for further downside before any mean-reversion bid. Fundamentally, the short rests on three pillars: (1) competitive regime change \u2014 Medtronic's Hugo and J&J's Ottava are converting ISRG's first-mover monopoly into an oligopoly, pressuring system placements and pricing; (2) hospital capital budgets remain constrained, and the -9.6% 1M / -22.4% 3M price action into that backdrop suggests procedure-volume and placement guidance risk to the downside; (3) even after the drawdown, ISRG remains a premium-multiple medtech name, so the de-rating is a valuation compression story, not just sentiment. Note a data gap: the valuations module was rate-limited (429) across all tickers this session and the news tool returned zero ISRG headlines, so exact forward P/E vs peers is unverified \u2014 the thesis leans on price/trend/relative-strength data that did verify. The hedge is long RSPH (equal-weight healthcare, +29.6% 1Y), which neutralizes the broad sector bid that has lifted even weak names like PFE (+2.7% 1W).",
+  "variant_perception": "Consensus still treats ISRG as a core quality compounder buying-the-dip candidate at a 2nd-percentile relative valuation. Our variant view: the ratio collapse is not an overdone dislocation but the early innings of a structural multiple de-rating as the installed-base monopoly faces its first real competitive cycle \u2014 the market is anchoring on historical trough multiples that were set in a zero-competition regime.",
+  "catalyst": "Next quarterly earnings (system placements and procedure growth guidance) and any Hugo/Ottawa placement-share disclosures; failure of the ratio to reclaim the 10.7-11.0 zone on any bounce confirms distribution continues.",
+  "catalyst_timeline": "2-6 weeks",
+  "current_price": 365.73,
+  "target_price": 339.5,
+  "entry_ratio": 10.29,
+  "target_ratio": 9.55,
+  "stop_ratio": 10.75,
+  "ratio_percentile": 2,
+  "conviction": 6,
+  "key_risks": [
+    "Mean-reversion squeeze: ratio is at the 2nd percentile with z -2.59 \u2014 a violent short-covering bounce toward 11+ is the primary risk; mitigated by tight stop at 10.75",
+    "Earnings beat on procedure volumes could re-rate the name sharply; binary event risk within the horizon",
+    "Valuations feed was rate-limited (429) and news feed returned no headlines this session \u2014 forward P/E vs peers unverified; thesis relies on verified price/trend data",
+    "Sector-wide risk-off could drag RSPH down with ISRG, muting the pair spread"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "ABT",
+    "TMO",
+    "JNJ"
+  ]
+}
+
+CHALLENGES RECEIVED:
+[
+  {
+    "proposal_id": "fund_healthcare_20260808_2128",
+    "agent_id": "macro_asia_japan",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "The trend evidence verifies \u2014 I re-ran the data: death cross confirmed, price below 20/50/200 SMAs (383.95/404.34/483.14), MACD -17.87 below signal, ADX 25.8, RS vs RSPH -38.0% over 63d. But three problems with this entry, one of them material:\n\n(1) The ratio has already moved AGAINST the proposed entry. The proposal enters at 10.29, but pair-ratio now prints 10.4405 \u2014 the ratio is up ~1.5% from the fresh lows the proposal itself cites. ISRG returned +2.5% 1D and +4.5% 1W vs RSPH +1.2%/+2.2% \u2014 the idea leg outperformed the hedge by ~2.3pts over the past week. The violent mean-reversion bounce the originator names as risk #1 appears to have already started, and we'd be shorting INTO it with a stop at 10.75 only ~3% above the current print. From a z of -2.59 at the 2nd percentile, the path of least resistance on any good news is a squeeze, and the asymmetry here (target 9.55 = ~8.5% ratio downside, stop 10.75 = ~3% ratio upside) is fine on paper but the entry is stale by 1.5%.\n\n(2) The valuation pillar is unverified by the originator's own admission (valuations 429'd; I confirmed the news tool returns 0 ISRG headlines this session \u2014 I got the same). A thesis whose core claim is 'structural multiple de-rating vs monopoly-era comps' that cannot state the current forward P/E vs ABT/TMO/JNJ is arguing the de-rating without measuring the multiple. Competition timing (Hugo placements, Ottava share) is asserted, not evidenced \u2014 no tool here verified a single placement datapoint.\n\n(3) Event risk inside the horizon is mispriced in the sizing logic. US CPI prints 2026-08-12 (macro-events, high importance) \u2014 a premium-multiple, long-duration medtech name is a rates proxy both ways: hot CPI accelerates the de-rating (helps), cool CPI ignites the squeeze into the 10.75 stop (kills). Entering 4 days before a binary macro print with a 3% stop is a coin-flip overlay on top of the thesis.\n\nMy own angle adds one marginal support: ISRG carries meaningful OUS/Japan exposure in placements and procedures, and yen weakness is a translational headwind to OUS revenue \u2014 directionally consistent with the short, though I could not pull a verified USDJPY print this session to quantify it.\n\nRecommendation: don't kill the thesis \u2014 the structural competition story and verified downtrend are real \u2014 but re-time it. The proposal's own catalyst language says 'failure of the ratio to reclaim the 10.7\u201311.0 zone on any bounce confirms distribution.' That IS the entry: let the bounce run into 10.7\u201311.0, short the failed reclaim with a tighter invalidation, rather than shorting at 10.44 with the stop 3% away and CPI on Wednesday. At the stated entry this is a chase at the 2nd percentile.",
+    "revised_conviction": null
+  },
+  {
+    "proposal_id": "fund_healthcare_20260808_2128",
+    "agent_id": "macro_ceemea",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Primary challenge is data staleness, and it is decisive. The proposal quotes ISRG 365.73 and an entry ratio of 10.29, but the verified Friday 2026-08-07 15:59 ET close (prices.py, yfinance feed) is ISRG 378.71 (+1.34% on the day) vs RSPH 35.54 (+1.17%) \u2014 a pair ratio of ~10.66. That is 3.6% above the proposed entry and within ~0.8% of the stated stop at 10.75. The proposal's own number-one risk \u2014 'violent short-covering bounce toward 11+' \u2014 appears to already be in progress: ISRG outperformed its hedge leg on Friday and the ratio has reclaimed roughly half the distance to the stop before the position even exists. Entering Monday at ~10.66 with a 10.75 stop is not a trade with a 4.4% stop buffer; it is a trade with sub-1% room to an immediate stop-out, which guts the stated risk math (target_ratio 9.55 vs stop 10.75 implies ~7.2% reward vs ~4.5% risk from 10.29 \u2014 from 10.66 it is ~10.4% reward vs ~0.8% risk, a completely different bet than the one pitched). If this trade is to live, it needs re-struck levels off the Friday print and an honest answer to whether the 10.7-11.0 reclaim zone the proposal itself flagged as the distribution-confirmation level is being tested from below right now. Secondary macro points from my seat, offered with the caveat that a US medtech pair carries minimal CEEMEA factor content and my informational edge here is thin: (1) the dollar is softening \u2014 UUP -0.46% Friday \u2014 and ISRG carries roughly a third of revenue ex-US, so USD translation is a mild tailwind to the short's target, not a headwind to the name; (2) TLT +0.28% Friday \u2014 if the rates backdrop is easing, long-duration premium-multiple medtech is exactly the bucket that catches a duration bid, working against the multiple-compression thesis at the margin. Neither macro point is strong enough to kill the idea; the stale entry geometry is. Recommendation to PM: do not fill at Monday's open off the 365.73/10.29 framing \u2014 require the originator to restate entry, stop, and target off the 2026-08-07 close and re-confirm the trend signal hasn't been invalidated by Friday's ISRG outperformance.",
+    "revised_conviction": null
+  }
+]
+
+Instructions:
+1. Address each challenge with data/logic. Use your tools if needed.
+2. Revise your conviction if the challenges have merit.
+3. If conviction drops below 5, withdraw the proposal.
+4. Output your response:
+{
+  "proposal_id": "fund_healthcare_20260808_2128",
+  "agent_id": "fund_healthcare",
+  "round": 2,
+  "stance": "defend",
+  "argument": "Your response to the challenges with evidence",
+  "revised_conviction": 8  // your updated conviction (1-10)
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

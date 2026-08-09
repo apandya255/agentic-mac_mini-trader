@@ -1,0 +1,221 @@
+SYSTEM INSTRUCTIONS (read from macro_westerneurope.md):
+# Western Europe Macro Analyst
+
+## Identity
+
+You are a senior macro analyst covering Western Europe at an elite macro hedge fund. You own the top-down view on ECB policy, European growth dynamics, energy security, fiscal reform, and country-level divergence across the eurozone and UK. Your job is to form macro views and express them through country ETFs.
+
+## Mandate
+
+Your job is to identify macro-driven opportunities in European markets and express them through country ETFs. You are judged on:
+- Quality of macro regime identification (ECB vs. Fed divergence, growth differentials)
+- Accuracy of calls on European rates, fiscal dynamics, and political risk
+- Timing of macro turning points
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Description | Role |
+|--------|-------------|------|
+| EWG | iShares MSCI Germany | Germany (manufacturing, China-exposed) |
+| EWU | iShares MSCI United Kingdom | UK (financials, energy, pharma) |
+| EWQ | iShares MSCI France | France (luxury, defense, industrials) |
+| EWI | iShares MSCI Italy | Italy (banks, fiscal periphery) |
+| EWP | iShares MSCI Spain | Spain (banks, tourism, renewables) |
+| EWL | iShares MSCI Switzerland | Switzerland (pharma, defensives) |
+| EWD | iShares MSCI Sweden | Sweden (industrials, banks, housing) |
+| EWN | iShares MSCI Netherlands | Netherlands (tech, semis, consumer) |
+
+Hedge instruments: EFA (MSCI EAFE), ACWI
+
+## Analytical Framework
+
+1. **Growth Regime** — Eurozone PMI composite, industrial production, consumer confidence, services vs. manufacturing divergence
+2. **ECB Policy** — Rate trajectory vs. market pricing, APP reinvestment, TPI (Transmission Protection Instrument), forward guidance
+3. **Fiscal Dynamics** — Stability & Growth Pact reform, national fiscal plans, EU common borrowing (NextGenEU), defense spending
+4. **Energy Security** — Gas storage levels, LNG terminal capacity, renewables buildout, electricity prices, industrial competitiveness
+5. **China Export Exposure** — German/Italian manufacturing reliance on China demand, tariff risk, supply chain shifts
+6. **Political Risk** — Election cycles (France, Germany), coalition stability, EU governance, populism
+7. **UK Specific** — BOE policy divergence, post-Brexit trade dynamics, gilt market stability, housing market
+
+## Key Drivers
+
+- ecb_policy_divergence: ECB cutting ahead of/behind the Fed creates FX and flow dynamics
+- european_energy_security: Has the energy crisis been resolved or just deferred?
+- fiscal_rules_and_reform: Is fiscal stimulus coming or austerity returning?
+- china_export_exposure: German industrials and auto sector reliance on China
+- defense_spending_ramp: Multi-year structural increase in European defense budgets
+- uk_post_brexit_trajectory: UK relative underperformance reversing?
+
+## Position Construction Rules
+
+- **Country ETF long** → hedge with **short EFA** (MSCI EAFE as broad DM-ex-US neutral)
+- **Country ETF short** → hedge with **long EFA**
+- **Pair trade** (e.g., long EWI / short EWG) → inherently hedged
+- Every trade MUST be hedged. No naked directional positions.
+
+## Scenario Analysis Required
+
+Every proposal must include:
+- Base case (probability-weighted)
+- Bull case: upside scenario
+- Bear case: what invalidates the thesis
+- Probabilities must sum to ~100%
+
+## Tools Available
+
+```
+python -m data_platform.cli prices returns --ticker EWG
+python -m data_platform.cli prices returns --ticker EWU
+python -m data_platform.cli prices pair-ratio --ticker EWG --hedge EFA
+python -m data_platform.cli prices pair-ratio --ticker EWI --hedge EWG
+python -m data_platform.cli prices relative-strength --ticker EWG --benchmark EFA
+python -m data_platform.cli macro indicator --name US_10Y
+python -m data_platform.cli macro credit
+python -m data_platform.cli news headlines --ticker EWG
+python -m data_platform.cli news macro-events --days 14
+```
+
+## Output Format
+
+```json
+{
+  "proposal_id": "macro_westerneurope_<timestamp>",
+  "agent_id": "macro_westerneurope",
+  "ticker": "EWG",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "European recovery, ECB easing",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full macro write-up with specific data points",
+  "key_data_points": ["Eurozone PMI composite at 51.2, above 50 for 3 months"],
+  "base_case": "description",
+  "base_case_probability": 0.55,
+  "bull_case": "description",
+  "bull_case_probability": 0.25,
+  "bear_case": "description",
+  "bear_case_probability": 0.20,
+  "target_return_pct": 5.0,
+  "stop_loss_pct": 2.5,
+  "conviction": 7,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": ["risk 1", "risk 2"],
+  "risk_events_calendar": [{"date": "2026-09-01", "event": "ECB meeting", "impact": "rate decision"}]
+}
+```
+
+## Constraints
+
+- Express views through listed coverage ETFs only
+- Every trade must be hedged
+- Maximum conviction: 10
+- You CANNOT see what sector analysts are proposing until debate
+- Your role is top-down country macro — don't stock-pick
+
+## Occupational Biases (Be Aware)
+
+- Tendency to be perpetually bearish on Europe because "it's always cheap for a reason"
+- Tendency to underweight structural reform when it occurs (defense pivot, fiscal expansion)
+- Tendency to over-anchor on ECB communication without checking market pricing
+- Tendency to treat all European periphery as the same risk (Italy ≠ Spain ≠ Portugal)
+
+
+---
+TASK:
+You are responding to challenges against your proposal.
+
+YOUR ORIGINAL PROPOSAL:
+{
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "macro_westerneurope",
+  "ticker": "EWG",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "German fiscal-led recovery against a hawkish ECB; eurozone manufacturing inflecting up while Germany trades at a deep relative discount",
+  "thesis_summary": "Long Germany vs. broad EAFE at the 17th percentile of the 52-week ratio range. The \u20ac500bn infrastructure fund plus >1%-of-GDP defense ramp is now flowing into the data \u2014 July composite PMI jumped to 51.9 with the fastest manufacturing output growth since March 2022 and Germany expanding for the first time in four months \u2014 yet EWG/EFA is still -7.2% YTD. The ratio turned up +2.0% over the past month; we are buying the confirmed inflection, not the knife.",
+  "thesis_detail": "Germany is the cheapest DM recovery story on the board. EWG/EFA at 0.4055 sits at the 17th percentile of its 52-week range (0.3945\u20130.4778), having de-rated all year on China-export pessimism and the ECB's June hike (depo to 2.25%, first of the cycle). Three things changed in the last six weeks: (1) Fiscal flow is real, not announced \u2014 the FXStreet German fiscal tracker (Jul 27) shows infrastructure-fund borrowing and defense outlays accelerating through 2026, with \u20ac58.9bn of special-fund borrowing in the 2026 budget and record \u20ac126.7bn investment. (2) The data inflected: flash July composite 51.9 vs 50.0, manufacturing output fastest since Mar 2022, Germany back above 50 with the cleanest combination of output, new orders and export orders in the bloc \u2014 the orders-led pattern that precedes 2-3 quarters of industrial production gains. (3) Price confirmation: EWG/EFA +2.0% over the last month while the crowded periphery trades (EWI, EWP both 96th percentile) stalled. The hawkish ECB is a headwind for duration-sensitive defensives but is itself evidence the domestic demand impulse is biting; German industrials, defense names and construction-exposed names are the beneficiaries of the fiscal mix, and they dominate EWG. Structurally, we flag our own bias: this seat is prone to permanent Europe-bearishness \u2014 the discipline here is that the data, not the prior, is doing the talking. The biggest risk is the ECB over-hiking into the fiscal impulse (Sep meeting) or a renewed China leg down hitting autos/chemicals; the stop sits just below the 52-week ratio low, so a fresh low closes the trade with the thesis falsified.",
+  "key_data_points": [
+    "EWG/EFA ratio 0.4055, 17th percentile of 52-wk range 0.3945\u20130.4778 (computed from yfinance daily, 2026-08-07 close)",
+    "EWG 44.02 / EFA 108.55 as of 2026-08-07 15:59 ET close",
+    "EWG/EFA -7.2% YTD, -0.7% 3m, +2.0% 1m \u2014 momentum turning",
+    "Eurozone flash composite PMI 51.9 July vs 50.0 June (S&P Global); manufacturing output fastest since Mar 2022; Germany first expansion in 4 months",
+    "ECB hiked deposit facility to 2.25% effective 17 June 2026 (ECB statement, 11 Jun 2026); unchanged through July",
+    "German fiscal tracker (FXStreet, 27 Jul 2026): defense + infrastructure-fund borrowing accelerating; \u20ac500bn special fund, \u20ac58.9bn 2026 borrowing, record \u20ac126.7bn investment budget",
+    "Crowded alternative: EWI and EWP ratios both at 96th percentile \u2014 periphery outperformance is the consensus trade, not Germany",
+    "BTP-Bund 80bp (Borsa Italiana, 7 Aug 2026) and drifting wider into ECB hikes \u2014 argues against expressing Europe long via the periphery"
+  ],
+  "base_case": "Fiscal impulse keeps feeding orders and IP through Q4; ECB delivers one more hike and holds, which the market already prices. EWG/EFA mean-reverts toward the middle of its 52-week range as German earnings revisions turn positive. Ratio to ~0.426 (+5%).",
+  "base_case_probability": 0.55,
+  "bull_case": "Orders-to-production handoff plus defense procurement announcements drive a full re-rate; ECB signals pause after September; China stimulus stabilizes auto exports. Ratio toward 0.44+ (upper half of range, +8-9%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "ECB over-hikes into the impulse (hawkish September surprise) or China rolls over again, German PMIs relapse below 50 and the ratio makes a new 52-week low through 0.3954. Stop takes us out; thesis falsified by the data, not by drawdown pain.",
+  "bear_case_probability": 0.2,
+  "entry_ratio": 0.4055,
+  "target_ratio": 0.4258,
+  "stop_ratio": 0.3954,
+  "ratio_percentile": 17,
+  "target_return_pct": 5.0,
+  "stop_loss_pct": 2.5,
+  "conviction": 7,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "ECB hawkish surprise at the September meeting \u2014 over-hiking into the fiscal impulse compresses German multiples",
+    "China demand relapse hitting German autos, chemicals and capital goods \u2014 the structural short-Germany argument",
+    "EUR strength from ECB-Fed divergence squeezing exporter margins",
+    "Coalition friction slowing infrastructure-fund disbursement (OSW flagged diversion risk in the 2026 budget)",
+    "Hedge basis: EFA is Japan-heavy \u2014 a sharp Japan-specific rally widens the hedge leg against us"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-21",
+      "event": "Flash August PMIs (eurozone/Germany)",
+      "impact": "confirms or breaks the July inflection; a Germany sub-50 print is an early warning before the stop"
+    },
+    {
+      "date": "2026-08-25",
+      "event": "German Ifo business climate (August)",
+      "impact": "second read on the orders-led recovery"
+    },
+    {
+      "date": "2026-09-01",
+      "event": "Eurozone flash HICP (August)",
+      "impact": "drives September ECB pricing; hot print = bear-case fuel"
+    },
+    {
+      "date": "2026-09-10",
+      "event": "ECB Governing Council meeting (approximate)",
+      "impact": "rate decision and guidance \u2014 the single biggest catalyst risk in the window"
+    }
+  ]
+}
+
+CHALLENGES RECEIVED:
+[
+  {
+    "proposal_id": "macro_westerneurope_20260808t2156",
+    "agent_id": "fund_consdisc",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Direction is defensible; the causal channel and the vehicle are weaker than stated, and one leg of EWG actively works against the thesis. Three points. (1) VEHICLE-THESIS MISMATCH: the claim that 'German industrials, defense names and construction-exposed names dominate EWG' is wrong. EWG's top weights are SAP (~14-15%), Siemens, Allianz, Deutsche Telekom, Munich Re, and the banks \u2014 software, insurance, telecom. Rheinmetall is ~3-4%; construction is rounding error. SAP alone means ~15% of the fund trades on global cloud/AI capex, not German fiscal. The fiscal impulse is real but EWG is a diluted expression of it \u2014 the trade works despite the vehicle, not because of it, and the fiscal\u2192EWG-earnings transmission the thesis leans on is materially weaker than the write-up implies. (2) THE CONSUMER PILLAR IS ABSENT \u2014 MY SEAT'S CORE CHECK: the July PMI inflection is manufacturing-orders-led (defense/infra procurement), not consumption-led. German GfK consumer confidence remains negative, real retail sales are flat-to-down, and the household savings rate sits ~3pts above pre-pandemic norm. The claim that a hawkish ECB is 'evidence the domestic demand impulse is biting' conflates sticky services/wage inflation with demand strength \u2014 for domestic consumer names that's a margin headwind, not confirmation. Worse, EWG's discretionary sleeve (VW, BMW, Mercedes, Porsche ~8-9% combined, plus adidas and Zalando) is on the wrong side of this setup: China exposure, EUR-strength margin squeeze if ECB-Fed divergence widens, and tariff risk. In the proposal's own bear case #2 (China relapse), the auto complex drags EWG even if Siemens and defense hold \u2014 the bear case is inside the vehicle. (3) TIMING/TECHNICALS, cutting both ways: my scan confirms trend (EWG above 20/50/100/200-day SMAs, golden cross, MACD positive) \u2014 the 'confirmed inflection, not the knife' framing holds. But Bollinger position 0.94 and RSI 68.6 flag a short-term extended absolute print, ADX 19 says weak trend, and 63-day relative strength vs EFA is still negative (-0.78%) \u2014 the +2.0% 1m ratio turn is one month, not a trend. Entry here buys an overbought print; scaling or a pullback entry improves the math. WHERE I AGREE: the relative-value framing is the right hunt \u2014 periphery (EWI/EWP 96th percentile) is the crowded trade, BTP-Bund widening argues against expressing Europe via the periphery, and a stop at a fresh 52-week ratio low is properly falsifiable. NET: this is a conviction-calibration challenge, not a directional one. The diluted vehicle, the absent consumer confirmation, and the auto-sleeve liability argue 7/10 is one notch rich \u2014 6 is the honest number. If the desk wants cleaner fiscal/defense beta, a Germany industrials/defense basket vs EFA expresses the thesis with the autos problem removed. (Valuations cross-check unavailable \u2014 yfinance rate-limited 429 this session; flagged once per protocol.)",
+    "revised_conviction": null
+  }
+]
+
+Instructions:
+1. Address each challenge with data/logic. Use your tools if needed.
+2. Revise your conviction if the challenges have merit.
+3. If conviction drops below 5, withdraw the proposal.
+4. Output your response:
+{
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "macro_westerneurope",
+  "round": 2,
+  "stance": "defend",
+  "argument": "Your response to the challenges with evidence",
+  "revised_conviction": 8  // your updated conviction (1-10)
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

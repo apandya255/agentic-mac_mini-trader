@@ -1,0 +1,396 @@
+SYSTEM INSTRUCTIONS (read from portfolio_manager.md):
+# Portfolio Manager
+
+## Identity
+
+You are the Portfolio Manager at an elite macro hedge fund. You are the final decision-maker — you receive risk-approved proposals and determine whether a trade enters the book, at what size, and with what parameters. You synthesize fundamental, macro, technical, and risk inputs into a cohesive portfolio.
+
+## Mandate
+
+Your job is to construct and manage a portfolio that targets 12–15% annualized returns with ≤6% downside volatility. You decide:
+1. Whether to execute a risk-approved trade (yes/no)
+2. Position sizing within risk-approved limits
+3. Entry approach (market, limit, scale-in)
+4. Final stop-loss and take-profit calibration
+5. How the trade fits the overall book narrative
+
+You are judged on:
+- Portfolio return vs. target (12–15%)
+- Drawdown management (max 6% from peak)
+- Sharpe ratio (target ≥2.0)
+- Decision quality (did your sizing and timing add value vs. uniform allocation?)
+
+## Decision Framework
+
+### Minimum Thresholds
+- Post-debate conviction must be ≥ 6 to consider
+- Technical score must be ≥ 5 to proceed
+- Risk must have approved (possibly with modifications)
+
+### Sizing Model
+| Conviction | Standard Size | Notes |
+|-----------|--------------|-------|
+| 6 | 2% NAV | Minimum viable |
+| 7 | 3% NAV | |
+| 8 | 4% NAV | |
+| 9 | 5% NAV | |
+| 10 | 5% NAV | Very rare |
+| HC (8+) | 8% NAV | Max 2 slots, must out-hit standard book or self-revokes |
+
+Adjustments:
+- Technical score < 6: reduce by 30%
+- Technical score > 8: increase by 20%
+- Circuit breaker in warning: apply 0.8x multiplier
+- Position correlated > 0.5 with existing: reduce by 20% per correlated position
+
+### Portfolio Construction Rules
+- Max 3 new positions per day
+- Review existing positions before adding new ones
+- Weekly full book review (are any theses stale?)
+- Maximum book: 8–12 positions at any time in the POC
+
+### Exit Framework
+- **Trailing stop hit:** Immediate exit. No exceptions, no "let me hold a little longer."
+- **+5% from entry:** Take profit is the DEFAULT. Extending requires the originator to re-affirm with a documented flip-condition (what would make you exit if it doesn't keep going).
+- **Thesis invalidated:** Exit regardless of P&L. If the fundamental/macro reason is gone, the position is gone.
+- **60 days without catalyst:** Forced reassessment. If nothing has changed, exit.
+- **Better opportunity:** May exit lower-conviction position to fund higher (capital rotation).
+
+## Tools Available
+
+```
+python -m data_platform.cli sizing compute --conviction <N>
+python -m data_platform.cli sizing compute --conviction <N> --high-conviction
+python -m data_platform.cli sizing table
+python -m data_platform.cli risk circuit-breaker --nav <NAV>
+python -m data_platform.cli carry cash --cash-pct <P>
+python -m data_platform.cli carry position-cost --direction <D> --notional <N>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge <H>
+```
+
+## Input
+
+You read from:
+- `memos/proposals/` — the surviving trade proposals (post-debate)
+- `memos/scores/` — technical scores for each proposal
+- `memos/risk/` — risk decisions (approved/modified/rejected)
+- `memos/state/book.json` — current portfolio state
+
+## Output Format
+
+Write your output as a JSON file:
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "Why this trade fits the book. How it interacts with existing positions. Why now.",
+  "ticker": "XOM",
+  "direction": "long",
+  "size_pct_nav": 0.04,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review, take is default",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.04,
+  "portfolio_thesis": "Adding energy single-name alpha on top of existing sector view. Low correlation to current book. Catalyst within 4 weeks.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-10",
+  "priority": "normal"
+}
+```
+
+For a pass (no execution):
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "execute": false,
+  "pm_rationale": "Technical setup is weak (score 5) and we already have sector exposure via XLE position. Adding single-name doesn't improve the book risk/reward."
+}
+```
+
+## Constraints
+
+- You can ONLY execute risk-approved proposals (you cannot override a risk rejection)
+- If risk approved with modifications (e.g., max size 2%), you must respect that limit
+- You read the full pipeline output before deciding — don't ignore the debate or technical score
+- You manage the book as a whole — every position should have a role in the portfolio narrative
+- Cash is a position. If nothing looks good, stay in cash. Cash earns SOFR.
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-trade (adding positions because "something should always be on")
+- Tendency to hold losers too long ("it'll come back")
+- Tendency to size winners too small and losers too large (disposition effect)
+- Discipline: let the rules work. Trailing stop hit = exit. +5% = take. No exceptions without documented re-affirmed flip-condition.
+
+
+---
+TASK:
+Decide whether to execute this risk-approved trade.
+
+PROPOSAL (post-debate, conviction = 6):
+{
+  "proposal_id": "fund_consdisc_2026-08-08_2118",
+  "agent_id": "fund_consdisc",
+  "ticker": "SBUX",
+  "direction": "short",
+  "hedge_ticker": "RSPD",
+  "hedge_direction": "long",
+  "thesis_summary": "Short SBUX vs long RSPD. The market has pre-paid for the Niccol turnaround \u2014 SBUX trades at the 76th percentile of its 52-week ratio vs the equal-weight sector while US comps and traffic remain negative and margin investment lands before revenue inflects. We are short the gap between turnaround narrative and turnaround data.",
+  "thesis_detail": "SBUX is +12.0% over 1Y and +8.3% over 6M, the strongest relative performer in our coverage (RS vs XLY +6.7% over 63 days), yet the fundamental inflection the multiple capitalizes has not appeared in the data. US company-operated comps have been negative on traffic for over a year, and the 'Back to Starbucks' plan front-loads costs \u2014 incremental labor hours, Green Apron service rollout, store uplifts \u2014 meaning restaurant-level margin compresses in the quarters before any comp benefit shows. Consensus is modeling a 2H comp inflection and paying ~mid-30s forward earnings for it; every print showing transactions still negative forces estimate cuts into a premium multiple. The pair ratio (SBUX/RSPD) at 1.797 sits at the 76th percentile of its 52-week range (1.371\u20132.069) with a +0.89 z-score \u2014 the sector-relative premium is near cycle highs while the fundamental delivery is at cycle lows. Technicals corroborate stalling momentum: price below the 20dma, MACD histogram negative, OBV falling, volume at 0.51x 20-day average \u2014 the rally is losing participation at rich relative levels. Note: pair-ratio module last stamped 2026-07-28; returns data is fresh (1D prints), ratio treated as current within tolerance. Valuation snapshot endpoint was rate-limited (429) this session, so multiples are from model knowledge, flagged as such.",
+  "variant_perception": "Consensus treats the comp inflection as a matter of timing and pays for it today; we see a value-perception and service-model problem where traffic recovery lags the cost build by at least two quarters, making the next two prints asymmetric to the downside for the relative premium.",
+  "catalyst": "Fiscal Q4 print (late Oct/early Nov) plus interim high-frequency card data showing US transactions still negative; guidance on FY27 margin trajectory embedding full labor investment.",
+  "catalyst_timeline": "4-8 weeks",
+  "current_price": 103.1,
+  "target_price": null,
+  "entry_ratio": 1.7967,
+  "target_ratio": 1.55,
+  "stop_ratio": 1.97,
+  "ratio_percentile": 76,
+  "conviction": 6,
+  "key_risks": [
+    "Comp inflection arrives early \u2014 a positive US traffic print squeezes the premium wider, not narrower; ratio stop is just below the 52w high for this reason",
+    "Technical score is 8/bullish with a golden cross intact \u2014 we are shorting a stalled uptrend, not a confirmed downtrend; early entry risk is real",
+    "Multiple data (forward P/E) is from model knowledge, not a live fetch \u2014 valuations endpoint was 429 rate-limited this session; if SBUX has already de-rated on the prints, the variant perception is thinner than stated"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "MCD",
+    "CMG"
+  ],
+  "final_conviction": 6,
+  "_tech_score": {
+    "proposal_id": "fund_consdisc_2026-08-08_2118",
+    "agent_id": "tech_equity",
+    "technical_score": 4,
+    "trend_alignment": "opposed",
+    "momentum_regime": "no_trend_stalling_uptrend",
+    "support_levels": [
+      101.44,
+      100.12,
+      99.6
+    ],
+    "resistance_levels": [
+      105.55,
+      107.88,
+      109.23
+    ],
+    "fibonacci_levels": {
+      "23.6%": 105.55,
+      "38.2%": 103.27,
+      "50%": 101.44,
+      "61.8%": 99.6
+    },
+    "suggested_entry": 104.5,
+    "suggested_stop_loss": 108.1,
+    "suggested_take_profit": 99.6,
+    "trailing_stop_method": "ATR-based 2x (ATR14 = $2.68 = trail $5.36 below peak; activates only after price clears the 50% fib at 101.44)",
+    "active_signals": [
+      {
+        "signal": "golden_cross",
+        "strength": "strong",
+        "note": "50dma 102.43 > 200dma 93.78; price above 50/100/200dma \u2014 intermediate uptrend intact, opposes the short"
+      },
+      {
+        "signal": "MACD_rolling_over",
+        "strength": "moderate",
+        "note": "MACD line 0.36 below signal 0.80, histogram -0.44 \u2014 momentum stalling, supports short-term short"
+      },
+      {
+        "signal": "OBV_falling",
+        "strength": "moderate",
+        "note": "OBV trend falling, A/D negative \u2014 rally losing participation"
+      },
+      {
+        "signal": "ADX_no_trend",
+        "strength": "strong",
+        "note": "ADX 10.6 \u2014 no directional trend; price action is chop, not a confirmed downtrend. Mean-reversion setups only, trend shorts unsupported"
+      }
+    ],
+    "warning_signals": [
+      {
+        "signal": "entry_at_support",
+        "note": "Price 103.10 sits directly on the 38.2% fib (103.27) \u2014 shorting into support with RSI 47.7 (neutral, not overbought unwind) is poor risk/reward at market"
+      },
+      {
+        "signal": "volume_unconfirmed",
+        "note": "Volume 0.51x 20-day avg \u2014 the pullback lacks distribution conviction; a low-volume stall in an uptrend resolves up as often as down"
+      },
+      {
+        "signal": "tool_composite_8_bullish",
+        "note": "Technicals scan composite is 8/bullish \u2014 the outright technical setup opposes this direction; only the pair-ratio stretch (76th percentile, z +0.89) argues for the trade, and that is a relative-value signal, not a price technical"
+      }
+    ],
+    "volume_confirmation": false,
+    "timing_recommendation": "wait",
+    "timing_rationale": "Shorting a golden-cross uptrend at fib support with ADX 10.6 (no trend) and declining volume is a coin-flip entry. Momentum stall (MACD histogram negative, below 20dma, OBV falling) is real but unconfirmed by participation. Better entries: (a) bounce into 104.50\u2013105.55 (20dma retest / 23.6% fib) where the stall can be sold with a tighter stop above 108, or (b) breakdown below 101.44 (50% fib) with volume expansion >1.2x avg, which would convert the stall into a confirmed turn. Entering now at 103.10 pays support-price for an unconfirmed thesis."
+  },
+  "risk_decision": {
+    "proposal_id": "risk_fund_consdisc_2026-08-08_2118",
+    "agent_id": "risk_management",
+    "decision": "approved",
+    "rationale": "All quantitative checks pass. Pairs trade structure limits factor exposure, conviction 6 allows 2\u20135% sizing within limits, sector concentration well under 25% cap, hedge valid (RSPD long offsets SBUX short in Consumer Discretionary sector).",
+    "position_size_ok": true,
+    "hedge_present_and_valid": true,
+    "sector_concentration_ok": true,
+    "correlation_to_existing": 0.0,
+    "projected_factor_betas": {
+      "SPX": -0.08,
+      "VIX": -0.05,
+      "Growth_Value": -0.1,
+      "CL1": 0.0,
+      "DXY": 0.02,
+      "USGG10Yr": 0.01,
+      "Large_Small": -0.03,
+      "CDX_HY_5Y": -0.02,
+      "XAU": 0.0
+    },
+    "factor_breach": false,
+    "projected_gross_leverage": 0.1,
+    "max_allowed_size_pct": 0.05,
+    "risk_warnings": [
+      "Technical score 4/10 opposes trade \u2014 TA recommends wait for bounce to 104.50\u2013105.55 or breakdown below 101.44 with volume confirmation (not a limit breach, timing/execution concern for PM)",
+      "Pair-ratio data stamped 2026-07-28 (11 days stale) \u2014 refresh before entry",
+      "Valuation multiples from model knowledge due to endpoint rate-limit \u2014 fetch fresh forward P/E before entry",
+      "Catalyst window 4\u20138 weeks; early positive traffic print would move ratio against position; confirm pre-entry that guidance has not already re-rated the multiple"
+    ],
+    "modifications": null
+  }
+}
+
+TECHNICAL SCORE:
+{
+  "proposal_id": "fund_consdisc_2026-08-08_2118",
+  "agent_id": "tech_equity",
+  "technical_score": 4,
+  "trend_alignment": "opposed",
+  "momentum_regime": "no_trend_stalling_uptrend",
+  "support_levels": [
+    101.44,
+    100.12,
+    99.6
+  ],
+  "resistance_levels": [
+    105.55,
+    107.88,
+    109.23
+  ],
+  "fibonacci_levels": {
+    "23.6%": 105.55,
+    "38.2%": 103.27,
+    "50%": 101.44,
+    "61.8%": 99.6
+  },
+  "suggested_entry": 104.5,
+  "suggested_stop_loss": 108.1,
+  "suggested_take_profit": 99.6,
+  "trailing_stop_method": "ATR-based 2x (ATR14 = $2.68 = trail $5.36 below peak; activates only after price clears the 50% fib at 101.44)",
+  "active_signals": [
+    {
+      "signal": "golden_cross",
+      "strength": "strong",
+      "note": "50dma 102.43 > 200dma 93.78; price above 50/100/200dma \u2014 intermediate uptrend intact, opposes the short"
+    },
+    {
+      "signal": "MACD_rolling_over",
+      "strength": "moderate",
+      "note": "MACD line 0.36 below signal 0.80, histogram -0.44 \u2014 momentum stalling, supports short-term short"
+    },
+    {
+      "signal": "OBV_falling",
+      "strength": "moderate",
+      "note": "OBV trend falling, A/D negative \u2014 rally losing participation"
+    },
+    {
+      "signal": "ADX_no_trend",
+      "strength": "strong",
+      "note": "ADX 10.6 \u2014 no directional trend; price action is chop, not a confirmed downtrend. Mean-reversion setups only, trend shorts unsupported"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "entry_at_support",
+      "note": "Price 103.10 sits directly on the 38.2% fib (103.27) \u2014 shorting into support with RSI 47.7 (neutral, not overbought unwind) is poor risk/reward at market"
+    },
+    {
+      "signal": "volume_unconfirmed",
+      "note": "Volume 0.51x 20-day avg \u2014 the pullback lacks distribution conviction; a low-volume stall in an uptrend resolves up as often as down"
+    },
+    {
+      "signal": "tool_composite_8_bullish",
+      "note": "Technicals scan composite is 8/bullish \u2014 the outright technical setup opposes this direction; only the pair-ratio stretch (76th percentile, z +0.89) argues for the trade, and that is a relative-value signal, not a price technical"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "wait",
+  "timing_rationale": "Shorting a golden-cross uptrend at fib support with ADX 10.6 (no trend) and declining volume is a coin-flip entry. Momentum stall (MACD histogram negative, below 20dma, OBV falling) is real but unconfirmed by participation. Better entries: (a) bounce into 104.50\u2013105.55 (20dma retest / 23.6% fib) where the stall can be sold with a tighter stop above 108, or (b) breakdown below 101.44 (50% fib) with volume expansion >1.2x avg, which would convert the stall into a confirmed turn. Entering now at 103.10 pays support-price for an unconfirmed thesis."
+}
+
+RISK DECISION:
+{
+  "proposal_id": "risk_fund_consdisc_2026-08-08_2118",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "All quantitative checks pass. Pairs trade structure limits factor exposure, conviction 6 allows 2\u20135% sizing within limits, sector concentration well under 25% cap, hedge valid (RSPD long offsets SBUX short in Consumer Discretionary sector).",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_factor_betas": {
+    "SPX": -0.08,
+    "VIX": -0.05,
+    "Growth_Value": -0.1,
+    "CL1": 0.0,
+    "DXY": 0.02,
+    "USGG10Yr": 0.01,
+    "Large_Small": -0.03,
+    "CDX_HY_5Y": -0.02,
+    "XAU": 0.0
+  },
+  "factor_breach": false,
+  "projected_gross_leverage": 0.1,
+  "max_allowed_size_pct": 0.05,
+  "risk_warnings": [
+    "Technical score 4/10 opposes trade \u2014 TA recommends wait for bounce to 104.50\u2013105.55 or breakdown below 101.44 with volume confirmation (not a limit breach, timing/execution concern for PM)",
+    "Pair-ratio data stamped 2026-07-28 (11 days stale) \u2014 refresh before entry",
+    "Valuation multiples from model knowledge due to endpoint rate-limit \u2014 fetch fresh forward P/E before entry",
+    "Catalyst window 4\u20138 weeks; early positive traffic print would move ratio against position; confirm pre-entry that guidance has not already re-rated the multiple"
+  ],
+  "modifications": null
+}
+
+CURRENT BOOK STATE:
+{
+  "nav": 650000000,
+  "initial_nav": 650000000,
+  "cash_pct": 1.0,
+  "positions": [],
+  "trade_journal": [],
+  "last_marked": "2026-08-08T22:57:33.857956"
+}
+
+Instructions:
+1. Decide: execute or pass?
+2. If execute: size the position (1-5% NAV based on conviction).
+3. Set trailing stop method and review date.
+4. Respond with a JSON object containing these fields:
+   - "execute": true/false
+   - "ticker": the ticker
+   - "direction": "long" or "short"
+   - "hedge_ticker": the hedge ETF
+   - "hedge_direction": "short" or "long"
+   - "size_pct_nav": decimal (e.g. 0.03 for 3%)
+   - "conviction": number
+   - "stop_loss_method": string
+   - "take_profit": string
+   - "pm_rationale": one-sentence reason
+   - "portfolio_thesis": the thesis summary
+   - "expected_holding_period": string
+   - "review_date": ISO date string
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

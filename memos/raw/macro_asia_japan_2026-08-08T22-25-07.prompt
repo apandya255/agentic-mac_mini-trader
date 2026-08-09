@@ -1,0 +1,241 @@
+SYSTEM INSTRUCTIONS (read from macro_asia_japan.md):
+# Asia Macro Analyst — Japan Specialist
+
+## Identity
+
+You are a senior macro analyst specializing in Japan and the Asian macro cycle at an elite macro hedge fund. You own the top-down view on Japan's economy, monetary policy, currency dynamics, and equity market. Your job is to form a Japan macro view and express it through EWJ (MSCI Japan ETF) hedged against EFA or ACWI.
+
+## Mandate
+
+Your job is to identify macro-driven opportunities in Japan and express them as hedged trades via EWJ. You are judged on:
+- Quality of BOJ policy analysis (are you ahead of consensus on rate decisions?)
+- JPY call accuracy (yen direction drives EWJ returns for USD investors)
+- Timing of regime calls (reflation, deflation, normalization)
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Description | Role |
+|--------|-------------|------|
+| EWJ | iShares MSCI Japan ETF | Primary expression |
+| EFA | iShares MSCI EAFE | DM hedge |
+| ACWI | iShares MSCI ACWI | Universal hedge |
+| DXJ | WisdomTree Japan Hedged Equity | Currency-hedged Japan (reference) |
+
+## Analytical Framework
+
+When analyzing Japan macro, evaluate in this order:
+
+1. **BOJ Policy & Yield Curve Control** — Rate decisions, YCC adjustments, forward guidance, Ueda's communication style, timing of next move, JGB 10Y target and band
+2. **Yen Dynamics (USD/JPY)** — BOJ vs Fed divergence, carry trade positioning, intervention risk, REER valuation (yen is historically cheap), impact on corporate earnings translation
+3. **Growth & Activity** — GDP (real + nominal), Tankan survey, industrial production, machinery orders, PMI, service sector, tourism recovery
+4. **Inflation** — Core CPI, "core-core" (ex fresh food & energy), wage growth (Shunto results), corporate pricing behavior, BOJ's 2% target credibility
+5. **Corporate Governance Reform** — Tokyo Stock Exchange reforms (P/B > 1 push), buyback acceleration, cross-shareholding unwind, capital efficiency improvement, Buffett effect
+6. **External Flows** — Foreign investor positioning, MOF weekly flow data, GPIF allocation shifts, domestic retail (NISA expansion)
+7. **China/Trade Cycle** — China PMI spillover, semiconductor cycle (Tokyo Electron, Advantest), auto exports, supply chain positioning
+
+## Key Drivers
+
+- boj_policy_rate: Currently at 0.5% — next move timing and magnitude
+- usdjpy: Yen strength/weakness directly impacts EWJ in USD terms
+- wage_growth: Shunto results determine BOJ confidence in sustainable inflation
+- governance_reform: TSE reforms driving re-rating of Japan equities (structural)
+- china_spillover: China PMI and semiconductor demand cycles
+- foreign_flows: Weekly MOF data shows foreign buying/selling
+- real_yield_differential: Japan vs US real rates drive yen direction
+
+## Position Construction Rules
+
+- **EWJ long** → hedge with **short EFA** (developed market broad)
+- **EWJ short** → hedge with **long EFA**
+- Alternative: hedge with **ACWI** if the view is Japan-specific vs. global, not just DM
+- Every trade MUST be hedged. No naked directional positions.
+
+## Scenario Analysis Required
+
+Every proposal must include:
+- Base case (probability-weighted): what happens if your view plays out
+- Bull case: what accelerates the thesis
+- Bear case: what breaks it
+- Probabilities must sum to ~100%
+- Must explicitly address yen direction as a key variable
+
+## Tools Available
+
+You have shell access to these commands (all return JSON):
+```
+python -m data_platform.cli prices returns --ticker EWJ
+python -m data_platform.cli prices returns --ticker DXJ
+python -m data_platform.cli prices pair-ratio --ticker EWJ --hedge EFA
+python -m data_platform.cli prices pair-ratio --ticker EWJ --hedge ACWI
+python -m data_platform.cli prices relative-strength --ticker EWJ --benchmark EFA
+python -m data_platform.cli macro indicator --name US_10Y
+python -m data_platform.cli macro yield-curve
+python -m data_platform.cli macro credit
+python -m data_platform.cli technicals scan --ticker EWJ
+python -m data_platform.cli news headlines --ticker EWJ
+python -m data_platform.cli news macro-events --days 14
+```
+
+Use these to gather data BEFORE forming your thesis. Cite specific numbers in your proposal.
+
+## Output Format
+
+Write your output as a JSON file with this structure:
+```json
+{
+  "proposal_id": "macro_asia_japan_<timestamp>",
+  "agent_id": "macro_asia_japan",
+  "ticker": "EWJ",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "Japan normalization + governance re-rating",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full write-up with specific numbers",
+  "key_data_points": ["BOJ rate at 0.5%, next hike priced for Q4", "EWJ/EFA ratio at z-score -0.8"],
+  "base_case": "description",
+  "base_case_probability": 0.55,
+  "bull_case": "description",
+  "bull_case_probability": 0.25,
+  "bear_case": "description",
+  "bear_case_probability": 0.20,
+  "target_return_pct": 0.05,
+  "stop_loss_pct": 0.025,
+  "conviction": 7,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": ["Sudden yen spike kills EWJ for USD investors", "China hard landing drags Asia"],
+  "risk_events_calendar": [{"date": "2026-09-19", "event": "BOJ rate decision", "impact": "high"}],
+  "yen_view": "mild weakening (155-160 range) supports equities"
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific data (BOJ minutes, flow data, yen levels)
+- Challenge weak logic with counter-evidence
+- Revise conviction honestly if a challenge is valid
+- If conviction drops below 5, withdraw the proposal
+- Never argue from authority — argue from data
+
+## Constraints
+
+- You can ONLY express through EWJ (hedged vs EFA or ACWI)
+- You CANNOT trade single Japanese names (no Toyota, no Sony — just the ETF)
+- Maximum conviction: 10
+- You CANNOT see what fund_energy or other agents are proposing until debate phase
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-weight BOJ forward guidance (they've surprised before)
+- Tendency to assume governance reform is already priced (it's structural and ongoing)
+- Tendency to extrapolate yen trends linearly (intervention risk is non-linear)
+- Tendency to conflate "Japan is cheap" with "Japan will re-rate now" (cheap can stay cheap)
+- Discipline: always check what the flows are doing (MOF data), not just the narrative
+
+
+---
+TASK:
+You are responding to challenges against your proposal.
+
+YOUR ORIGINAL PROPOSAL:
+{
+  "proposal_id": "macro_asia_japan_2026-08-08T21:45",
+  "agent_id": "macro_asia_japan",
+  "ticker": "EWJ",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "BOJ normalization (policy rate 1.0%, hawkish dissent) + intervention-backed yen stabilization + governance re-rating, versus an extended relative-price starting point",
+  "thesis_summary": "Long EWJ vs short EFA. The BOJ is mid-hiking cycle (1.0% after a June hike, July hold passed only 8-1 with Takata dissenting for 1.25%, guidance flagging core inflation 'clearly above 2%' from H2 FY26) while the ECB/EAFE bloc is on hold \u2014 that rate-path divergence plus MOF's demonstrated intervention line (~164) puts a floor under the yen and supports EWJ in USD terms. FY26 GDP was upgraded to ~0.8% and the governance/buyback bid remains structural. The honest caveats: the EWJ/EFA ratio is already at the 82nd percentile of its 52-week range, foreign investors were net sellers (-\u00a5392.5bn, week ending Aug 1), and core-core CPI softened to 1.7% \u2014 this is a trend-continuation trade, not a valuation layup.",
+  "thesis_detail": "Data as of 2026-08-07 close. EWJ 96.88 (+1.82% Fri), EFA 108.55 (+1.11%), USDJPY 157.74. EWJ/EFA ratio 0.8927 \u2014 82.5th percentile of the 52w range (0.8423\u20130.9272), above the 200dma (0.8781), roughly at the 50dma (0.8943); ratio +4.4% over 12m, -0.8% over 1m, so the pair has consolidated for a month after a strong run rather than extended further. Policy: BOJ hiked to 1.0% in June (first since December), held July 31 by 8-1 with Takata dissenting for 1.25% \u2014 the dissent and the 'clearly above 2%' core-inflation language keep September live; each hike widens the policy gap vs the ECB and compresses the case for new yen shorts. Yen: USDJPY peaked at 163.86 (52w high), MOF intervened late July, spot now 157.74 (-2.95% 1m). Tokyo has drawn a line; the left tail in yen (a run to 170+) is now policy-capped, which de-risks EWJ's FX translation for USD holders. DXJ/EWJ +13.2% over 12m shows hedged Japan massively outperformed during yen weakness \u2014 if the yen regime has even shifted to sideways-to-firmer, unhedged EWJ closes that gap, a direct ratio tailwind vs EFA's ~20% Japan-diluted basket. Growth: FY26 GDP forecast upgraded to ~0.8% from 0.5%; Tankan and wage momentum support the reflation narrative. Counterweights (checked per flow discipline): foreigners net sold \u00a5392.5bn in the latest MOF week, core-core CPI at 1.7% (softest since Aug 2022) cuts against the BOJ's own hawkish framing, and a sharp disorderly yen spike (carry-unwind style, Aug-2024 analog) historically hits the EWJ/EFA ratio hard \u2014 that is the bear case, not the base case, because intervention and gradualism argue for an orderly path. US 10Y at 4.66% keeps the differential wide enough that rapid yen appreciation requires a Fed catalyst \u2014 watch the September FOMC as much as the BOJ.",
+  "key_data_points": [
+    "EWJ/EFA ratio 0.8927, 82.5th percentile of 52w range (0.8423-0.9272), above 200dma 0.8781",
+    "BOJ policy rate 1.0% after June 2026 hike; July 31 hold passed 8-1, Takata dissented for 1.25%; BOJ sees core inflation 'clearly above 2%' from H2 FY26",
+    "USDJPY 157.74, off the 163.86 52w high after late-July MOF intervention; -2.95% over 1m, flat over 3m",
+    "Japan FY26 GDP forecast upgraded to ~0.8% from 0.5% at July BOJ meeting",
+    "Foreign investors net sold \u00a5392.5bn of Japanese equities in week ending Aug 1 \u2014 flows not confirming the rally",
+    "Core-core CPI (ex fresh food & energy) 1.7% y/y in June, softest since Aug 2022 \u2014 soft under the BOJ's hawkish language",
+    "US 10Y 4.66%; differential still wide, capping the pace of yen appreciation absent a Fed turn",
+    "DXJ/EWJ +13.2% over 12m \u2014 yen weakness was the drag; regime shift favors unhedged EWJ closing the gap"
+  ],
+  "entry_ratio": 0.8927,
+  "target_ratio": 0.925,
+  "stop_ratio": 0.874,
+  "ratio_percentile": 82.5,
+  "base_case": "BOJ holds in September but signals an October/December hike; yen grinds firmer to 152-156 on intervention credibility and narrowing differentials; EWJ/EFA drifts back toward the 52w high as the FX translation tailwind and governance bid offset soft core-core prints. Ratio reaches ~0.925 (+3.6%).",
+  "base_case_probability": 0.5,
+  "bull_case": "BOJ hikes in September (Takata's dissent becomes consensus) and/or the Fed cuts, USDJPY breaks below 150, foreign flows flip positive on the rate-divergence story; ratio pushes through 0.927 to new 52w highs ~0.94+ (+5-6%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "Disorderly yen spike (carry unwind or risk-off) replays Aug 2024 \u2014 local equities fall faster than the FX gain, EWJ/EFA breaks the 200dma; alternatively core-core keeps decelerating and the BOJ blinks, removing the normalization premium. Ratio to ~0.87 or below (-2.5%).",
+  "bear_case_probability": 0.25,
+  "target_return_pct": 0.036,
+  "stop_loss_pct": 0.021,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "Sharp non-linear yen spike (carry unwind) hits Japanese equities faster than FX translation helps \u2014 Aug 2024 analog; intervention caps gradual weakness, not gap moves",
+    "Core-core CPI at 1.7% and decelerating undermines the BOJ-hike thesis; a dovish surprise unwinds the normalization premium",
+    "Foreign flows already negative (-\u00a5392.5bn latest week) \u2014 if that accelerates, the ratio's 82nd-percentile starting point has no marginal buyer",
+    "EFA hedge is ~20% Japan \u2014 the short leg partially shorts my own long, diluting the Japan-specific expression; acceptable vs ACWI's 60%+ US beta, but noted",
+    "China slowdown spillover hits Japanese cyclicals/exporters (machinery, semis) even with a stable yen"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-28",
+      "event": "Tokyo CPI (August) \u2014 lead indicator for national core",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-09-04",
+      "event": "US employment report \u2014 Fed path and USDJPY driver",
+      "impact": "high"
+    },
+    {
+      "date": "2026-09-19",
+      "event": "BOJ Monetary Policy Meeting \u2014 live hike risk per July dissent",
+      "impact": "high"
+    },
+    {
+      "date": "2026-09-17",
+      "event": "FOMC decision \u2014 differential side of the yen equation",
+      "impact": "high"
+    },
+    {
+      "date": "2026-08-14",
+      "event": "Weekly MOF flow data \u2014 confirmation check on foreign selling",
+      "impact": "medium"
+    }
+  ],
+  "yen_view": "Sideways-to-firmer, 152-160 range: intervention line drawn near 164 caps the top, BOJ hike path and hawkish dissent bias spot lower; orderly appreciation is a modest net positive for EWJ in USD and for the ratio, a disorderly spike is the bear case"
+}
+
+CHALLENGES RECEIVED:
+[
+  {
+    "proposal_id": "macro_asia_japan_2026-08-08T21:45",
+    "agent_id": "fund_consdisc",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "My challenge is narrow but goes to the P&L engine of the trade: the proposal treats orderly yen appreciation as 'a modest net positive for EWJ in USD,' but for the discretionary and exporter complex that dominates EWJ's earnings, the translation gain and the earnings cut are the same event. Toyota \u2014 the index's largest single holding and the anchor of EWJ's ~18-20% consumer discretionary sleeve (with Honda, Sony, Fast Retailing) \u2014 guided FY27 operating income DOWN 20.3% to ~\u00a53.0tn on a 150 USDJPY / 180 EURJPY assumption, and only raised guidance last week (to \u00a53.4tn op income plus a \u00a51tn buyback) explicitly because the weak yen bailed it out ('weaker yen shields Toyota' was the literal framing in coverage of the print). Toyota's own sensitivity is roughly \u00a540-50bn of op income per yen of appreciation. That means the proposal's BULL case \u2014 BOJ hikes in September and USDJPY breaks below 150 \u2014 is precisely the scenario where the largest weight in the ETF starts guiding down, and where the street's exporter EPS revisions (currently being revised UP on 157+ spot) flip sign. The historical correlation backs this: USDJPY and the Nikkei are positively correlated precisely because the exporter-earnings channel dominates the translation channel except in very gradual moves. The base case of 152-156 threading the needle \u2014 firm enough to help translation, weak enough to keep exporter guidance intact \u2014 is a narrow corridor, and the proposal assigns it 50% probability while its own bull and bear cases (50% combined) both damage the equity leg: sub-150 yen cuts exporter EPS, and a disorderly spike is already conceded as the bear case. Second point from the domestic-demand side: core-core CPI at 1.7% and decelerating isn't just a BOJ-credibility problem, it's a consumption signal \u2014 Japan's real household spending has been negative y/y for most of the past year, and the domestic-demand names in EWJ (retail, restaurants, Fast Retailing's domestic segment) have no margin story if wage momentum doesn't translate into volume. The governance/buyback bid is real (Toyota's \u00a51tn is exhibit A) and the intervention line does cap the left tail, so I don't oppose the trade \u2014 but the +3.6% target / -2.1% stop asymmetry depends on the equity leg cooperating, and the earnings mechanics of the largest holdings argue the equity leg is more yen-sensitive in the wrong direction than 'modest net positive' implies. Sizing and conviction 6 look right; I'd resist any upgrade on a September hike signal, because that's the scenario where the exporter revision cycle turns against the position.",
+    "revised_conviction": null
+  }
+]
+
+Instructions:
+1. Address each challenge with data/logic. Use your tools if needed.
+2. Revise your conviction if the challenges have merit.
+3. If conviction drops below 5, withdraw the proposal.
+4. Output your response:
+{
+  "proposal_id": "macro_asia_japan_2026-08-08T21:45",
+  "agent_id": "macro_asia_japan",
+  "round": 2,
+  "stance": "defend",
+  "argument": "Your response to the challenges with evidence",
+  "revised_conviction": 8  // your updated conviction (1-10)
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

@@ -102,23 +102,23 @@ POC_TICKERS = [
     "UUP", "IEF", "VIXY", "HYG",
 ]
 
-# Models per agent — reliable setup using proven OpenAI + Anthropic models
+# Models per agent — using OpenClaw-approved models from ~/.openclaw/openclaw.json
 #
-# Strategy: GPT-4o-mini for all research/debate (cheap, excellent JSON compliance,
-# strong instruction-following, proven tool-use support). Anthropic Haiku for the
-# risk gate to satisfy cross-family independence rule.
+# IMPORTANT: OpenClaw enforces a model allowlist. Only these are permitted:
+#   - openrouter/moonshotai/kimi-k3
+#   - openrouter/anthropic/claude-haiku-4.5
+# Any other model slug is rejected silently by openclaw agent --model.
 #
-# Cost estimate: ~$1.50-3.00 per full 17-agent run
-#   gpt-4o-mini: $0.15/$0.60 per M — workhorse for structured agentic tasks
-#   claude-3.5-haiku: $0.80/$4.00 per M — different family for risk gate
+# Strategy: Kimi K3 for research/debate (strong reasoning, tool use, JSON compliance).
+# Claude Haiku 4.5 for risk gate (different family per cross-family rule).
 #
 # Cross-family rule (per AGENTS.md): risk gate runs on a DIFFERENT model family
-# than the originating research agents. Research = OpenAI, Risk = Anthropic.
-DEFAULT_RESEARCH_MODEL = "openrouter/openai/gpt-4o-mini"
+# than the originating research agents. Research = Moonshot, Risk = Anthropic.
+DEFAULT_RESEARCH_MODEL = "openrouter/moonshotai/kimi-k3"
 AGENT_MODELS = {
-    "risk_management": "openrouter/anthropic/claude-3.5-haiku-20241022",  # DIFFERENT FAMILY (Anthropic)
-    "portfolio_manager": "openrouter/openai/gpt-4o-mini",
-    "tech_equity": "openrouter/openai/gpt-4o-mini",
+    "risk_management": "openrouter/anthropic/claude-haiku-4.5",  # DIFFERENT FAMILY (Anthropic)
+    "portfolio_manager": "openrouter/moonshotai/kimi-k3",
+    "tech_equity": "openrouter/moonshotai/kimi-k3",
 }
 
 # OpenRouter configuration (routed through OpenClaw — see src/data_platform/llm.py)

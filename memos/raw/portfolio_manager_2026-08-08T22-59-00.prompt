@@ -1,0 +1,377 @@
+SYSTEM INSTRUCTIONS (read from portfolio_manager.md):
+# Portfolio Manager
+
+## Identity
+
+You are the Portfolio Manager at an elite macro hedge fund. You are the final decision-maker — you receive risk-approved proposals and determine whether a trade enters the book, at what size, and with what parameters. You synthesize fundamental, macro, technical, and risk inputs into a cohesive portfolio.
+
+## Mandate
+
+Your job is to construct and manage a portfolio that targets 12–15% annualized returns with ≤6% downside volatility. You decide:
+1. Whether to execute a risk-approved trade (yes/no)
+2. Position sizing within risk-approved limits
+3. Entry approach (market, limit, scale-in)
+4. Final stop-loss and take-profit calibration
+5. How the trade fits the overall book narrative
+
+You are judged on:
+- Portfolio return vs. target (12–15%)
+- Drawdown management (max 6% from peak)
+- Sharpe ratio (target ≥2.0)
+- Decision quality (did your sizing and timing add value vs. uniform allocation?)
+
+## Decision Framework
+
+### Minimum Thresholds
+- Post-debate conviction must be ≥ 6 to consider
+- Technical score must be ≥ 5 to proceed
+- Risk must have approved (possibly with modifications)
+
+### Sizing Model
+| Conviction | Standard Size | Notes |
+|-----------|--------------|-------|
+| 6 | 2% NAV | Minimum viable |
+| 7 | 3% NAV | |
+| 8 | 4% NAV | |
+| 9 | 5% NAV | |
+| 10 | 5% NAV | Very rare |
+| HC (8+) | 8% NAV | Max 2 slots, must out-hit standard book or self-revokes |
+
+Adjustments:
+- Technical score < 6: reduce by 30%
+- Technical score > 8: increase by 20%
+- Circuit breaker in warning: apply 0.8x multiplier
+- Position correlated > 0.5 with existing: reduce by 20% per correlated position
+
+### Portfolio Construction Rules
+- Max 3 new positions per day
+- Review existing positions before adding new ones
+- Weekly full book review (are any theses stale?)
+- Maximum book: 8–12 positions at any time in the POC
+
+### Exit Framework
+- **Trailing stop hit:** Immediate exit. No exceptions, no "let me hold a little longer."
+- **+5% from entry:** Take profit is the DEFAULT. Extending requires the originator to re-affirm with a documented flip-condition (what would make you exit if it doesn't keep going).
+- **Thesis invalidated:** Exit regardless of P&L. If the fundamental/macro reason is gone, the position is gone.
+- **60 days without catalyst:** Forced reassessment. If nothing has changed, exit.
+- **Better opportunity:** May exit lower-conviction position to fund higher (capital rotation).
+
+## Tools Available
+
+```
+python -m data_platform.cli sizing compute --conviction <N>
+python -m data_platform.cli sizing compute --conviction <N> --high-conviction
+python -m data_platform.cli sizing table
+python -m data_platform.cli risk circuit-breaker --nav <NAV>
+python -m data_platform.cli carry cash --cash-pct <P>
+python -m data_platform.cli carry position-cost --direction <D> --notional <N>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge <H>
+```
+
+## Input
+
+You read from:
+- `memos/proposals/` — the surviving trade proposals (post-debate)
+- `memos/scores/` — technical scores for each proposal
+- `memos/risk/` — risk decisions (approved/modified/rejected)
+- `memos/state/book.json` — current portfolio state
+
+## Output Format
+
+Write your output as a JSON file:
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "Why this trade fits the book. How it interacts with existing positions. Why now.",
+  "ticker": "XOM",
+  "direction": "long",
+  "size_pct_nav": 0.04,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review, take is default",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.04,
+  "portfolio_thesis": "Adding energy single-name alpha on top of existing sector view. Low correlation to current book. Catalyst within 4 weeks.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-10",
+  "priority": "normal"
+}
+```
+
+For a pass (no execution):
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "execute": false,
+  "pm_rationale": "Technical setup is weak (score 5) and we already have sector exposure via XLE position. Adding single-name doesn't improve the book risk/reward."
+}
+```
+
+## Constraints
+
+- You can ONLY execute risk-approved proposals (you cannot override a risk rejection)
+- If risk approved with modifications (e.g., max size 2%), you must respect that limit
+- You read the full pipeline output before deciding — don't ignore the debate or technical score
+- You manage the book as a whole — every position should have a role in the portfolio narrative
+- Cash is a position. If nothing looks good, stay in cash. Cash earns SOFR.
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-trade (adding positions because "something should always be on")
+- Tendency to hold losers too long ("it'll come back")
+- Tendency to size winners too small and losers too large (disposition effect)
+- Discipline: let the rules work. Trailing stop hit = exit. +5% = take. No exceptions without documented re-affirmed flip-condition.
+
+
+---
+TASK:
+Decide whether to execute this risk-approved trade.
+
+PROPOSAL (post-debate, conviction = 5):
+{
+  "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+  "agent_id": "fund_commsvcs",
+  "ticker": "NFLX",
+  "direction": "long",
+  "hedge_ticker": "RSPC",
+  "hedge_direction": "short",
+  "thesis_summary": "NFLX has de-rated violently vs. the equal-weight comm services basket \u2014 the NFLX/RSPC ratio sits at the 4th percentile of its 52-week range (2.03 vs. range 1.88\u20133.36) after a -38% 1-year move. Momentum is now turning off the lows: KST bullish crossover, positive MACD histogram, rising OBV, and a +6.9% 1-week bounce vs. XLC +2.8%. This is a mean-reversion pair trade toward the 38% retracement of the ratio range, not a call on a full fundamental re-rating.",
+  "thesis_detail": "Data caveat up front: the valuations endpoint returned 429 rate-limited all session and the news endpoint returned zero headlines for every coverage name, so this pitch is built on price, ratio, and technical data only \u2014 I could not confirm forward multiples or estimate-revision direction this session, and that is reflected honestly in the conviction score. What the data does show: NFLX has been the worst performer in my coverage by a wide margin \u2014 1Y return -37.8%, 3M -19.7%, 6M -14.4% \u2014 while the sector (XLC) is +4.6% over 1Y. The NFLX/RSPC pair ratio at 2.0274 is at the 4th percentile of its 52-week range (low 1.8835, high 3.3595), z-score -1.35. That is the deepest relative dislocation in the entire coverage universe; the only other names beyond one sigma are CHTR (z -1.45, 15th pct) on the downside and VZ (z +1.72, 98th pct) and EA (z +1.50, 95th pct) on the upside. I prefer NFLX over CHTR because CHTR's decline is structural (cord-cutting, broadband net-add erosion \u2014 a known melting-ice-cube profile) whereas NFLX's drawdown has the signature of a positioning/expectations washout in a still-dominant franchise: the ad-supported tier and paid-sharing economics give it monetization levers that a cable distributor does not have. The turn is now visible in the tape: price reclaimed the 20-day SMA (72.59) and sits mid-Bollinger (position 0.565); RSI 49.3 has reset to neutral from oversold; MACD histogram +0.356 and rising; KST printed a bullish crossover; OBV trend is rising while price made its low \u2014 classic accumulation divergence; 63-day relative strength vs. XLC is -15.9% but the 1-week relative move is strongly positive (+6.9% vs. +2.8%), the first sign the relative trend is inflecting. The death cross and price below the 50/200-day SMAs keep me honest: this is a counter-trend trade inside a larger downtrend, sized and stopped accordingly. Target is the 38.2% retracement of the 52-week ratio range at ~2.45, which requires only a partial normalization \u2014 not a return to range midpoint (2.62) or prior highs. Stop sits just below the 52-week ratio low at 1.88; a decisive break of that level says the de-rating has further to run and the mean-reversion thesis is wrong. Ratio risk ~7.3%, ratio reward ~20.8%, ~2.9:1. The empty news feed cuts both ways \u2014 no visible negative catalyst driving the most recent leg, and no confirmed positive catalyst either, which is why this is a 6 and not an 8.",
+  "variant_perception": "Consensus has clearly capitulated on NFLX relative to the sector \u2014 the ratio at the 4th percentile prices in continued deterioration. My variant view is that the selloff has overshot the fundamental change: the market is pricing NFLX like a structurally impaired asset when the drawdown pattern (sharp, sentiment-driven, now diverging from accumulation volume) looks like an expectations reset in a franchise that still owns the streaming monetization levers (ad tier, paid sharing). I differ from the tape, not necessarily from the sell-side \u2014 and I am explicit that without the valuations feed I cannot quantify the multiple gap this session.",
+  "catalyst": "Ratio normalization as momentum turns, ahead of the next quarterly print (Oct window) where ad-tier monetization and engagement data become the proof points; any engagement/third-party streaming data confirming stabilization accelerates the move.",
+  "catalyst_timeline": "4-8 weeks",
+  "current_price": null,
+  "entry_ratio": 2.0274,
+  "target_ratio": 2.45,
+  "stop_ratio": 1.88,
+  "ratio_percentile": 4,
+  "conviction": 5,
+  "key_risks": [
+    "Valuations and news feeds were unavailable this session \u2014 no fundamental confirmation of the multiple or estimate trajectory; debate stage should treat this as a technical-led pitch requiring fundamental validation",
+    "Counter-trend trade: death cross intact, price below 50/200-day SMAs, overall technical score 1/10 \u2014 the larger trend is still down and mean reversion may fail at the 50-day (~78) overhead",
+    "1-week bounce came on below-average volume (0.51x 20-day avg) \u2014 weak sponsorship; a break of the 52-week ratio low (1.8835) likely triggers another leg of relative underperformance"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "DIS",
+    "META",
+    "GOOG"
+  ],
+  "data_notes": {
+    "ratio_as_of": "2026-07-28",
+    "valuations_feed": "down (429 rate-limited)",
+    "news_feed": "empty for all coverage names"
+  },
+  "final_conviction": 5,
+  "_tech_score": {
+    "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+    "agent_id": "tech_equity",
+    "technical_score": 3,
+    "trend_alignment": "opposed",
+    "momentum_regime": "strong_downtrend_with_early_counter-trend_reversal_signals",
+    "support_levels": [
+      70.0,
+      66.53,
+      65.08
+    ],
+    "resistance_levels": [
+      76.39,
+      78.08,
+      78.64,
+      79.89
+    ],
+    "fibonacci_levels": {
+      "38.2%": 83.39,
+      "50%": 79.89,
+      "61.8%": 76.39,
+      "swing_high": 94.7,
+      "swing_low": 65.08
+    },
+    "suggested_entry": 73.4,
+    "suggested_stop_loss": 64.9,
+    "suggested_take_profit": 78.0,
+    "trailing_stop_method": "ATR-based 2x (ATR-14 = $2.63, trail $5.26 below position peak); hard invalidation on a close below the 65.08 swing low",
+    "active_signals": [
+      {
+        "signal": "KST_bullish_crossover",
+        "strength": "moderate",
+        "note": "KST -0.906 vs signal -0.925, fresh crossover from deeply negative territory \u2014 genuine but early"
+      },
+      {
+        "signal": "MACD_histogram_positive",
+        "strength": "moderate",
+        "note": "Histogram +0.356 and rising; MACD line still below zero, so momentum inflection not trend change"
+      },
+      {
+        "signal": "OBV_accumulation_divergence",
+        "strength": "moderate",
+        "note": "OBV rising while price made its low \u2014 the strongest single piece of evidence for the mean-reversion case"
+      },
+      {
+        "signal": "price_reclaimed_20sma",
+        "strength": "weak",
+        "note": "Close 73.38 vs 20-SMA 72.59; first reclaim, unconfirmed"
+      }
+    ],
+    "warning_signals": [
+      {
+        "signal": "death_cross_intact",
+        "note": "50-SMA 78.08 below 200-SMA 92.05; price below 50/100/200 \u2014 full bearish MA stack overhead"
+      },
+      {
+        "signal": "ADX_strong_downtrend",
+        "note": "ADX 32.1 = real trend, not noise \u2014 and the trend is DOWN. This is the decisive fact: counter-trend entries into ADX>30 trends have poor expectancy without volume sponsorship"
+      },
+      {
+        "signal": "volume_not_confirming",
+        "note": "Bounce week printed 0.51x 20-day average volume; last up-day (Jul 28) on 24.6M vs ~48M avg. Accumulation divergence in OBV but no participation on the bounce itself"
+      },
+      {
+        "signal": "resistance_cluster_overhead",
+        "note": "61.8% retrace 76.39, 50-SMA 78.08, BB upper 78.64, 50% retrace 79.89 \u2014 dense supply 4-9% above entry where counter-trend rallies typically die"
+      }
+    ],
+    "volume_confirmation": false,
+    "timing_recommendation": "wait",
+    "timing_rationale": "Honest read: the outright technical setup scores 1/10 on the scanner and the proposed direction fights a confirmed strong downtrend (ADX 32, death cross, price below all major MAs). The mean-reversion signals the fund seat cites are real \u2014 KST cross, positive MACD histogram, OBV divergence, RSI reset to 49 \u2014 but the bounce has zero volume sponsorship (0.51x avg), and ADX this high says the downtrend is a trend, not noise. The pair structure (ratio at 4th percentile, z -1.35, stop at the 52w ratio low 1.88) is the only thing keeping this from a 1-2 score: it converts a bad outright long into a defined-risk relative-value trade with 2.9:1 ratio R:R. My 3 reflects that. On timing: entering here is front-running confirmation. The trade gets materially better technically on either (a) a volume-backed reclaim of 74 (Jul 28 high 73.75) showing sponsorship, or (b) a pullback that holds 69-70 and turns \u2014 either entry sacrifices a few percent for confirmation the washout is done. Price-based levels if PM proceeds now: entry ~73.40, hard stop 64.90 (below the 65.08 swing low \u2014 a new low voids the divergence), first target 78.00 at the 50-SMA/BB-upper cluster where I would expect the counter-trend move to fail without a fundamental catalyst; only above 79.89 does the 83.40 (38.2% retrace) open up, which maps to the fund seat's ratio target. Do not let the strong fundamental framing move this score \u2014 trend, ADX, and volume all oppose the long; the ratio setup is the entire case."
+  },
+  "risk_decision": {
+    "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+    "decision": "approved",
+    "rationale": "All quantitative checks pass: hedge valid (RSPC short correctly hedges NFLX long per sector-neutral doctrine), no factor breaches projected (pair structure contains all factors well under \u00b10.6 limits), sizing within 2-5% band for conviction 5, sector concentration under 15% limit, no existing correlations, gross leverage minimal.",
+    "position_size_ok": true,
+    "hedge_present_and_valid": true,
+    "sector_concentration_ok": true,
+    "risk_warnings": [
+      "Explicit size must be specified within 2-5% of NAV for conviction 5 band",
+      "Calculate actual factor betas before execution to confirm no limit breaches; estimated exposures (SPX \u00b10.01, Growth/Value \u00b10.02, Large/Small \u00b10.02) assume pair correlation offsets",
+      "Technical score 3/10 requires strict stop discipline; hard stop at ratio 1.88 (52-week low) is non-negotiable per proposal risk statement"
+    ]
+  }
+}
+
+TECHNICAL SCORE:
+{
+  "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+  "agent_id": "tech_equity",
+  "technical_score": 3,
+  "trend_alignment": "opposed",
+  "momentum_regime": "strong_downtrend_with_early_counter-trend_reversal_signals",
+  "support_levels": [
+    70.0,
+    66.53,
+    65.08
+  ],
+  "resistance_levels": [
+    76.39,
+    78.08,
+    78.64,
+    79.89
+  ],
+  "fibonacci_levels": {
+    "38.2%": 83.39,
+    "50%": 79.89,
+    "61.8%": 76.39,
+    "swing_high": 94.7,
+    "swing_low": 65.08
+  },
+  "suggested_entry": 73.4,
+  "suggested_stop_loss": 64.9,
+  "suggested_take_profit": 78.0,
+  "trailing_stop_method": "ATR-based 2x (ATR-14 = $2.63, trail $5.26 below position peak); hard invalidation on a close below the 65.08 swing low",
+  "active_signals": [
+    {
+      "signal": "KST_bullish_crossover",
+      "strength": "moderate",
+      "note": "KST -0.906 vs signal -0.925, fresh crossover from deeply negative territory \u2014 genuine but early"
+    },
+    {
+      "signal": "MACD_histogram_positive",
+      "strength": "moderate",
+      "note": "Histogram +0.356 and rising; MACD line still below zero, so momentum inflection not trend change"
+    },
+    {
+      "signal": "OBV_accumulation_divergence",
+      "strength": "moderate",
+      "note": "OBV rising while price made its low \u2014 the strongest single piece of evidence for the mean-reversion case"
+    },
+    {
+      "signal": "price_reclaimed_20sma",
+      "strength": "weak",
+      "note": "Close 73.38 vs 20-SMA 72.59; first reclaim, unconfirmed"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "death_cross_intact",
+      "note": "50-SMA 78.08 below 200-SMA 92.05; price below 50/100/200 \u2014 full bearish MA stack overhead"
+    },
+    {
+      "signal": "ADX_strong_downtrend",
+      "note": "ADX 32.1 = real trend, not noise \u2014 and the trend is DOWN. This is the decisive fact: counter-trend entries into ADX>30 trends have poor expectancy without volume sponsorship"
+    },
+    {
+      "signal": "volume_not_confirming",
+      "note": "Bounce week printed 0.51x 20-day average volume; last up-day (Jul 28) on 24.6M vs ~48M avg. Accumulation divergence in OBV but no participation on the bounce itself"
+    },
+    {
+      "signal": "resistance_cluster_overhead",
+      "note": "61.8% retrace 76.39, 50-SMA 78.08, BB upper 78.64, 50% retrace 79.89 \u2014 dense supply 4-9% above entry where counter-trend rallies typically die"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "wait",
+  "timing_rationale": "Honest read: the outright technical setup scores 1/10 on the scanner and the proposed direction fights a confirmed strong downtrend (ADX 32, death cross, price below all major MAs). The mean-reversion signals the fund seat cites are real \u2014 KST cross, positive MACD histogram, OBV divergence, RSI reset to 49 \u2014 but the bounce has zero volume sponsorship (0.51x avg), and ADX this high says the downtrend is a trend, not noise. The pair structure (ratio at 4th percentile, z -1.35, stop at the 52w ratio low 1.88) is the only thing keeping this from a 1-2 score: it converts a bad outright long into a defined-risk relative-value trade with 2.9:1 ratio R:R. My 3 reflects that. On timing: entering here is front-running confirmation. The trade gets materially better technically on either (a) a volume-backed reclaim of 74 (Jul 28 high 73.75) showing sponsorship, or (b) a pullback that holds 69-70 and turns \u2014 either entry sacrifices a few percent for confirmation the washout is done. Price-based levels if PM proceeds now: entry ~73.40, hard stop 64.90 (below the 65.08 swing low \u2014 a new low voids the divergence), first target 78.00 at the 50-SMA/BB-upper cluster where I would expect the counter-trend move to fail without a fundamental catalyst; only above 79.89 does the 83.40 (38.2% retrace) open up, which maps to the fund seat's ratio target. Do not let the strong fundamental framing move this score \u2014 trend, ADX, and volume all oppose the long; the ratio setup is the entire case."
+}
+
+RISK DECISION:
+{
+  "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+  "decision": "approved",
+  "rationale": "All quantitative checks pass: hedge valid (RSPC short correctly hedges NFLX long per sector-neutral doctrine), no factor breaches projected (pair structure contains all factors well under \u00b10.6 limits), sizing within 2-5% band for conviction 5, sector concentration under 15% limit, no existing correlations, gross leverage minimal.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "risk_warnings": [
+    "Explicit size must be specified within 2-5% of NAV for conviction 5 band",
+    "Calculate actual factor betas before execution to confirm no limit breaches; estimated exposures (SPX \u00b10.01, Growth/Value \u00b10.02, Large/Small \u00b10.02) assume pair correlation offsets",
+    "Technical score 3/10 requires strict stop discipline; hard stop at ratio 1.88 (52-week low) is non-negotiable per proposal risk statement"
+  ]
+}
+
+CURRENT BOOK STATE:
+{
+  "nav": 650000000,
+  "initial_nav": 650000000,
+  "cash_pct": 1.0,
+  "positions": [],
+  "trade_journal": [],
+  "last_marked": "2026-08-08T22:57:33.857956"
+}
+
+Instructions:
+1. Decide: execute or pass?
+2. If execute: size the position (1-5% NAV based on conviction).
+3. Set trailing stop method and review date.
+4. Respond with a JSON object containing these fields:
+   - "execute": true/false
+   - "ticker": the ticker
+   - "direction": "long" or "short"
+   - "hedge_ticker": the hedge ETF
+   - "hedge_direction": "short" or "long"
+   - "size_pct_nav": decimal (e.g. 0.03 for 3%)
+   - "conviction": number
+   - "stop_loss_method": string
+   - "take_profit": string
+   - "pm_rationale": one-sentence reason
+   - "portfolio_thesis": the thesis summary
+   - "expected_holding_period": string
+   - "review_date": ISO date string
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

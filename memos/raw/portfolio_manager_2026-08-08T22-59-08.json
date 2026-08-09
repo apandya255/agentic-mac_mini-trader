@@ -1,0 +1,28 @@
+{
+  "order_id": "order_fund_consdisc_2026-08-08_2118",
+  "proposal_id": "fund_consdisc_2026-08-08_2118",
+  "agent_id": "portfolio_manager",
+  "execute": false,
+  "ticker": "SBUX",
+  "direction": "short",
+  "hedge_ticker": "RSPD",
+  "hedge_direction": "long",
+  "size_pct_nav": 0.0,
+  "conviction": 6,
+  "stop_loss_method": "n/a \u2014 no position",
+  "take_profit": "n/a \u2014 no position",
+  "pm_rationale": "Technical score 4/10 is below my 5/10 minimum and TA explicitly says wait \u2014 shorting a golden-cross uptrend directly on the 38.2% fib with ADX 10.6 and half-volume participation is a coin-flip entry, so I park the thesis and re-arm it as a limit-short at 104.50\u2013105.55 (20dma/23.6% fib retest, tighter stop above 108) or a breakdown trigger below 101.44 on >1.2x volume, whichever prints first; conviction 6 fundamental thesis is sound but the entry location is not, and stale pair-ratio (2026-07-28) plus unverified forward P/E must be refreshed before any fill.",
+  "portfolio_thesis": "Short SBUX vs long RSPD \u2014 short the gap between the pre-paid Niccol turnaround narrative (76th percentile 52w ratio, z +0.89) and the data (negative US traffic, front-loaded labor/service investment compressing margins before comps inflect); thesis parked pending better entry or trend confirmation, not rejected.",
+  "expected_holding_period": "4-8 weeks once entered",
+  "review_date": "2026-08-10",
+  "re_entry_triggers": {
+    "limit_short": "SBUX bounces to 104.50\u2013105.55; sell the stall with stop above 108.10, target 99.60",
+    "breakdown": "close below 101.44 with volume >1.2x 20-day avg converts stall to confirmed turn \u2014 enter on confirmation"
+  },
+  "pre_entry_requirements": [
+    "Refresh SBUX/RSPD pair ratio (last stamped 2026-07-28, 11 days stale)",
+    "Fetch live forward P/E \u2014 valuation snapshot was 429 rate-limited, multiples currently from model knowledge",
+    "Confirm no guidance re-rate since proposal"
+  ],
+  "priority": "park"
+}

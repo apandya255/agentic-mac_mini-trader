@@ -1,0 +1,61 @@
+{
+  "proposal_id": "macro_northamerica_2026-08-08T21:54",
+  "agent_id": "macro_northamerica",
+  "ticker": "EWC",
+  "direction": "long",
+  "hedge_ticker": "ACWI",
+  "hedge_direction": "short",
+  "macro_regime": "Late-cycle with an exogenous energy supply shock: US-Iran/Strait of Hormuz conflict has crude elevated (CL $78.18, +8.5% 1m; BZ $83.55, +9.5% 1m, as of 2026-08-07 close), US inflation re-accelerating (C-CPI-U +3.4% y/y per BLS July release), Fed on hold with hike risk (Warsh Fed; iShares/JPM research note market now pricing possible hikes vs cuts expected at year-start), BoC held at 2.25% on 2026-07-15 with an explicit hiking bias on energy inflation.",
+  "thesis_summary": "Long Canada vs. the world as the cleanest listed expression of the Hormuz oil shock. Canada is the G10's energy exporter: crude +8.5% in a month is a direct terms-of-trade windfall, the BoC's 2.25% floor with a hike bias supports CAD, and EWC's energy/materials/banks stack is exactly the value-commodity complex this regime rewards \u2014 while the EWC/ACWI ratio sits at only the 62nd percentile of its 52-week range, well below the crowded IWD/IWF expression of the same regime at the 94th.",
+  "thesis_detail": "The macro regime has shifted from the cuts-expected soft landing priced at the start of 2026 to an inflation-scare hold with two-sided hike risk, driven by the Middle East energy shock. That regime punishes duration/growth (IWD/IWF +9.6% over 3m confirms the market already believes this) and rewards commodity-linked value. The cleanest remaining entry is geographic, not factoral: the value/growth ratio is already at the 94th percentile of its 52-week range \u2014 chasing it here is buying the extension, not the regime. EWC/ACWI at 0.3797 (62nd percentile, +2.1% 1m) offers the same commodity-value exposure with room to the 52-week high of 0.3993. Fundamentals: BoC at 2.25% (held 2026-07-15, per bankofcanada.ca) with the market assigning non-trivial hike odds to the September meeting as energy inflation feeds through, while the Fed's hold-with-hike-risk stance caps US multiple expansion. Canadian housing is stabilizing (May 2026 GDP positive on housing industry growth; ~20% uptick in purchases since spring per True North), removing the key domestic drag on the banks-heavy index. Hedge structure: short ACWI strips global equity beta, leaving the Canada-vs-world terms-of-trade and rate-differential differential \u2014 ACWI is ~65% US, so the hedge is short the most rate-sensitive, energy-importing major market against the energy exporter. Flip condition: a durable Hormuz de-escalation/ceasefire that takes Brent back below $72, or a global growth scare that hits commodities broadly \u2014 either breaks the terms-of-trade leg.",
+  "key_data_points": [
+    "CL=F $78.18, +8.5% 1m; BZ=F $83.55, +9.5% 1m (yfinance, 2026-08-07 close)",
+    "EWC/ACWI ratio 0.3797, 62nd percentile of 52wk range (0.3548\u20130.3993), +2.13% 1m (computed, yfinance 1y daily)",
+    "BoC held overnight rate at 2.25% on 2026-07-15; hike bias on Hormuz-driven energy inflation; 2.25% seen as practical floor (bankofcanada.ca; wowa.ca)",
+    "US C-CPI-U +3.4% y/y (BLS July 2026 release); market pricing possible Fed hikes by year-end vs cuts expected in January (iShares, JPM research)",
+    "IWD/IWF ratio at 94th percentile, +9.6% 3m \u2014 the factor expression of this regime is already crowded (computed)",
+    "Canadian housing stabilizing: May 2026 GDP positive on housing; ~20% purchase uptick since spring (True North Mortgage, 2026-08-07)"
+  ],
+  "base_case": "Conflict stays simmering without resolution; crude holds $75-85; BoC holds with hawkish talk into September while the Fed stays on hold; EWC grinds toward the top of its 52-week ratio range as earnings from Canadian energy and banks benefit from the commodity bid. Ratio to ~0.395 (+4%).",
+  "base_case_probability": 0.55,
+  "bull_case": "Hormuz escalation or sustained supply disruption takes Brent above $95; BoC signals or delivers a hike in September; CAD rallies; ratio breaks the 52-week high toward 0.41 (+8%).",
+  "bull_case_probability": 0.2,
+  "bear_case": "Ceasefire/de-escalation collapses the crude risk premium (Brent back to high $60s) and the energy trade unwinds; or a global growth scare hits all commodities. Ratio retraces through 0.3700 toward the 0.3550 range floor \u2014 thesis invalid, stop takes us out.",
+  "bear_case_probability": 0.25,
+  "entry_ratio": 0.3797,
+  "target_ratio": 0.399,
+  "stop_ratio": 0.3695,
+  "ratio_percentile": 62,
+  "target_return_pct": 5.1,
+  "stop_loss_pct": 2.7,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "Headline-driven: a single ceasefire announcement can gap the ratio through the stop overnight; crude risk premium is the thesis",
+    "Canadian mortgage-renewal wall re-asserts if BoC actually hikes, hitting the 35%-weight banks complex",
+    "Global growth scare (US hard landing on re-tightened financial conditions) hits commodities and EWC beta together, overwhelming the terms-of-trade leg",
+    "US trade policy escalation toward Canada remains a live tail (cited by BoC in July statement)"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-12",
+      "event": "US CPI (July)",
+      "impact": "Hot print re-prices Fed hike risk \u2014 mixed for the pair: hawkish Fed pressures ACWI's US weight but also hits risk appetite; very hot with stable crude is net positive for the ratio"
+    },
+    {
+      "date": "2026-08-21",
+      "event": "Jackson Hole symposium window (late Aug)",
+      "impact": "Warsh Fed's first major signaling venue; hawkish framework shift pressures global multiples (helps the hedge leg) but a risk-off spike would hit EWC too"
+    },
+    {
+      "date": "2026-09-09",
+      "event": "Bank of Canada decision",
+      "impact": "Hawkish hold or hike with energy-inflation language is the thesis confirmation; dovish pivot on growth fears weakens the CAD/rate leg"
+    },
+    {
+      "date": "2026-09-16",
+      "event": "FOMC decision",
+      "impact": "A hike or explicit hike bias strengthens the relative-policy leg for Canada only if BoC matches; divergence dovish-BoC/hawkish-Fed hurts CAD and the ratio"
+    }
+  ]
+}

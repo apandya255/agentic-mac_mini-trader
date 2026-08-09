@@ -1,0 +1,32 @@
+{
+  "proposal_id": "fund_consstaples_20260808_2120",
+  "agent_id": "fund_consstaples",
+  "ticker": "PEP",
+  "direction": "long",
+  "hedge_ticker": "RSPS",
+  "hedge_direction": "short",
+  "thesis_summary": "PEP has de-rated to the 4th percentile of its 52-week range vs the equal-weight staples basket (z \u2248 -1.96) on post-Q2 downgrades and a guidance cut, but the affordability re-investment is showing early volume response and the technical base is turning. Long PEP / short RSPS is a mean-reversion pair with a 4.3% dividend yield floor and sell-side capitulation already in the price.",
+  "thesis_detail": "PEP trades at a ~4th-percentile ratio vs RSPS (4.4704 as of the 8/7 close: PEP $139.02 / RSPS $31.095) after a -6.8% 3-month slide driven by the mid-July Q2 print: management guided to the low end of the EPS range, leaned heavily on a Q4 ramp, and drew downgrades (Citi Buy\u2192Neutral, target $170\u2192$145; Barclays, Wells Fargo, TD Cowen also cut). That is the consensus position \u2014 we are buying after the capitulation, not before it. The variant is that the affordability price investments are working: reporting post-print (Motley Fool, 7/31) indicates price cuts are producing the intended volume response in Frito-Lay North America. Volume-led organic recovery is exactly the decomposition this desk demands \u2014 price/mix has been exhausted across staples and PEP is the one name explicitly re-investing for volume. Technicals confirm the inflection: price back above the 20- and 50-day SMAs, RSI 55.5 and rising, MACD histogram positive, +5.3% on the week while XLP was flat. The $5.92 annualized dividend yields ~4.26% at $139, a level that has historically capped downside in this name. KHC's split-pause (announced ~3 weeks ago) and WMT's -10.8% 3-month slide confirm consumer weakness \u2014 but both are already consensus, and PEP's pair structure isolates the idiosyncratic recovery from the sector tape. Note: the valuations feed was 429-rate-limited this session, so the multiples leg of the thesis is qualitative; the pair ratio and technicals are computed and fresh.",
+  "variant_perception": "Consensus just downgraded PEP on guidance risk and back-loaded Q4 delivery. Our variant view: the affordability pivot is producing volume response NOW, the downgrades mark peak pessimism, and a 4th-percentile pair ratio with a 4.3% yield misprices a name whose volume trajectory is inflecting while the sector's pricing-led model is rolling over (KHC split pause, MDLZ -8.6% 1Y).",
+  "catalyst": "Monthly Nielsen/scanner reads confirming Frito-Lay volume stabilization; Q3 earnings (mid-October) where low-end guidance plus any volume beat forces estimate re-rating; further sell-side capitulation is exhausted, so revisions skew asymmetrically positive from here",
+  "catalyst_timeline": "4-8 weeks (scanner data within 2-4 weeks, Q3 print ~8-10 weeks)",
+  "current_price": 139.02,
+  "target_price": 147.5,
+  "entry_ratio": 4.4704,
+  "target_ratio": 4.75,
+  "stop_ratio": 4.35,
+  "ratio_percentile": 4,
+  "conviction": 6,
+  "key_risks": [
+    "Q4-loaded guidance is an execution trap \u2014 if Q3 shows no volume inflection, the low end of the range gets cut again and the ratio makes new 52-week lows (this is the stop condition)",
+    "Consumer trade-down accelerates beyond what affordability pricing can offset; WMT's slide and KHC's volume weakness say the backdrop is genuinely soft",
+    "GLP-1 and salty-snack secular pressure make PEP a value trap \u2014 cheap gets cheaper in a sector de-rating",
+    "Valuations feed was rate-limited this session \u2014 multiples cross-check not verified"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "KO",
+    "MDLZ",
+    "KHC"
+  ]
+}

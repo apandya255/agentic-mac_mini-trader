@@ -1,0 +1,33 @@
+{
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "All quantitative limits passed: hedge is valid (long EWG vs short EFA), projected factor betas remain well within \u00b10.6 limits, sizing at conviction 7 fits within 4\u20136% NAV band, sector concentration acceptable, gross leverage 1.04x remains below ceiling.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_factor_betas": {
+    "SPX": 0.15,
+    "DXY": -0.13,
+    "USGG10Yr": -0.05,
+    "VIX": -0.18,
+    "Growth_Value": -0.25,
+    "CL1": 0.1,
+    "Large_Small": 0.02,
+    "CDX_HY_5Y": -0.08,
+    "XAU": -0.06
+  },
+  "factor_breach": false,
+  "projected_gross_leverage": 1.04,
+  "max_allowed_size_pct": 0.06,
+  "risk_warnings": [
+    "Technical score 6 (not 8): inflection confirmed but within falling 200d downtrend; mean-reversion, not trend-following.",
+    "No volume confirmation: EWG volume 0.52x 20d avg; real re-rate needs volume pickup.",
+    "Fresh 52w low only 11 sessions old (0.3945); proposed stop 0.3954 sits just above it\u2014acceptable but near.",
+    "EWG absolute RSI 68.6 (overbought): near-term pullback risk in long leg despite ratio thesis.",
+    "ECB Governing Council 2026-09-10 is binary catalyst; hawkish surprise compresses German multiples.",
+    "China demand relapse is structural risk to German autos/chemicals/capital goods."
+  ],
+  "modifications": null
+}

@@ -1,0 +1,17 @@
+{
+  "execute": true,
+  "ticker": "VLO",
+  "direction": "short",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "long",
+  "size_pct_nav": 0.03,
+  "conviction": 7,
+  "stop_loss_method": "trailing 2.5% on the VLO/RSPG pair ratio from its peak (entry 2.9004; hard stop at modified 2.973 ratio per risk gate \u2014 original 3.02 rejected as >3% loss); secondary thesis-break check at a new 52w ratio high 3.02; ~2x ATR trail ($20.90) governs the single-name leg if the ratio gap forces early action",
+  "take_profit": "ratio 2.45 primary target (mid-band of 52w median 2.19 and current 2.90); first scale at 284 (38.2% retrace); main 262 (61.8%) aligning with 250\u2013260 price zone; +5% from entry triggers PM review \u2014 take is default, extension requires re-affirmed flip-condition",
+  "pm_rationale": "93rd-percentile pair ratio with a dated catalyst (Hormuz reopening) and a hedged structure that neutralizes the opposed single-name trend \u2014 3% NAV at conviction 7 respects the tech-score-6 ceiling and risk's 8% cap while keeping dry powder in a flat book.",
+  "portfolio_thesis": "First position in an all-cash book: short VLO vs long RSPG captures war-premium crack normalization as a market-neutral energy alpha with zero correlation to existing exposure, a dated 1\u20134 week catalyst, and ~4% risk to 15%+ median-reversion reward \u2014 establishing the book's return engine without consuming factor or sector budget.",
+  "expected_holding_period": "2-6 weeks",
+  "review_date": "2026-08-12",
+  "proposal_id": "fund_energy_20260808_vlo_short",
+  "order_id": "order_fund_energy_20260808_vlo_short_2026-08-08T23-00-23"
+}

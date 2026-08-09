@@ -1,0 +1,218 @@
+SYSTEM INSTRUCTIONS (read from macro_ceemea.md):
+# CEEMEA Macro Analyst
+
+## Identity
+
+You are a senior macro analyst covering Central & Eastern Europe, Middle East, and Africa (CEEMEA) at an elite macro hedge fund. You own the top-down view on energy dependence, geopolitical risk, EU convergence dynamics, and frontier market opportunities. Your job is to form macro views and express them through regional ETFs.
+
+## Mandate
+
+Your job is to identify macro-driven opportunities in CEEMEA markets and express them through available ETFs. You are judged on:
+- Quality of macro regime identification (geopolitical risk pricing, energy dynamics)
+- Accuracy of calls on EM risk appetite and regional divergence
+- Timing of macro turning points
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Description | Role |
+|--------|-------------|------|
+| EEM | iShares MSCI Emerging Markets | Broad EM expression |
+| ACWI | iShares MSCI ACWI | Global all-country benchmark |
+| EFA | iShares MSCI EAFE | DM ex-US (for relative value) |
+
+Note: Limited single-country ETF liquidity in CEEMEA. Primary expressions are through broad EM vs. DM relative value, or overweight/underweight recommendations that the PM translates into position sizing.
+
+Hedge instruments: ACWI, EFA, SPY
+
+## Analytical Framework
+
+1. **Energy Dependence & Pricing** — Gas import reliance, LNG access, electricity market reform, energy subsidy fiscal cost
+2. **Geopolitical Risk** — Russia/Ukraine trajectory, Middle East conflict premium, sanctions evolution, supply chain rerouting
+3. **EU Convergence Trade** — CEE growth catch-up, structural fund absorption, institutional reform, euro adoption timeline
+4. **Current Account Vulnerability** — External financing needs, reserve adequacy, FDI vs. portfolio flow dependence
+5. **Central Bank Independence** — Real rates, inflation targeting credibility, political interference risk
+6. **Sanctions & Capital Controls** — Investment restrictions, market access, settlement risk, repatriation ability
+
+## Key Drivers
+
+- energy_dependence_and_pricing: European gas dynamics, Russian supply alternatives, green transition
+- geopolitical_risk: Ukraine conflict duration, Middle East escalation, sanctions regime changes
+- EU_convergence_trade: CEE growth premium, institutional quality improvement, FDI flows
+- current_account_vulnerability: External funding needs, terms of trade shocks
+- central_bank_independence: Political interference risk in emerging market CB policy
+- sanctions_and_capital_controls: Investability constraints, market access changes
+
+## Position Construction Rules
+
+- **EEM long** → hedge with **short ACWI** (EM outperformance vs. global)
+- **EEM short** → hedge with **long ACWI**
+- **EEM long** → hedge with **short SPY** (EM vs. US relative value)
+- **EM vs DM pair** → inherently hedged (long EEM / short EFA)
+- Every trade MUST be hedged. No naked directional positions.
+
+## Scenario Analysis Required
+
+Every proposal must include:
+- Base case (probability-weighted)
+- Bull case: upside scenario (geopolitical de-escalation, risk-on)
+- Bear case: what invalidates (escalation, sanctions expansion, capital flight)
+- Probabilities must sum to ~100%
+
+## Tools Available
+
+```
+python -m data_platform.cli prices returns --ticker EEM
+python -m data_platform.cli prices returns --ticker EFA
+python -m data_platform.cli prices pair-ratio --ticker EEM --hedge ACWI
+python -m data_platform.cli prices pair-ratio --ticker EEM --hedge SPY
+python -m data_platform.cli prices relative-strength --ticker EEM --benchmark ACWI
+python -m data_platform.cli macro indicator --name DXY_BROAD
+python -m data_platform.cli macro indicator --name US_10Y
+python -m data_platform.cli macro credit
+python -m data_platform.cli news macro-events --days 14
+```
+
+## Output Format
+
+```json
+{
+  "proposal_id": "macro_ceemea_<timestamp>",
+  "agent_id": "macro_ceemea",
+  "ticker": "EEM",
+  "direction": "long",
+  "hedge_ticker": "ACWI",
+  "hedge_direction": "short",
+  "macro_regime": "geopolitical risk repricing, EM catch-up",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full macro write-up with specific data points",
+  "key_data_points": ["EM/DM valuation gap at 40% discount", "Ceasefire probability rising"],
+  "base_case": "description",
+  "base_case_probability": 0.50,
+  "bull_case": "description",
+  "bull_case_probability": 0.20,
+  "bear_case": "description",
+  "bear_case_probability": 0.30,
+  "target_return_pct": 5.0,
+  "stop_loss_pct": 3.0,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": ["risk 1", "risk 2"],
+  "risk_events_calendar": [{"date": "2026-09-01", "event": "EU summit on Ukraine", "impact": "sanctions/aid direction"}]
+}
+```
+
+## Constraints
+
+- Express views through listed coverage ETFs only (EEM, ACWI, EFA)
+- Every trade must be hedged
+- Maximum conviction: 10
+- You CANNOT see what sector analysts are proposing until debate
+- Your role is top-down macro — recommend EM vs. DM allocations, not individual country picks
+- Be explicit about geopolitical assumptions — they are your biggest risk factor
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-discount geopolitical risk as "already priced in" when tail risk remains material
+- Tendency to treat EM as a monolithic asset class when country dispersion is extreme
+- Tendency to be seduced by high nominal yields without adjusting for currency depreciation and inflation
+- Tendency to anchor on valuation cheapness without catalysts for re-rating
+
+
+---
+TASK:
+You are responding to challenges against your proposal.
+
+YOUR ORIGINAL PROPOSAL:
+{
+  "proposal_id": "macro_ceemea_20260808_2147",
+  "agent_id": "macro_ceemea",
+  "ticker": "EEM",
+  "direction": "short",
+  "hedge_ticker": "ACWI",
+  "hedge_direction": "long",
+  "macro_regime": "energy supply shock + sanctions escalation squeezing EM importers; EM tech momentum rolling over after outsized YTD run",
+  "thesis_summary": "Short EM vs. global benchmark. The Hormuz closure (since Mar 2026) has Brent up ~21% y/y at ~$77 and tightening secondary sanctions on Russian/Iranian barrels raise the terms-of-trade tax on the big EM importers (China, India, Turkey, CEE) that dominate EEM, while the AI/semis complex that carried EEM +17% YTD is now the source of its underperformance (EEM/ACWI -6.1% over 3m). Consensus (GS, BlackRock weekly) remains constructive EM, leaving positioning a headwind if the ratio's downtrend extends toward the 52-week low.",
+  "thesis_detail": "Prices verified this session, Aug 7 2026 close: EEM 65.64, ACWI 161.43, EFA 108.55, SPY 773.12. EEM/ACWI ratio 0.4066, 50th percentile of its 52-week range (hi 0.4519 / lo 0.3706); 1m -4.4%, 3m -6.1%, YTD +2.9% \u2014 i.e., all of EM's relative gains have been given back since May. Fundamental driver stack is now one-sided against EM beta: (1) Energy \u2014 crude ~$77/bbl, +20.7% y/y (TradingEconomics, Aug 7), with the Strait of Hormuz effectively closed since March (House of Commons Library brief, Aug 7); EEM's heavyweight economies are net energy importers, so the shock is a direct terms-of-trade and inflation hit. (2) Sanctions \u2014 US Senate voted 86-12 on Jul 28 to advance the Graham Sanctioning Russia and Iran Act; Rosneft/Lukoil already designated; Ukraine's strikes on Russian energy infrastructure are removing export capacity (Steptoe, Aug 4). Escalation path points to secondary-sanctions risk on India/China buyers \u2014 directly negative for two of EEM's three largest country weights. (3) Momentum/positioning \u2014 'EM loses momentum as AI volatility, oil prices test investors' (Seeking Alpha, ~Aug 1); sell-side consensus still expects EM FX/equity resilience (GS AM, Aug 4), so the pain trade is further underperformance. CEEMEA-specific color: CEE disinflation is real (Czech CPI 1.5%, Hungary 1.7%, Poland 2.5% in June per national prints) but Polish CPI is set to re-accelerate to ~3.1% in July on fuel; NBP held at 3.75% for a fourth meeting, CNB is the region's hawk with ~2 hikes priced. CEE is a small EEM weight, so this proposal is a broad EM-underperformance expression driven by the energy/sanctions channel \u2014 the cleanest instrument the mandate allows. Acknowledged weakness: the oil shock is five months old and partly priced; the trade needs the second derivative (sanctions enforcement, AI-complex derating) to keep working.",
+  "key_data_points": [
+    "EEM/ACWI ratio 0.4066 at 50th percentile of 52w range (0.3706-0.4519); -6.1% over 3m (Aug 7 close)",
+    "Crude ~$77.08/bbl, +20.7% y/y; Strait of Hormuz effectively closed since Mar 2026 (TradingEconomics Aug 7; HoC Library)",
+    "US Senate 86-12 to advance Graham Russia/Iran sanctions act (Jul 28); Rosneft/Lukoil designated; secondary-sanctions risk on EM buyers",
+    "EEM -0.9% vs ACWI +5.6% over 3m absolute; EM consensus still constructive (GS AM Aug 4, BlackRock BII Jul 30)",
+    "CEE disinflation intact but fuel pass-through arriving: Poland CPI 2.5% June -> ~3.1% July est; NBP on hold at 3.75%"
+  ],
+  "base_case": "Oil holds $75-90 with Hormuz constrained, sanctions enforcement tightens incrementally, and the AI/semis complex consolidates its YTD gain; EM importers' terms-of-trade drag persists and EEM/ACWI grinds toward 0.376 over 1-3 months.",
+  "base_case_probability": 0.5,
+  "bull_case": "Escalation leg: final passage and aggressive enforcement of the Graham act with secondary sanctions on Indian/Chinese buyers, or renewed Hormuz disruption pushing crude >$100; EM capital flight accelerates and the ratio overshoots toward/below the 52w low of 0.3706 \u2014 trade outperforms target.",
+  "bull_case_probability": 0.25,
+  "bear_case": "Invalidation: Iran de-escalation reopens Hormuz and crude breaks below $70, or a durable Ukraine ceasefire triggers sanctions-relief repricing; EM risk-on squeeze with consensus positioning amplifying the move \u2014 ratio recovers above 0.4245 and the thesis of persistent EM underperformance is wrong. Stop hit.",
+  "bear_case_probability": 0.25,
+  "target_return_pct": 7.0,
+  "stop_loss_pct": 4.4,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "Instrument mismatch: EEM is ~75% Asia; the CEEMEA energy/sanctions view transmits mainly through China/India import costs and global risk premium, not directly",
+    "Oil shock is five months old and partially priced; de-escalation unwinds it fast against a crowded-consensus long-EM backdrop (squeeze risk cuts both ways)",
+    "Fed path: a dovish surprise weakens the dollar and historically lifts EM beta regardless of the oil drag",
+    "Chasing risk: ratio already -6% over 3m; entry at the 50th percentile is mid-range, not stretched"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-15",
+      "event": "Poland July CPI final print (fuel pass-through, ~3.1% expected window mid-Aug)",
+      "impact": "CEE rates/FX tone; confirms or softens the energy pass-through leg"
+    },
+    {
+      "date": "2026-08-31",
+      "event": "Graham Sanctioning Russia and Iran Act \u2014 Senate floor action expected during August session (date TBD)",
+      "impact": "secondary-sanctions scope on India/China buyers is the single largest swing factor for the short"
+    },
+    {
+      "date": "2026-09-10",
+      "event": "NBP September decision (rate held at 3.75% since Jul 8 meeting; next meeting early Sep, exact date TBD)",
+      "impact": "CEE easing-path signal; a surprise cut confirms growth concern from energy drag"
+    }
+  ],
+  "entry_ratio": 0.4066,
+  "target_ratio": 0.376,
+  "stop_ratio": 0.4245,
+  "ratio_percentile": 50
+}
+
+CHALLENGES RECEIVED:
+[
+  {
+    "proposal_id": "macro_ceemea_20260808_2147",
+    "agent_id": "fund_consdisc",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Ran the pair and tape checks from my seat. Ratio data confirmed (EEM/ACWI 0.4066, 50th pct, z +0.14, as of Aug 7), but the absolute momentum picture undercuts the timing: EEM is +36.4% 1y, +12.7% 6m, and just bounced +2.4% on the week / +0.95% on the last session (data_platform, Aug 7 close). The proposal shorts relative value into a strong absolute uptrend, at mid-range, after the ratio has already moved -6.1% over 3m \u2014 the entry is chasing, and the 0.4245 stop sits ~4.4% away against a pair that just rallied 2.4% in five sessions. One Hormuz de-escalation headline and the stop is in play before the sanctions catalyst (Aug 31, date TBD) even arrives. Second, an internal inconsistency: driver #3 is AI/semis derating, but ACWI is ~65% US and carries the same mega-cap AI complex in heavier cap-weighted concentration than EEM's TSMC/Samsung/Tencent stack. If the AI complex is the source of underperformance, this pair is a muddy expression of it \u2014 a genuine AI derating could compress ACWI's US leg as much as EEM's tech leg, neutralizing the trade exactly when the thesis is 'working.' Third, from the consumer side of my mandate: the energy terms-of-trade tax on China/India/CEE consumers is real but five months old, and EM consumer-facing demand has absorbed it so far \u2014 you don't get +36% 1y in an importer-heavy index if the consumer transmission is biting. My own driver board has China consumer recovery as a live swing factor for NKE/luxury/travel; this short is implicitly short that recovery without any consumer-level evidence (comp trends, card data, retail sales) cited in the proposal. The bear case (de-escalation, crude <$70) at 25% probability looks underpriced given how fast a crowded-consensus-long market squeezes when the shock premium unwinds \u2014 and de-escalation is a double tailwind for EM importers (ToT relief + FX). Net: direction is defensible, entry and instrument are not. Conviction 6 reads a touch high; I'd want 5, or a better entry closer to 0.42 with the Graham act vote as a confirmed catalyst date rather than TBD.",
+    "revised_conviction": null
+  },
+  {
+    "proposal_id": "macro_ceemea_20260808_2147",
+    "agent_id": "fund_commsvcs",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Verified the price stack this session: EEM 65.645, ACWI 161.43 (Aug 7 close) and the EEM/ACWI ratio at 0.4066, 52w range 0.3706-0.4519, ~50th percentile, -7.1% over 3m, -4.2% over 1m (computed from yfinance daily closes; proposal's -6.1%/3m is directionally right, slightly understated). Price facts check out. The problem is instrument selection, which the proposal under-weights. EEM's geography makes this a CEEMEA thesis wearing an Asia costume: China ~28%, Taiwan ~21%, India ~18%, Korea ~12% \u2014 CEEMEA proper (Poland, Hungary, Czechia, Turkey, South Africa, Gulf) is roughly 10-12% of the fund. The energy terms-of-trade tax is real but lands very unevenly inside the wrapper: Saudi (~4%) and Brazil (~4.5%) are net beneficiaries of $77 crude, and China \u2014 the single largest weight \u2014 sources a meaningful share of its crude from sanctioned Russian and Iranian barrels at a discount. Tighter secondary sanctions enforcement has to actually close that discount before the tax bites China; the 86-12 Senate vote is known and the enforcement timeline is the same catalyst the proposal is trading on, which means the market has months to watch it leak. Second, internal consistency: a Strait of Hormuz 'effectively closed' for five months removes ~17-20 mbd from the water and crude sits at $77, +21% y/y. Either the closure is porous \u2014 in which case the shock is a managed tax, not an embargo, and China CPI pass-through is negligible (China headline CPI is running near zero, so no demand destruction hitting EM internet consumption) \u2014 or the market is wildly mispricing the biggest supply event in decades. Both readings argue the acute leg of the energy trade is behind us, which the proposal concedes. From my seat's vantage, the leg that does have teeth is the third one: TSMC + Samsung + Tencent + Alibaba are ~25-28% of EEM, so an AI/semis derating mechanically delivers EEM/ACWI underperformance, and my comm-services work supports consolidation rather than a new leg up \u2014 AI monetization at the ad platforms is real but capex intensity is rising into 2H and the easy re-rate is done. But that is a semis/Asia view, not a CEEMEA view, and it drags the ratio for reasons the stated thesis doesn't own. Finally, entry quality: mid-range (50th percentile) entry on a ratio already -7% over 3m, against a constructive-consensus crowd, is the weakest part of the construction \u2014 consensus longs are the squeeze fuel if Hormuz reopens or the Fed surprises dovish, and the 7.0%/4.4% target/stop at a 0.50 base probability gives thin expected value from a mid-range start. Net: the direction is defensible but the thesis is doing work the instrument can't deliver and vice versa. If the desk wants this view, the cleaner expressions are a short in EM energy importers vs exporters, or a direct short of the EM tech/AI complex \u2014 both sharper than a mid-range EEM short justified by CEE fuel pass-through. Conviction 6 feels right for the AI-derating leg dressed correctly; as proposed, I'd mark it a 4-5 and want the ratio nearer 0.43+ before shorting it.",
+    "revised_conviction": null
+  }
+]
+
+Instructions:
+1. Address each challenge with data/logic. Use your tools if needed.
+2. Revise your conviction if the challenges have merit.
+3. If conviction drops below 5, withdraw the proposal.
+4. Output your response:
+{
+  "proposal_id": "macro_ceemea_20260808_2147",
+  "agent_id": "macro_ceemea",
+  "round": 2,
+  "stance": "defend",
+  "argument": "Your response to the challenges with evidence",
+  "revised_conviction": 8  // your updated conviction (1-10)
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

@@ -1,0 +1,30 @@
+{
+  "proposal_id": "macro_asia_japan_2026-08-08T21:45",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "Empty book; hedge valid per sleeve doctrine; pair trade creates near-zero net leverage and minimal factor exposure; no beta or concentration breaches; conviction-6 sizing within 2\u20135% standard band.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_gross_leverage": 0.1,
+  "projected_net_leverage": 0.0,
+  "max_allowed_size_pct": 0.05,
+  "projected_factor_betas": {
+    "DXY": -0.15,
+    "SPX": -0.2,
+    "USGG10Yr": 0.05,
+    "VIX": -0.05,
+    "Growth_Value": 0.1,
+    "CL1": 0.0,
+    "Large_Small": 0.0,
+    "CDX_HY_5Y": 0.0,
+    "XAU": 0.0
+  },
+  "factor_breach": false,
+  "risk_warnings": [
+    "Technical timing rec 'wait': ratio 82.5th percentile, ADX 13.3 (no trend), 63-day RS flat; EWJ closed above upper Bollinger Friday\u2014pullback entry ~0.8850 or breakout >0.9000 with vol >1.5x avg preferred over current spot",
+    "Volume confirmation absent (1.01x 20-day avg); flow divergence (\u00a5392.5bn foreign selling vs rising OBV) signals fragility if selling accelerates",
+    "EFA hedge ~20% Japan; net Japan position diluted but acceptable vs ACWI per sleeve doctrine"
+  ]
+}

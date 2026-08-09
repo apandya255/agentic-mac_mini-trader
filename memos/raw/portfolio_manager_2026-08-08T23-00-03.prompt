@@ -1,0 +1,458 @@
+SYSTEM INSTRUCTIONS (read from portfolio_manager.md):
+# Portfolio Manager
+
+## Identity
+
+You are the Portfolio Manager at an elite macro hedge fund. You are the final decision-maker — you receive risk-approved proposals and determine whether a trade enters the book, at what size, and with what parameters. You synthesize fundamental, macro, technical, and risk inputs into a cohesive portfolio.
+
+## Mandate
+
+Your job is to construct and manage a portfolio that targets 12–15% annualized returns with ≤6% downside volatility. You decide:
+1. Whether to execute a risk-approved trade (yes/no)
+2. Position sizing within risk-approved limits
+3. Entry approach (market, limit, scale-in)
+4. Final stop-loss and take-profit calibration
+5. How the trade fits the overall book narrative
+
+You are judged on:
+- Portfolio return vs. target (12–15%)
+- Drawdown management (max 6% from peak)
+- Sharpe ratio (target ≥2.0)
+- Decision quality (did your sizing and timing add value vs. uniform allocation?)
+
+## Decision Framework
+
+### Minimum Thresholds
+- Post-debate conviction must be ≥ 6 to consider
+- Technical score must be ≥ 5 to proceed
+- Risk must have approved (possibly with modifications)
+
+### Sizing Model
+| Conviction | Standard Size | Notes |
+|-----------|--------------|-------|
+| 6 | 2% NAV | Minimum viable |
+| 7 | 3% NAV | |
+| 8 | 4% NAV | |
+| 9 | 5% NAV | |
+| 10 | 5% NAV | Very rare |
+| HC (8+) | 8% NAV | Max 2 slots, must out-hit standard book or self-revokes |
+
+Adjustments:
+- Technical score < 6: reduce by 30%
+- Technical score > 8: increase by 20%
+- Circuit breaker in warning: apply 0.8x multiplier
+- Position correlated > 0.5 with existing: reduce by 20% per correlated position
+
+### Portfolio Construction Rules
+- Max 3 new positions per day
+- Review existing positions before adding new ones
+- Weekly full book review (are any theses stale?)
+- Maximum book: 8–12 positions at any time in the POC
+
+### Exit Framework
+- **Trailing stop hit:** Immediate exit. No exceptions, no "let me hold a little longer."
+- **+5% from entry:** Take profit is the DEFAULT. Extending requires the originator to re-affirm with a documented flip-condition (what would make you exit if it doesn't keep going).
+- **Thesis invalidated:** Exit regardless of P&L. If the fundamental/macro reason is gone, the position is gone.
+- **60 days without catalyst:** Forced reassessment. If nothing has changed, exit.
+- **Better opportunity:** May exit lower-conviction position to fund higher (capital rotation).
+
+## Tools Available
+
+```
+python -m data_platform.cli sizing compute --conviction <N>
+python -m data_platform.cli sizing compute --conviction <N> --high-conviction
+python -m data_platform.cli sizing table
+python -m data_platform.cli risk circuit-breaker --nav <NAV>
+python -m data_platform.cli carry cash --cash-pct <P>
+python -m data_platform.cli carry position-cost --direction <D> --notional <N>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge <H>
+```
+
+## Input
+
+You read from:
+- `memos/proposals/` — the surviving trade proposals (post-debate)
+- `memos/scores/` — technical scores for each proposal
+- `memos/risk/` — risk decisions (approved/modified/rejected)
+- `memos/state/book.json` — current portfolio state
+
+## Output Format
+
+Write your output as a JSON file:
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "Why this trade fits the book. How it interacts with existing positions. Why now.",
+  "ticker": "XOM",
+  "direction": "long",
+  "size_pct_nav": 0.04,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review, take is default",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.04,
+  "portfolio_thesis": "Adding energy single-name alpha on top of existing sector view. Low correlation to current book. Catalyst within 4 weeks.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-10",
+  "priority": "normal"
+}
+```
+
+For a pass (no execution):
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "execute": false,
+  "pm_rationale": "Technical setup is weak (score 5) and we already have sector exposure via XLE position. Adding single-name doesn't improve the book risk/reward."
+}
+```
+
+## Constraints
+
+- You can ONLY execute risk-approved proposals (you cannot override a risk rejection)
+- If risk approved with modifications (e.g., max size 2%), you must respect that limit
+- You read the full pipeline output before deciding — don't ignore the debate or technical score
+- You manage the book as a whole — every position should have a role in the portfolio narrative
+- Cash is a position. If nothing looks good, stay in cash. Cash earns SOFR.
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-trade (adding positions because "something should always be on")
+- Tendency to hold losers too long ("it'll come back")
+- Tendency to size winners too small and losers too large (disposition effect)
+- Discipline: let the rules work. Trailing stop hit = exit. +5% = take. No exceptions without documented re-affirmed flip-condition.
+
+
+---
+TASK:
+Decide whether to execute this risk-approved trade.
+
+PROPOSAL (post-debate, conviction = 7):
+{
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "macro_westerneurope",
+  "ticker": "EWG",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "German fiscal-led recovery against a hawkish ECB; eurozone manufacturing inflecting up while Germany trades at a deep relative discount",
+  "thesis_summary": "Long Germany vs. broad EAFE at the 17th percentile of the 52-week ratio range. The \u20ac500bn infrastructure fund plus >1%-of-GDP defense ramp is now flowing into the data \u2014 July composite PMI jumped to 51.9 with the fastest manufacturing output growth since March 2022 and Germany expanding for the first time in four months \u2014 yet EWG/EFA is still -7.2% YTD. The ratio turned up +2.0% over the past month; we are buying the confirmed inflection, not the knife.",
+  "thesis_detail": "Germany is the cheapest DM recovery story on the board. EWG/EFA at 0.4055 sits at the 17th percentile of its 52-week range (0.3945\u20130.4778), having de-rated all year on China-export pessimism and the ECB's June hike (depo to 2.25%, first of the cycle). Three things changed in the last six weeks: (1) Fiscal flow is real, not announced \u2014 the FXStreet German fiscal tracker (Jul 27) shows infrastructure-fund borrowing and defense outlays accelerating through 2026, with \u20ac58.9bn of special-fund borrowing in the 2026 budget and record \u20ac126.7bn investment. (2) The data inflected: flash July composite 51.9 vs 50.0, manufacturing output fastest since Mar 2022, Germany back above 50 with the cleanest combination of output, new orders and export orders in the bloc \u2014 the orders-led pattern that precedes 2-3 quarters of industrial production gains. (3) Price confirmation: EWG/EFA +2.0% over the last month while the crowded periphery trades (EWI, EWP both 96th percentile) stalled. The hawkish ECB is a headwind for duration-sensitive defensives but is itself evidence the domestic demand impulse is biting; German industrials, defense names and construction-exposed names are the beneficiaries of the fiscal mix, and they dominate EWG. Structurally, we flag our own bias: this seat is prone to permanent Europe-bearishness \u2014 the discipline here is that the data, not the prior, is doing the talking. The biggest risk is the ECB over-hiking into the fiscal impulse (Sep meeting) or a renewed China leg down hitting autos/chemicals; the stop sits just below the 52-week ratio low, so a fresh low closes the trade with the thesis falsified.",
+  "key_data_points": [
+    "EWG/EFA ratio 0.4055, 17th percentile of 52-wk range 0.3945\u20130.4778 (computed from yfinance daily, 2026-08-07 close)",
+    "EWG 44.02 / EFA 108.55 as of 2026-08-07 15:59 ET close",
+    "EWG/EFA -7.2% YTD, -0.7% 3m, +2.0% 1m \u2014 momentum turning",
+    "Eurozone flash composite PMI 51.9 July vs 50.0 June (S&P Global); manufacturing output fastest since Mar 2022; Germany first expansion in 4 months",
+    "ECB hiked deposit facility to 2.25% effective 17 June 2026 (ECB statement, 11 Jun 2026); unchanged through July",
+    "German fiscal tracker (FXStreet, 27 Jul 2026): defense + infrastructure-fund borrowing accelerating; \u20ac500bn special fund, \u20ac58.9bn 2026 borrowing, record \u20ac126.7bn investment budget",
+    "Crowded alternative: EWI and EWP ratios both at 96th percentile \u2014 periphery outperformance is the consensus trade, not Germany",
+    "BTP-Bund 80bp (Borsa Italiana, 7 Aug 2026) and drifting wider into ECB hikes \u2014 argues against expressing Europe long via the periphery"
+  ],
+  "base_case": "Fiscal impulse keeps feeding orders and IP through Q4; ECB delivers one more hike and holds, which the market already prices. EWG/EFA mean-reverts toward the middle of its 52-week range as German earnings revisions turn positive. Ratio to ~0.426 (+5%).",
+  "base_case_probability": 0.55,
+  "bull_case": "Orders-to-production handoff plus defense procurement announcements drive a full re-rate; ECB signals pause after September; China stimulus stabilizes auto exports. Ratio toward 0.44+ (upper half of range, +8-9%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "ECB over-hikes into the impulse (hawkish September surprise) or China rolls over again, German PMIs relapse below 50 and the ratio makes a new 52-week low through 0.3954. Stop takes us out; thesis falsified by the data, not by drawdown pain.",
+  "bear_case_probability": 0.2,
+  "entry_ratio": 0.4055,
+  "target_ratio": 0.4258,
+  "stop_ratio": 0.3954,
+  "ratio_percentile": 17,
+  "target_return_pct": 5.0,
+  "stop_loss_pct": 2.5,
+  "conviction": 7,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "ECB hawkish surprise at the September meeting \u2014 over-hiking into the fiscal impulse compresses German multiples",
+    "China demand relapse hitting German autos, chemicals and capital goods \u2014 the structural short-Germany argument",
+    "EUR strength from ECB-Fed divergence squeezing exporter margins",
+    "Coalition friction slowing infrastructure-fund disbursement (OSW flagged diversion risk in the 2026 budget)",
+    "Hedge basis: EFA is Japan-heavy \u2014 a sharp Japan-specific rally widens the hedge leg against us"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-21",
+      "event": "Flash August PMIs (eurozone/Germany)",
+      "impact": "confirms or breaks the July inflection; a Germany sub-50 print is an early warning before the stop"
+    },
+    {
+      "date": "2026-08-25",
+      "event": "German Ifo business climate (August)",
+      "impact": "second read on the orders-led recovery"
+    },
+    {
+      "date": "2026-09-01",
+      "event": "Eurozone flash HICP (August)",
+      "impact": "drives September ECB pricing; hot print = bear-case fuel"
+    },
+    {
+      "date": "2026-09-10",
+      "event": "ECB Governing Council meeting (approximate)",
+      "impact": "rate decision and guidance \u2014 the single biggest catalyst risk in the window"
+    }
+  ],
+  "final_conviction": 7,
+  "_tech_score": {
+    "proposal_id": "macro_westerneurope_20260808t2156",
+    "agent_id": "tech_equity",
+    "technical_score": 6,
+    "trend_alignment": "neutral",
+    "momentum_regime": "early_inflection_within_downtrend",
+    "instrument_assessed": "EWG/EFA ratio (pair trade \u2014 ratio technicals govern, absolute legs scored for context)",
+    "as_of": "2026-08-07 close (ratio 0.4055, computed from yfinance daily \u2014 verified this session)",
+    "ratio_technicals": {
+      "sma20": 0.4015,
+      "sma50": 0.4025,
+      "sma100": 0.4059,
+      "sma200": 0.4187,
+      "structure": "Above 20d/50d, below 100d and a falling 200d \u2014 short-term turn inside a longer-term downtrend. No golden cross on the ratio; the 200d at 0.4187 sits between entry and target and is the key battleground.",
+      "rsi14": 56.1,
+      "macd": "positive cross, histogram +0.00078 and rising \u2014 momentum inflection confirmed",
+      "atr14_pct": 0.47,
+      "pctile_52w": 16.7,
+      "52w_low": "0.3945 printed 2026-07-23 \u2014 only 11 sessions old",
+      "chg_1m_pct": 1.97
+    },
+    "absolute_legs_context": {
+      "EWG": "Scan score 8 bullish, golden cross, above all MAs \u2014 but RSI 68.6, BB position 0.94, volume 0.52x 20d avg with falling OBV. The absolute rally is extended and unconfirmed by volume.",
+      "EFA": "Scan score 8 bullish, golden cross, ADX 14 (no trend) \u2014 hedge leg is not in a strong absolute uptrend, which suits the pair."
+    },
+    "support_levels": [
+      0.4025,
+      0.4015,
+      0.3945
+    ],
+    "resistance_levels": [
+      0.4092,
+      0.4187,
+      0.436
+    ],
+    "suggested_entry": 0.4055,
+    "suggested_stop_loss": 0.3954,
+    "suggested_take_profit": 0.4258,
+    "trailing_stop_method": "Desk-standard 2.5% trail from ratio peak once in profit; for level-setting context, ratio ATR14 is 0.0019 (0.47%/day) so a 2x-ATR trail \u2248 0.9% \u2014 too tight for this horizon; use the desk trail and treat 0.4187 (200d) as the trim/re-assess level.",
+    "active_signals": [
+      {
+        "signal": "macd_bullish_cross",
+        "strength": "moderate",
+        "note": "Ratio MACD crossed above signal with rising histogram \u2014 the inflection the thesis claims is real in the data"
+      },
+      {
+        "signal": "short_term_ma_reclaim",
+        "strength": "moderate",
+        "note": "Ratio back above 20d/50d after the 2026-07-23 low; +2.0% 1m confirms the turn"
+      },
+      {
+        "signal": "rsi_constructive",
+        "strength": "moderate",
+        "note": "Ratio RSI 56, rising, far from overbought \u2014 headroom to target"
+      }
+    ],
+    "warning_signals": [
+      {
+        "signal": "no_volume_confirmation",
+        "note": "EWG volume 0.52x 20d avg, OBV falling \u2014 the July bounce is a low-participation move; a real re-rate needs volume to show up"
+      },
+      {
+        "signal": "fresh_52w_low",
+        "note": "The 0.3945 low is 11 sessions old \u2014 this is mean-reversion against a downtrend (ratio below falling 200d), not an established uptrend. ADX 19/14 on the legs says no trend strength either way yet"
+      },
+      {
+        "signal": "extended_absolute_leg",
+        "note": "EWG absolute RSI 68.6 at the upper Bollinger band \u2014 near-term pullback risk in the long leg even if the ratio thesis is right"
+      },
+      {
+        "signal": "stop_placement",
+        "note": "Proposed stop 0.3954 sits 0.2% above the 52w low 0.3945, not below it as the thesis text claims \u2014 it will trigger before a fresh low prints. Acceptable within the 2-3% band, but the true falsifier is a close below 0.3945"
+      }
+    ],
+    "volume_confirmation": false,
+    "timing_recommendation": "now",
+    "timing_rationale": "Entry is defensible here: ratio momentum has crossed positively, RSI 56 leaves room, and price sits directly on the 20d/50d support cluster (0.4015-0.4025) so risk is well-defined at 2.5%. This is a 6, not an 8, because the trade fights the 200d downtrend with zero volume confirmation and an 11-day-old low \u2014 it is a confirmed inflection, not a confirmed trend. Honest label: mean-reversion with momentum evidence, not trend-following. Expect a fight at 0.4187 (200d) before the 0.4258 target; the Aug 21 flash PMI is the nearest catalyst that can resolve it either way."
+  },
+  "risk_decision": {
+    "proposal_id": "macro_westerneurope_20260808t2156",
+    "agent_id": "risk_management",
+    "decision": "approved",
+    "rationale": "All quantitative limits passed: hedge is valid (long EWG vs short EFA), projected factor betas remain well within \u00b10.6 limits, sizing at conviction 7 fits within 4\u20136% NAV band, sector concentration acceptable, gross leverage 1.04x remains below ceiling.",
+    "position_size_ok": true,
+    "hedge_present_and_valid": true,
+    "sector_concentration_ok": true,
+    "correlation_to_existing": 0.0,
+    "projected_factor_betas": {
+      "SPX": 0.15,
+      "DXY": -0.13,
+      "USGG10Yr": -0.05,
+      "VIX": -0.18,
+      "Growth_Value": -0.25,
+      "CL1": 0.1,
+      "Large_Small": 0.02,
+      "CDX_HY_5Y": -0.08,
+      "XAU": -0.06
+    },
+    "factor_breach": false,
+    "projected_gross_leverage": 1.04,
+    "max_allowed_size_pct": 0.06,
+    "risk_warnings": [
+      "Technical score 6 (not 8): inflection confirmed but within falling 200d downtrend; mean-reversion, not trend-following.",
+      "No volume confirmation: EWG volume 0.52x 20d avg; real re-rate needs volume pickup.",
+      "Fresh 52w low only 11 sessions old (0.3945); proposed stop 0.3954 sits just above it\u2014acceptable but near.",
+      "EWG absolute RSI 68.6 (overbought): near-term pullback risk in long leg despite ratio thesis.",
+      "ECB Governing Council 2026-09-10 is binary catalyst; hawkish surprise compresses German multiples.",
+      "China demand relapse is structural risk to German autos/chemicals/capital goods."
+    ],
+    "modifications": null
+  }
+}
+
+TECHNICAL SCORE:
+{
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "tech_equity",
+  "technical_score": 6,
+  "trend_alignment": "neutral",
+  "momentum_regime": "early_inflection_within_downtrend",
+  "instrument_assessed": "EWG/EFA ratio (pair trade \u2014 ratio technicals govern, absolute legs scored for context)",
+  "as_of": "2026-08-07 close (ratio 0.4055, computed from yfinance daily \u2014 verified this session)",
+  "ratio_technicals": {
+    "sma20": 0.4015,
+    "sma50": 0.4025,
+    "sma100": 0.4059,
+    "sma200": 0.4187,
+    "structure": "Above 20d/50d, below 100d and a falling 200d \u2014 short-term turn inside a longer-term downtrend. No golden cross on the ratio; the 200d at 0.4187 sits between entry and target and is the key battleground.",
+    "rsi14": 56.1,
+    "macd": "positive cross, histogram +0.00078 and rising \u2014 momentum inflection confirmed",
+    "atr14_pct": 0.47,
+    "pctile_52w": 16.7,
+    "52w_low": "0.3945 printed 2026-07-23 \u2014 only 11 sessions old",
+    "chg_1m_pct": 1.97
+  },
+  "absolute_legs_context": {
+    "EWG": "Scan score 8 bullish, golden cross, above all MAs \u2014 but RSI 68.6, BB position 0.94, volume 0.52x 20d avg with falling OBV. The absolute rally is extended and unconfirmed by volume.",
+    "EFA": "Scan score 8 bullish, golden cross, ADX 14 (no trend) \u2014 hedge leg is not in a strong absolute uptrend, which suits the pair."
+  },
+  "support_levels": [
+    0.4025,
+    0.4015,
+    0.3945
+  ],
+  "resistance_levels": [
+    0.4092,
+    0.4187,
+    0.436
+  ],
+  "suggested_entry": 0.4055,
+  "suggested_stop_loss": 0.3954,
+  "suggested_take_profit": 0.4258,
+  "trailing_stop_method": "Desk-standard 2.5% trail from ratio peak once in profit; for level-setting context, ratio ATR14 is 0.0019 (0.47%/day) so a 2x-ATR trail \u2248 0.9% \u2014 too tight for this horizon; use the desk trail and treat 0.4187 (200d) as the trim/re-assess level.",
+  "active_signals": [
+    {
+      "signal": "macd_bullish_cross",
+      "strength": "moderate",
+      "note": "Ratio MACD crossed above signal with rising histogram \u2014 the inflection the thesis claims is real in the data"
+    },
+    {
+      "signal": "short_term_ma_reclaim",
+      "strength": "moderate",
+      "note": "Ratio back above 20d/50d after the 2026-07-23 low; +2.0% 1m confirms the turn"
+    },
+    {
+      "signal": "rsi_constructive",
+      "strength": "moderate",
+      "note": "Ratio RSI 56, rising, far from overbought \u2014 headroom to target"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "no_volume_confirmation",
+      "note": "EWG volume 0.52x 20d avg, OBV falling \u2014 the July bounce is a low-participation move; a real re-rate needs volume to show up"
+    },
+    {
+      "signal": "fresh_52w_low",
+      "note": "The 0.3945 low is 11 sessions old \u2014 this is mean-reversion against a downtrend (ratio below falling 200d), not an established uptrend. ADX 19/14 on the legs says no trend strength either way yet"
+    },
+    {
+      "signal": "extended_absolute_leg",
+      "note": "EWG absolute RSI 68.6 at the upper Bollinger band \u2014 near-term pullback risk in the long leg even if the ratio thesis is right"
+    },
+    {
+      "signal": "stop_placement",
+      "note": "Proposed stop 0.3954 sits 0.2% above the 52w low 0.3945, not below it as the thesis text claims \u2014 it will trigger before a fresh low prints. Acceptable within the 2-3% band, but the true falsifier is a close below 0.3945"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "now",
+  "timing_rationale": "Entry is defensible here: ratio momentum has crossed positively, RSI 56 leaves room, and price sits directly on the 20d/50d support cluster (0.4015-0.4025) so risk is well-defined at 2.5%. This is a 6, not an 8, because the trade fights the 200d downtrend with zero volume confirmation and an 11-day-old low \u2014 it is a confirmed inflection, not a confirmed trend. Honest label: mean-reversion with momentum evidence, not trend-following. Expect a fight at 0.4187 (200d) before the 0.4258 target; the Aug 21 flash PMI is the nearest catalyst that can resolve it either way."
+}
+
+RISK DECISION:
+{
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "All quantitative limits passed: hedge is valid (long EWG vs short EFA), projected factor betas remain well within \u00b10.6 limits, sizing at conviction 7 fits within 4\u20136% NAV band, sector concentration acceptable, gross leverage 1.04x remains below ceiling.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_factor_betas": {
+    "SPX": 0.15,
+    "DXY": -0.13,
+    "USGG10Yr": -0.05,
+    "VIX": -0.18,
+    "Growth_Value": -0.25,
+    "CL1": 0.1,
+    "Large_Small": 0.02,
+    "CDX_HY_5Y": -0.08,
+    "XAU": -0.06
+  },
+  "factor_breach": false,
+  "projected_gross_leverage": 1.04,
+  "max_allowed_size_pct": 0.06,
+  "risk_warnings": [
+    "Technical score 6 (not 8): inflection confirmed but within falling 200d downtrend; mean-reversion, not trend-following.",
+    "No volume confirmation: EWG volume 0.52x 20d avg; real re-rate needs volume pickup.",
+    "Fresh 52w low only 11 sessions old (0.3945); proposed stop 0.3954 sits just above it\u2014acceptable but near.",
+    "EWG absolute RSI 68.6 (overbought): near-term pullback risk in long leg despite ratio thesis.",
+    "ECB Governing Council 2026-09-10 is binary catalyst; hawkish surprise compresses German multiples.",
+    "China demand relapse is structural risk to German autos/chemicals/capital goods."
+  ],
+  "modifications": null
+}
+
+CURRENT BOOK STATE:
+{
+  "nav": 650000000,
+  "initial_nav": 650000000,
+  "cash_pct": 1.0,
+  "positions": [],
+  "trade_journal": [],
+  "last_marked": "2026-08-08T22:57:33.857956"
+}
+
+Instructions:
+1. Decide: execute or pass?
+2. If execute: size the position (1-5% NAV based on conviction).
+3. Set trailing stop method and review date.
+4. Respond with a JSON object containing these fields:
+   - "execute": true/false
+   - "ticker": the ticker
+   - "direction": "long" or "short"
+   - "hedge_ticker": the hedge ETF
+   - "hedge_direction": "short" or "long"
+   - "size_pct_nav": decimal (e.g. 0.03 for 3%)
+   - "conviction": number
+   - "stop_loss_method": string
+   - "take_profit": string
+   - "pm_rationale": one-sentence reason
+   - "portfolio_thesis": the thesis summary
+   - "expected_holding_period": string
+   - "review_date": ISO date string
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

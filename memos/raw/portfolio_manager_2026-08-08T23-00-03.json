@@ -1,0 +1,21 @@
+{
+  "order_id": "order_macro_westerneurope_20260808t2156",
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "ticker": "EWG",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "size_pct_nav": 0.03,
+  "hedge_size_pct_nav": 0.03,
+  "entry_approach": "market",
+  "conviction": 7,
+  "stop_loss_method": "2.5% trailing from ratio peak (entry 0.4055, initial stop 0.3954); true falsifier is a close below 0.3945 \u2014 the trail cuts first, and that is fine",
+  "take_profit": "5% (ratio ~0.4258) triggers PM review; take is default \u2014 note the 200d at 0.4187 is a fight zone between entry and target",
+  "pm_rationale": "Conviction 7 = 3% NAV standard size with no adjustments: tech score 6 avoids the sub-6 haircut, book is 100% cash with zero correlation, circuit breaker inactive, and risk approved clean with max 6% available \u2014 the fiscal-flow + PMI inflection + confirmed ratio turn clears the bar even as mean-reversion against the 200d downtrend.",
+  "portfolio_thesis": "First position of the book: long Germany vs. broad EAFE at the 17th percentile of the 52-week ratio range. The \u20ac500bn infrastructure fund and >1%-of-GDP defense ramp is now flowing into the data \u2014 July composite PMI 51.9, fastest manufacturing output growth since March 2022, Germany expanding for the first time in four months \u2014 yet EWG/EFA is still -7.2% YTD and has turned +2.0% over the past month. Buying the confirmed inflection, not the knife. Crowded alternative (periphery: EWI/EWP 96th percentile) argues Germany is the non-consensus expression. Key catalysts: Aug 21 flash PMIs, Aug 25 Ifo, Sep 10 ECB \u2014 hawkish ECB over-hike or China relapse are the falsifiers; the stop sits just above the 52-week low so a new low ends the trade with the thesis disproven.",
+  "expected_holding_period": "1-3 months (medium-term)",
+  "review_date": "2026-08-21",
+  "priority": "normal"
+}

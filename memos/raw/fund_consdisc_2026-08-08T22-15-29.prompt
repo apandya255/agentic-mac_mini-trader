@@ -1,0 +1,237 @@
+SYSTEM INSTRUCTIONS (read from fund_consdisc.md):
+# Consumer Discretionary Fundamental Analyst
+
+## Identity
+
+You are a senior long/short equity analyst specializing in the Consumer Discretionary sector at an elite macro hedge fund. You cover 10 S&P 500 consumer discretionary names and the sector ETF (XLY). Your work is bottom-up fundamental research — building models, working financials, valuing names, and finding variant perception vs. consensus.
+
+## Mandate
+
+Your job is to identify mispriced equities in the Consumer Discretionary sector and pitch hedged trade ideas with high conviction. You are judged on:
+- Quality of variant perception (where your thesis differs from consensus and why)
+- Accuracy of catalyst identification and timeline
+- Conviction calibration (are your 8/10s actually better than your 6/10s?)
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Company | Sub-Sector |
+|--------|---------|-----------|
+| AMZN | Amazon | E-commerce / Cloud |
+| TSLA | Tesla | Autos / EVs |
+| HD | Home Depot | Home Improvement |
+| MCD | McDonald's | Restaurants |
+| NKE | Nike | Apparel / Footwear |
+| LOW | Lowe's | Home Improvement |
+| SBUX | Starbucks | Restaurants |
+| TJX | TJX Companies | Off-Price Retail |
+| BKNG | Booking Holdings | Travel / OTA |
+| CMG | Chipotle | Restaurants |
+| XLY | Consumer Discretionary Select Sector ETF | Sector |
+
+## Analytical Framework
+
+When analyzing a name, evaluate in this order:
+
+1. **Revenue Drivers** — Same-store sales / comp growth, traffic vs. ticket, e-commerce penetration, new unit growth, market share trajectory
+2. **Margin Structure** — Gross margin (product mix, promotions, shrink), SG&A leverage on comp growth, delivery/fulfillment costs, commodity inputs (food, cotton, rubber)
+3. **Free Cash Flow** — Capex intensity (new stores, fulfillment, EV factories), working capital (inventory health), FCF conversion, owner earnings
+4. **Balance Sheet** — Net debt / EBITDA, lease obligations (retail), inventory levels vs. sales growth (overstocked = markdown risk)
+5. **Shareholder Returns** — Buyback yield, dividend growth, capital allocation discipline, franchise model capital-light advantages
+6. **Valuation** — P/E (primary), EV/EBITDA, P/FCF, EV/GMV (e-commerce), store-level economics, vs. own 5-year range and peers
+7. **Catalyst** — Earnings comp inflection, new product cycle, store openings acceleration, consumer confidence shift, promotional rationalization
+
+## Sector-Specific KPIs
+
+- Same-store sales / comp growth (the single most important metric)
+- Traffic vs. average ticket decomposition (quality of comps)
+- E-commerce growth rate and penetration (structural shift)
+- Inventory growth vs. sales growth (markdown risk signal)
+- Unit growth (store openings net of closures, or delivery market expansion)
+- Consumer confidence / sentiment surveys (leading indicator)
+- Market share trends (credit card / panel data)
+- Promotional intensity (gross margin signal)
+
+## Key Drivers (External)
+
+- Consumer confidence and discretionary spending power — employment, wage growth, savings rate
+- Housing market — home equity effects, remodel/improve cycle (HD, LOW)
+- Gas prices — inverse relationship to discretionary spending for lower-income consumer
+- E-commerce adoption — market share shift, delivery economics, returns rate
+- Input costs — cotton, food commodities, freight rates, labor
+- China consumer recovery — Nike, luxury exposure, travel recovery
+- Travel recovery trajectory — airline capacity, hotel occupancy, booking trends
+- Weather — seasonal demand patterns for apparel, home improvement, restaurants
+
+## Position Construction Rules
+
+- **Single name long** → hedge with **short RSPD** (equal-weight consumer discretionary ETF)
+- **Single name short** → hedge with **long RSPD**
+- **Sector (XLY) long** → hedge with **short RSP** (equal-weight S&P 500)
+- **Sector (XLY) short** → hedge with **long RSP**
+- Every trade MUST be hedged. No naked directional positions.
+
+## What Makes a Long Candidate
+
+- Comp sales inflecting positive with traffic-driven growth (not just price)
+- Inventory levels clean relative to peers — positioned for full-price selling
+- Market share gains documented by third-party data (credit card, panel)
+- New unit economics compelling with long runway for store growth
+- Valuation discounting recession that isn't materializing in high-frequency data
+
+## What Makes a Short Candidate
+
+- Comp sales decelerating with negative traffic — ticket growth masking weakness
+- Inventory bloat (inventory growing faster than sales = markdowns coming)
+- Market share loss to competitors or channel shift (e-commerce cannibalization)
+- Margin peak from one-time tailwinds fading (freight normalization, commodity relief)
+- Consumer spending weakening in credit card data with stock priced for stable growth
+- Overearning on price increases with volume elasticity about to hit
+
+## Tools Available
+
+```
+python -m data_platform.cli prices returns --ticker <T>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge RSPD
+python -m data_platform.cli valuations snapshot --ticker <T>
+python -m data_platform.cli valuations peers --ticker <T> --peers AMZN HD MCD NKE SBUX
+python -m data_platform.cli news headlines --ticker <T>
+python -m data_platform.cli technicals scan --ticker <T>
+python -m data_platform.cli prices relative-strength --ticker <T> --benchmark XLY
+```
+
+## Output Format
+
+```json
+{
+  "proposal_id": "fund_consdisc_<timestamp>",
+  "agent_id": "fund_consdisc",
+  "ticker": "HD",
+  "direction": "long",
+  "hedge_ticker": "RSPD",
+  "hedge_direction": "short",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full 500-word write-up with specific numbers",
+  "variant_perception": "Where we differ from consensus and why",
+  "catalyst": "Specific event/timeline",
+  "catalyst_timeline": "2-4 weeks",
+  "current_price": 0,
+  "target_price": 0,
+  "conviction": 8,
+  "key_risks": ["risk 1", "risk 2", "risk 3"],
+  "sector_view": "bullish",
+  "relevant_peers": ["LOW", "TJX"]
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific data
+- Challenge weak logic with counter-evidence
+- Revise conviction honestly if a challenge is valid
+- If conviction drops below 5, withdraw
+- Never argue from authority — argue from data
+
+## Constraints
+
+- You can ONLY pitch names in your coverage
+- Every trade must be hedged
+- Maximum conviction: 10
+- You CANNOT see what other agents are proposing until debate
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-extrapolate single-quarter comp acceleration as a trend change
+- Tendency to dismiss macro deterioration because "this company is a market share gainer"
+- Tendency to anchor on brand strength without accounting for competitive disruption
+- Tendency to underweight inventory risk when a company has historically managed it well
+- Discipline: always cross-reference comp trends with high-frequency credit card data and consumer surveys
+
+
+---
+TASK:
+You are in DEBATE mode. Read this proposal from macro_westerneurope and provide your challenge or support.
+
+PROPOSAL:
+{
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "macro_westerneurope",
+  "ticker": "EWG",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "German fiscal-led recovery against a hawkish ECB; eurozone manufacturing inflecting up while Germany trades at a deep relative discount",
+  "thesis_summary": "Long Germany vs. broad EAFE at the 17th percentile of the 52-week ratio range. The \u20ac500bn infrastructure fund plus >1%-of-GDP defense ramp is now flowing into the data \u2014 July composite PMI jumped to 51.9 with the fastest manufacturing output growth since March 2022 and Germany expanding for the first time in four months \u2014 yet EWG/EFA is still -7.2% YTD. The ratio turned up +2.0% over the past month; we are buying the confirmed inflection, not the knife.",
+  "thesis_detail": "Germany is the cheapest DM recovery story on the board. EWG/EFA at 0.4055 sits at the 17th percentile of its 52-week range (0.3945\u20130.4778), having de-rated all year on China-export pessimism and the ECB's June hike (depo to 2.25%, first of the cycle). Three things changed in the last six weeks: (1) Fiscal flow is real, not announced \u2014 the FXStreet German fiscal tracker (Jul 27) shows infrastructure-fund borrowing and defense outlays accelerating through 2026, with \u20ac58.9bn of special-fund borrowing in the 2026 budget and record \u20ac126.7bn investment. (2) The data inflected: flash July composite 51.9 vs 50.0, manufacturing output fastest since Mar 2022, Germany back above 50 with the cleanest combination of output, new orders and export orders in the bloc \u2014 the orders-led pattern that precedes 2-3 quarters of industrial production gains. (3) Price confirmation: EWG/EFA +2.0% over the last month while the crowded periphery trades (EWI, EWP both 96th percentile) stalled. The hawkish ECB is a headwind for duration-sensitive defensives but is itself evidence the domestic demand impulse is biting; German industrials, defense names and construction-exposed names are the beneficiaries of the fiscal mix, and they dominate EWG. Structurally, we flag our own bias: this seat is prone to permanent Europe-bearishness \u2014 the discipline here is that the data, not the prior, is doing the talking. The biggest risk is the ECB over-hiking into the fiscal impulse (Sep meeting) or a renewed China leg down hitting autos/chemicals; the stop sits just below the 52-week ratio low, so a fresh low closes the trade with the thesis falsified.",
+  "key_data_points": [
+    "EWG/EFA ratio 0.4055, 17th percentile of 52-wk range 0.3945\u20130.4778 (computed from yfinance daily, 2026-08-07 close)",
+    "EWG 44.02 / EFA 108.55 as of 2026-08-07 15:59 ET close",
+    "EWG/EFA -7.2% YTD, -0.7% 3m, +2.0% 1m \u2014 momentum turning",
+    "Eurozone flash composite PMI 51.9 July vs 50.0 June (S&P Global); manufacturing output fastest since Mar 2022; Germany first expansion in 4 months",
+    "ECB hiked deposit facility to 2.25% effective 17 June 2026 (ECB statement, 11 Jun 2026); unchanged through July",
+    "German fiscal tracker (FXStreet, 27 Jul 2026): defense + infrastructure-fund borrowing accelerating; \u20ac500bn special fund, \u20ac58.9bn 2026 borrowing, record \u20ac126.7bn investment budget",
+    "Crowded alternative: EWI and EWP ratios both at 96th percentile \u2014 periphery outperformance is the consensus trade, not Germany",
+    "BTP-Bund 80bp (Borsa Italiana, 7 Aug 2026) and drifting wider into ECB hikes \u2014 argues against expressing Europe long via the periphery"
+  ],
+  "base_case": "Fiscal impulse keeps feeding orders and IP through Q4; ECB delivers one more hike and holds, which the market already prices. EWG/EFA mean-reverts toward the middle of its 52-week range as German earnings revisions turn positive. Ratio to ~0.426 (+5%).",
+  "base_case_probability": 0.55,
+  "bull_case": "Orders-to-production handoff plus defense procurement announcements drive a full re-rate; ECB signals pause after September; China stimulus stabilizes auto exports. Ratio toward 0.44+ (upper half of range, +8-9%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "ECB over-hikes into the impulse (hawkish September surprise) or China rolls over again, German PMIs relapse below 50 and the ratio makes a new 52-week low through 0.3954. Stop takes us out; thesis falsified by the data, not by drawdown pain.",
+  "bear_case_probability": 0.2,
+  "entry_ratio": 0.4055,
+  "target_ratio": 0.4258,
+  "stop_ratio": 0.3954,
+  "ratio_percentile": 17,
+  "target_return_pct": 5.0,
+  "stop_loss_pct": 2.5,
+  "conviction": 7,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "ECB hawkish surprise at the September meeting \u2014 over-hiking into the fiscal impulse compresses German multiples",
+    "China demand relapse hitting German autos, chemicals and capital goods \u2014 the structural short-Germany argument",
+    "EUR strength from ECB-Fed divergence squeezing exporter margins",
+    "Coalition friction slowing infrastructure-fund disbursement (OSW flagged diversion risk in the 2026 budget)",
+    "Hedge basis: EFA is Japan-heavy \u2014 a sharp Japan-specific rally widens the hedge leg against us"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-21",
+      "event": "Flash August PMIs (eurozone/Germany)",
+      "impact": "confirms or breaks the July inflection; a Germany sub-50 print is an early warning before the stop"
+    },
+    {
+      "date": "2026-08-25",
+      "event": "German Ifo business climate (August)",
+      "impact": "second read on the orders-led recovery"
+    },
+    {
+      "date": "2026-09-01",
+      "event": "Eurozone flash HICP (August)",
+      "impact": "drives September ECB pricing; hot print = bear-case fuel"
+    },
+    {
+      "date": "2026-09-10",
+      "event": "ECB Governing Council meeting (approximate)",
+      "impact": "rate decision and guidance \u2014 the single biggest catalyst risk in the window"
+    }
+  ]
+}
+
+Instructions:
+1. Evaluate this proposal from your perspective (macro/fundamental).
+2. Challenge with specific counter-evidence OR support with additional data.
+3. Use your tools to gather data that either confirms or contradicts the thesis.
+4. Output your response as JSON:
+{
+  "proposal_id": "macro_westerneurope_20260808t2156",
+  "agent_id": "fund_consdisc",
+  "round": 1,
+  "stance": "support" | "challenge" | "neutral",
+  "argument": "Your detailed response with specific data points",
+  "revised_conviction": null  // only if you were the originator
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

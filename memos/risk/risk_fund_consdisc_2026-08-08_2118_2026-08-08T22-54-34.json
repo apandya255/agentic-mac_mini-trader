@@ -1,0 +1,31 @@
+{
+  "proposal_id": "risk_fund_consdisc_2026-08-08_2118",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "All quantitative checks pass. Pairs trade structure limits factor exposure, conviction 6 allows 2\u20135% sizing within limits, sector concentration well under 25% cap, hedge valid (RSPD long offsets SBUX short in Consumer Discretionary sector).",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_factor_betas": {
+    "SPX": -0.08,
+    "VIX": -0.05,
+    "Growth_Value": -0.1,
+    "CL1": 0.0,
+    "DXY": 0.02,
+    "USGG10Yr": 0.01,
+    "Large_Small": -0.03,
+    "CDX_HY_5Y": -0.02,
+    "XAU": 0.0
+  },
+  "factor_breach": false,
+  "projected_gross_leverage": 0.1,
+  "max_allowed_size_pct": 0.05,
+  "risk_warnings": [
+    "Technical score 4/10 opposes trade \u2014 TA recommends wait for bounce to 104.50\u2013105.55 or breakdown below 101.44 with volume confirmation (not a limit breach, timing/execution concern for PM)",
+    "Pair-ratio data stamped 2026-07-28 (11 days stale) \u2014 refresh before entry",
+    "Valuation multiples from model knowledge due to endpoint rate-limit \u2014 fetch fresh forward P/E before entry",
+    "Catalyst window 4\u20138 weeks; early positive traffic print would move ratio against position; confirm pre-entry that guidance has not already re-rated the multiple"
+  ],
+  "modifications": null
+}

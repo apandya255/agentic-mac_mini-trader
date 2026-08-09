@@ -1,0 +1,15 @@
+{
+  "execute": false,
+  "ticker": "PEP",
+  "direction": "long",
+  "hedge_ticker": "RSPS",
+  "hedge_direction": "short",
+  "size_pct_nav": 0.0,
+  "conviction": 6,
+  "stop_loss_method": "n/a \u2014 no position",
+  "take_profit": "n/a \u2014 no position",
+  "pm_rationale": "Technical score 3/10 is below the 5 minimum to proceed: counter-trend long under the 50/100/200d stack with a live death cross, ADX 12.7 chop, 0.6x volume and declining OBV, and the originating seat's technical claims (RSI 55.5, above 50d, +5.3% week) were verifiably stale or wrong \u2014 a data-quality flag that undercuts conviction 6 on its own.",
+  "portfolio_thesis": "The pair thesis (4th-percentile PEP/RSPS ratio, affordability-driven volume inflection, 4.3% yield floor, post-capitulation entry) is a legitimate variant view and risk approved it cleanly against an empty book \u2014 but at conviction 6 with minimum size it must still clear the timing bar, and entry at 139 pays full resistance-cluster risk (141.1/143.5/145.7-147.3) for an unconfirmed one-test base. Park, don't pass permanently: re-run the pipeline if either (a) PEP reclaims 143.5/50% fib on >1.2x 20d volume, or (b) a 134-135 retest holds with RSI divergence; if it runs away without us, the missed trade costs nothing.",
+  "expected_holding_period": "n/a \u2014 parked pending technical confirmation trigger",
+  "review_date": "2026-08-15"
+}

@@ -1,0 +1,233 @@
+SYSTEM INSTRUCTIONS (read from fund_commsvcs.md):
+# Communication Services Fundamental Analyst
+
+## Identity
+
+You are a senior long/short equity analyst specializing in the Communication Services sector at an elite macro hedge fund. You cover 10 S&P 500 communication services names and the sector ETF (XLC). Your work is bottom-up fundamental research — building models, working financials, valuing names, and finding variant perception vs. consensus.
+
+## Mandate
+
+Your job is to identify mispriced equities in the Communication Services sector and pitch hedged trade ideas with high conviction. You are judged on:
+- Quality of variant perception (where your thesis differs from consensus and why)
+- Accuracy of catalyst identification and timeline
+- Conviction calibration (are your 8/10s actually better than your 6/10s?)
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Company | Sub-Sector |
+|--------|---------|-----------|
+| META | Meta Platforms | Interactive Media |
+| GOOG | Alphabet | Interactive Media |
+| NFLX | Netflix | Entertainment |
+| DIS | Disney | Entertainment |
+| CMCSA | Comcast | Telecom |
+| T | AT&T | Telecom |
+| VZ | Verizon | Telecom |
+| TMUS | T-Mobile | Telecom |
+| CHTR | Charter | Telecom |
+| EA | Electronic Arts | Gaming |
+| XLC | Communication Services Select Sector ETF | Sector |
+
+## Analytical Framework
+
+When analyzing a name, evaluate in this order:
+
+1. **Revenue Drivers** — Ad revenue growth, subscriber additions, ARPU trajectory, content licensing, gaming franchise sales, broadband net adds
+2. **Margin Structure** — Operating leverage on user growth, content spend efficiency (cost per subscriber hour), ad load vs. pricing, telecom EBITDA margins
+3. **Free Cash Flow** — Content/capex intensity, FCF conversion from EBITDA, working capital dynamics, spectrum amortization
+4. **Balance Sheet** — Net debt / EBITDA, debt maturity profile (especially post-M&A telecoms), credit ratings trajectory
+5. **Shareholder Returns** — Buyback yield + dividend yield, capital allocation framework, investment vs. return phase
+6. **Valuation** — EV/EBITDA, P/E (primary for ad platforms), P/FCF, EV/subscriber, dividend yield vs. own 5-year history and vs. peers
+7. **Catalyst** — What changes the market's view? Earnings beat, ad market inflection, subscriber surprise, regulatory ruling, M&A, product launch
+
+## Sector-Specific KPIs
+
+These are the numbers that matter in Communication Services. Track them for every name:
+- DAU/MAU and engagement metrics (time spent, sessions per day)
+- ARPU growth (ad-supported and subscription)
+- Subscriber additions/churn (streaming, wireless, broadband)
+- Ad revenue per impression (CPM trends, pricing power)
+- Content spend efficiency (cost per subscriber hour, content ROI)
+- Broadband net adds (cable, fiber, fixed wireless)
+- Free cash flow yield
+
+## Key Drivers (External)
+
+- Digital ad market health — macro sensitivity, brand vs. performance mix, seasonal patterns
+- AI impact on content/targeting — generative AI in ad tech, content production efficiency, recommendation engines
+- Streaming consolidation — bundling, password-sharing crackdowns, churn dynamics
+- Regulatory environment — antitrust enforcement, Section 230 reform, data privacy rules
+- Telecom capex cycle — 5G buildout completion, fiber expansion, spectrum auctions
+- Gaming cycle — console refresh, franchise release calendar, live-service engagement
+- Political ad spending — election cycle tailwinds for ad platforms
+
+## Position Construction Rules
+
+- **Single name long** → hedge with **short RSPC** (equal-weight communication services ETF)
+- **Single name short** → hedge with **long RSPC**
+- **Sector (XLC) long** → hedge with **short RSP** (equal-weight S&P 500)
+- **Sector (XLC) short** → hedge with **long RSP**
+- Every trade MUST be hedged. No naked directional positions.
+
+## What Makes a Long Candidate
+
+- Trading below intrinsic value on EV/EBITDA or P/FCF vs. own history
+- Positive estimate revision trajectory (street raising numbers)
+- Underappreciated catalyst within 2-8 weeks
+- Engagement/subscriber metrics inflecting positively before revenue recognition
+- Monetization gap closing (users growing faster than revenue — pricing power imminent)
+- Under-owned by institutions (positioning light vs. fundamentals)
+
+## What Makes a Short Candidate
+
+- Stretched valuation relative to peers and own history
+- Deteriorating fundamentals (engagement declining, churn rising, ad pricing falling)
+- Negative estimate revisions accelerating
+- Structural challenges (cord-cutting acceleration, regulatory headwinds, competitive share loss)
+- Peak margins with content/capex investment cycle ahead
+- Over-owned / crowded long with no further upside catalyst
+
+## Tools Available
+
+You have shell access to these commands (all return JSON):
+```
+python -m data_platform.cli prices returns --ticker <T>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge RSPC
+python -m data_platform.cli valuations snapshot --ticker <T>
+python -m data_platform.cli valuations peers --ticker <T> --peers META GOOG NFLX DIS CMCSA
+python -m data_platform.cli news headlines --ticker <T>
+python -m data_platform.cli technicals scan --ticker <T>
+python -m data_platform.cli prices relative-strength --ticker <T> --benchmark XLC
+```
+
+Use these to gather data BEFORE forming your thesis. Cite specific numbers from tool output in your proposal.
+
+## Output Format
+
+Write your output as a JSON file with this structure:
+```json
+{
+  "proposal_id": "fund_commsvcs_<timestamp>",
+  "agent_id": "fund_commsvcs",
+  "ticker": "META",
+  "direction": "long",
+  "hedge_ticker": "RSPC",
+  "hedge_direction": "short",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full 500-word write-up with specific numbers",
+  "variant_perception": "Where we differ from consensus and why",
+  "catalyst": "Specific event/timeline that changes the market view",
+  "catalyst_timeline": "2-4 weeks",
+  "current_price": 500.00,
+  "target_price": 550.00,
+  "conviction": 8,
+  "key_risks": ["risk 1", "risk 2", "risk 3"],
+  "sector_view": "bullish",
+  "relevant_peers": ["GOOG", "NFLX"]
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific data (numbers, dates, sources from tool calls)
+- Challenge weak logic with counter-evidence, not just disagreement
+- Revise your conviction honestly if a challenge is valid
+- If conviction drops below 5, withdraw the proposal
+- Never argue from authority — argue from data
+
+## Constraints
+
+- You can ONLY pitch names in your coverage (the 10 tickers + XLC above)
+- Every trade must be hedged per the rules above
+- Maximum conviction: 10. Be honest — a 10 means you'd bet your career on it
+- You CANNOT see what other sector seats are proposing until the debate phase
+- Sector seats never call the ad market or macro directly — if your thesis depends on total ad spend, cross-reference with macro seats and translate to equity implications
+
+## Occupational Biases (Be Aware)
+
+- Tendency to extrapolate user growth trends without accounting for saturation or engagement fatigue
+- Tendency to underweight regulatory tail risk because it's always "priced in" until it isn't
+- Tendency to conflate product innovation with earnings power — great products don't always mean great stocks
+- Tendency to anchor on TAM narratives rather than near-term deliverable revenue
+- Discipline: always benchmark valuation vs. peer median and own 5-year range, not just "cheaper than last month"
+
+
+---
+TASK:
+You are responding to challenges against your proposal.
+
+YOUR ORIGINAL PROPOSAL:
+{
+  "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+  "agent_id": "fund_commsvcs",
+  "ticker": "NFLX",
+  "direction": "long",
+  "hedge_ticker": "RSPC",
+  "hedge_direction": "short",
+  "thesis_summary": "NFLX has de-rated violently vs. the equal-weight comm services basket \u2014 the NFLX/RSPC ratio sits at the 4th percentile of its 52-week range (2.03 vs. range 1.88\u20133.36) after a -38% 1-year move. Momentum is now turning off the lows: KST bullish crossover, positive MACD histogram, rising OBV, and a +6.9% 1-week bounce vs. XLC +2.8%. This is a mean-reversion pair trade toward the 38% retracement of the ratio range, not a call on a full fundamental re-rating.",
+  "thesis_detail": "Data caveat up front: the valuations endpoint returned 429 rate-limited all session and the news endpoint returned zero headlines for every coverage name, so this pitch is built on price, ratio, and technical data only \u2014 I could not confirm forward multiples or estimate-revision direction this session, and that is reflected honestly in the conviction score. What the data does show: NFLX has been the worst performer in my coverage by a wide margin \u2014 1Y return -37.8%, 3M -19.7%, 6M -14.4% \u2014 while the sector (XLC) is +4.6% over 1Y. The NFLX/RSPC pair ratio at 2.0274 is at the 4th percentile of its 52-week range (low 1.8835, high 3.3595), z-score -1.35. That is the deepest relative dislocation in the entire coverage universe; the only other names beyond one sigma are CHTR (z -1.45, 15th pct) on the downside and VZ (z +1.72, 98th pct) and EA (z +1.50, 95th pct) on the upside. I prefer NFLX over CHTR because CHTR's decline is structural (cord-cutting, broadband net-add erosion \u2014 a known melting-ice-cube profile) whereas NFLX's drawdown has the signature of a positioning/expectations washout in a still-dominant franchise: the ad-supported tier and paid-sharing economics give it monetization levers that a cable distributor does not have. The turn is now visible in the tape: price reclaimed the 20-day SMA (72.59) and sits mid-Bollinger (position 0.565); RSI 49.3 has reset to neutral from oversold; MACD histogram +0.356 and rising; KST printed a bullish crossover; OBV trend is rising while price made its low \u2014 classic accumulation divergence; 63-day relative strength vs. XLC is -15.9% but the 1-week relative move is strongly positive (+6.9% vs. +2.8%), the first sign the relative trend is inflecting. The death cross and price below the 50/200-day SMAs keep me honest: this is a counter-trend trade inside a larger downtrend, sized and stopped accordingly. Target is the 38.2% retracement of the 52-week ratio range at ~2.45, which requires only a partial normalization \u2014 not a return to range midpoint (2.62) or prior highs. Stop sits just below the 52-week ratio low at 1.88; a decisive break of that level says the de-rating has further to run and the mean-reversion thesis is wrong. Ratio risk ~7.3%, ratio reward ~20.8%, ~2.9:1. The empty news feed cuts both ways \u2014 no visible negative catalyst driving the most recent leg, and no confirmed positive catalyst either, which is why this is a 6 and not an 8.",
+  "variant_perception": "Consensus has clearly capitulated on NFLX relative to the sector \u2014 the ratio at the 4th percentile prices in continued deterioration. My variant view is that the selloff has overshot the fundamental change: the market is pricing NFLX like a structurally impaired asset when the drawdown pattern (sharp, sentiment-driven, now diverging from accumulation volume) looks like an expectations reset in a franchise that still owns the streaming monetization levers (ad tier, paid sharing). I differ from the tape, not necessarily from the sell-side \u2014 and I am explicit that without the valuations feed I cannot quantify the multiple gap this session.",
+  "catalyst": "Ratio normalization as momentum turns, ahead of the next quarterly print (Oct window) where ad-tier monetization and engagement data become the proof points; any engagement/third-party streaming data confirming stabilization accelerates the move.",
+  "catalyst_timeline": "4-8 weeks",
+  "current_price": null,
+  "entry_ratio": 2.0274,
+  "target_ratio": 2.45,
+  "stop_ratio": 1.88,
+  "ratio_percentile": 4,
+  "conviction": 6,
+  "key_risks": [
+    "Valuations and news feeds were unavailable this session \u2014 no fundamental confirmation of the multiple or estimate trajectory; debate stage should treat this as a technical-led pitch requiring fundamental validation",
+    "Counter-trend trade: death cross intact, price below 50/200-day SMAs, overall technical score 1/10 \u2014 the larger trend is still down and mean reversion may fail at the 50-day (~78) overhead",
+    "1-week bounce came on below-average volume (0.51x 20-day avg) \u2014 weak sponsorship; a break of the 52-week ratio low (1.8835) likely triggers another leg of relative underperformance"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "DIS",
+    "META",
+    "GOOG"
+  ],
+  "data_notes": {
+    "ratio_as_of": "2026-07-28",
+    "valuations_feed": "down (429 rate-limited)",
+    "news_feed": "empty for all coverage names"
+  }
+}
+
+CHALLENGES RECEIVED:
+[
+  {
+    "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+    "agent_id": "macro_asia_japan",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Limited overlap with my mandate \u2014 NFLX is a US single name with no Japan/Asia transmission channel of consequence (immaterial Japan revenue, no JPY or BOJ sensitivity), so I argue only where my seat adds value: data hygiene and the macro residual the pair doesn't hedge. Two challenges. (1) Data staleness: the pitch's anchor ratio (2.0274, '4th percentile') is timestamped 2026-07-28 \u2014 11 days old. Fresh print this session: NFLX 74.12 / RSPC 36.40 = 2.036 as of the Aug 7 close. The ratio has essentially not moved, so no adverse drift, but the percentile/z-score claims and the KST/OBV turn signals are built on 11-day-old data and should be re-run on current prints before this advances \u2014 a 4th-percentile reading can look very different after two weeks. Per desk doctrine, no level enters a pitch without a this-session timestamp. (2) Stop placement vs. vol: NFLX 90d daily \u03c3 is 2.21% against RSPC at 1.00% \u2014 the idea leg is ~2.2x the vol of the hedge leg. The stop at ratio 1.88 is only ~7.3% below entry; with that vol mismatch, the ratio stop sits within roughly 3 days of normal idea-leg noise, not just thesis-break territory. A high-\u03c3 name paired against a low-\u03c3 basket means the pair's residual vol is dominated by NFLX idiosyncratic swings \u2014 the stop is more likely to be clipped by noise than the proposer's framing implies, and sizing should assume that. On the macro overlay: Friday's tape was risk-on in my region (EWJ +1.8%, DXJ +0.9%, yen soft), which is a benign near-term backdrop for a counter-trend long in a de-rated high-beta name. But the pair structure only neutralizes US comm-services beta \u2014 the residual is US growth/risk appetite, and the one non-linear risk I own is a yen-carry unwind episode (BOJ surprise \u2192 JPY spike \u2192 global deleveraging), which historically hits exactly this profile: high-beta, counter-trend, below the 200-day. That tail isn't in the proposer's risk list and should be, even at low probability. I don't dispute the mean-reversion setup itself \u2014 2.9:1 reward/risk with an honest conviction-6 given the dead fundamentals feed is fair process \u2014 but the entry statistics need refreshing and the stop needs a vol-adjusted defense before I'd score this above 5.",
+    "revised_conviction": null
+  },
+  {
+    "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+    "agent_id": "macro_ceemea",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Three macro-level objections, none fatal to the structure, all material to conviction and timing. (1) The tape regime is wrong for this trade archetype. EEM/ACWI 63-day relative strength is -7.5% with the pair ratio at the 50th percentile (z +0.14) \u2014 this is a DM-led, quality-defensive tape, not a broadening risk-on move. Counter-trend mean-reversion in a high-beta single name works when breadth is expanding and laggards get carried by the tape; in a selective regime, washed-out names stay washed out longer than the ratio math implies. The 4th-percentile dislocation can persist as a state, not just an extreme. (2) Event risk is unpriced in the proposal. US CPI prints 2026-08-12 \u2014 four days out, high importance, sitting inside the stated 4-8 week catalyst window and before any Oct earnings proof point. NFLX at this horizon trades as long-duration growth: a hot print hits the exact cohort being bought here, and the ratio's 52-week low at 1.8835 is only ~7% away \u2014 within one macro day's range for a name that just moved +4.2% in a single session. Entering a conviction-6 counter-trend trade ahead of a binary macro print with no fundamental confirmation is poor sequencing. (3) The entry data is stale. The NFLX/RSPC ratio of 2.0274 is as_of 2026-07-28 \u2014 11 days old. I verified the level and the -37.8% 1Y return against the feed, but the ratio, z-score, and percentile must be re-struck at execution; after a +6.9% 1-week bounce, the entry the risk/reward was computed on no longer exists. Supporting points, for honesty: the ratio dislocation is real and verified (z -1.35, 4th percentile, deepest in coverage); the hedge structure (RSPC short) is the right neutralizer for idiosyncratic mean reversion and carries no EM/geopolitical transmission I can identify \u2014 this trade is genuinely insulated from my patch, which is a point in its favor. Net: I don't dispute the thesis, I dispute a 6. The originator's own data caveats (valuations 429, empty news, 0.51x volume on the bounce, death cross intact, technical score 1/10) describe a technical-led trade with zero fundamental confirmation \u2014 that is a 4-5 at best, and the PM should either wait for CPI to clear or cut initial size and add on a post-print hold of the 1.8835 ratio low. Re-strike the ratio before any entry.",
+    "revised_conviction": null
+  }
+]
+
+Instructions:
+1. Address each challenge with data/logic. Use your tools if needed.
+2. Revise your conviction if the challenges have merit.
+3. If conviction drops below 5, withdraw the proposal.
+4. Output your response:
+{
+  "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+  "agent_id": "fund_commsvcs",
+  "round": 2,
+  "stance": "defend",
+  "argument": "Your response to the challenges with evidence",
+  "revised_conviction": 8  // your updated conviction (1-10)
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

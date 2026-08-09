@@ -1,0 +1,71 @@
+{
+  "proposal_id": "fund_energy_20260808_vlo_short",
+  "agent_id": "tech_equity",
+  "technical_score": 6,
+  "trend_alignment": "opposed",
+  "momentum_regime": "strong_trend_rolling_over",
+  "support_levels": [
+    291.49,
+    284.31,
+    273.21
+  ],
+  "resistance_levels": [
+    320.24,
+    326.64,
+    345.83
+  ],
+  "fibonacci_levels": {
+    "23.6%": 298.04,
+    "38.2%": 284.31,
+    "50%": 273.21,
+    "61.8%": 262.11
+  },
+  "suggested_entry": 298.26,
+  "suggested_stop_loss": 322.0,
+  "suggested_take_profit": 262.0,
+  "trailing_stop_method": "ATR-based 2x trail (ATR-14 = $10.45, trail $20.90 below peak); on the pair, trail the ratio 0.12 below its peak",
+  "active_signals": [
+    {
+      "signal": "pair_ratio_extreme",
+      "strength": "strong",
+      "note": "VLO/RSPG ratio 2.90, z-score +2.76, 97th percentile of 52w \u2014 textbook mean-reversion short setup on the pair"
+    },
+    {
+      "signal": "macd_bearish_cross",
+      "strength": "moderate",
+      "note": "MACD crossed below signal, histogram negative \u2014 near-term momentum rolling"
+    },
+    {
+      "signal": "price_pullback_started",
+      "strength": "moderate",
+      "note": "VLO -4.9% on the week, -1.9% today, off the 320 swing high"
+    },
+    {
+      "signal": "golden_cross",
+      "strength": "strong",
+      "note": "50 (267) > 200 (215), price above all major MAs \u2014 primary trend is UP and fights the short"
+    },
+    {
+      "signal": "adx_strong_uptrend",
+      "strength": "strong",
+      "note": "ADX 31.8 in an uptrend \u2014 this is a real trend, not noise; shorting it naked would be a fade against a confirmed trend"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "at_fib_support",
+      "note": "Price 298.26 sits directly on the 23.6% retrace (298.04) \u2014 first support; a bounce here is the live risk to immediate entry"
+    },
+    {
+      "signal": "volume_not_confirming",
+      "note": "Volume 0.4x 20-day avg \u2014 pullback so far is low-conviction profit-taking, not distribution; OBV still rising"
+    },
+    {
+      "signal": "single_name_vs_pair",
+      "note": "Score reflects the PAIR setup. Naked short would score 3-4; the RSPG hedge leg is what makes the technicals acceptable"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "now",
+  "timing_rationale": "The trade is a pair, and the pair technicals are the strongest element: ratio z-score +2.76 at the 97th percentile with MACD rolling over and a -4.9% week marking the first lower high attempt off 320. Single-name trend is firmly against the short (above all MAs, golden cross, ADX 31.8), which caps the score at 6 \u2014 but the hedge neutralizes most of that trend exposure. Price sitting on the 23.6% Fib at 298 argues for patience of a session or two at most; with the catalyst dated (Hormuz deal headline 'by Friday' risk window), the cost of waiting for a clean break of the 291.5 20-day SMA likely exceeds the entry improvement. Enter at market on the ratio; stop on a new ratio high (3.02, ~322 on price) \u2014 if the ratio makes a new 52-week high, the mean-reversion setup is invalidated by definition. First scale at the 38.2% retrace 284, main target 262 (61.8%) which aligns with the proposal's 250-260 zone."
+}

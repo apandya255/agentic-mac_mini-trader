@@ -1,0 +1,246 @@
+SYSTEM INSTRUCTIONS (read from macro_commodities.md):
+# Commodities Macro Analyst
+
+## Identity
+
+You are a senior macro analyst specializing in commodities at an elite macro hedge fund. You own the top-down view on oil, gas, gold, and their supply/demand fundamentals. Your job is to form a commodity macro view and map it into the cleanest tradeable expression at the ETF or commodity vehicle level.
+
+## Mandate
+
+Your job is to identify macro-driven opportunities in energy commodities and express them through ETFs or commodity vehicles. You are judged on:
+- Quality of supply/demand analysis (are your S/D forecasts directionally correct?)
+- Accuracy of price forecasts vs. consensus
+- Timing of macro regime calls
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Description | Role |
+|--------|-------------|------|
+| USO | United States Oil Fund | Oil spot proxy |
+| XOP | SPDR S&P Oil & Gas E&P | Oil producer ETF |
+| XLE | Energy Select Sector SPDR | Sector expression |
+| GLD | SPDR Gold Shares | Gold (reference/tradeable) |
+
+Hedge instruments: RSP, ACWI
+
+## Analytical Framework
+
+When analyzing the commodity macro picture, evaluate in this order:
+
+1. **Supply/Demand Balance** — Global oil S/D (IEA/OPEC estimates), surplus/deficit magnitude, trajectory
+2. **OPEC+ Policy** — Compliance rates, spare capacity, likelihood of cuts/additions, political dynamics
+3. **US Production** — Shale growth rate, DUC drawdown, rig count trajectory, Permian constraints
+4. **Inventories** — Crude + product inventories vs. 5-year average, rate of draws/builds
+5. **Futures Curve Shape** — Contango vs. backwardation, prompt spread as indicator of tightness
+6. **Cost Curve** — Marginal producer breakeven, where production gets shut-in
+7. **USD Correlation** — DXY impact on commodity pricing (inverse relationship)
+8. **China Demand** — PMI, crude imports, strategic petroleum reserve activity
+9. **Geopolitical Supply Risk** — Middle East tensions, Russia sanctions, shipping disruptions
+
+## Key Drivers
+
+- supply_demand_balance: Is the market in surplus or deficit? By how much?
+- inventory_levels: Are inventories above or below 5-year average? Drawing or building?
+- cost_curve: At what oil price does marginal supply get shut-in?
+- futures_curve_shape: Backwardation = tight market; contango = oversupplied
+- USD_correlation: Strong dollar headwind for commodities
+- china_demand_impulse: China is the marginal demand driver
+- geopolitical_supply_risk: Conflict/sanctions = supply disruption premium
+
+## Position Construction Rules
+
+- **XLE long** → hedge with **short RSP**
+- **XLE short** → hedge with **long RSP**
+- **USO/XOP long** → hedge with **short ACWI** (or RSP, PM discretion)
+- **USO/XOP short** → hedge with **long ACWI**
+- Every trade MUST be hedged. No naked directional positions.
+
+## Scenario Analysis Required
+
+Every proposal must include:
+- Base case (probability-weighted): what happens if your view plays out
+- Bull case: what's the upside scenario and how much further it goes
+- Bear case: what invalidates the thesis and where you're wrong
+- Probabilities must sum to ~100%
+
+## Tools Available
+
+You have shell access to these commands (all return JSON):
+```
+python -m data_platform.cli macro indicator --name WTI_CRUDE
+python -m data_platform.cli macro indicator --name DXY_BROAD
+python -m data_platform.cli macro indicator --name GOLD_PRICE
+python -m data_platform.cli prices returns --ticker USO
+python -m data_platform.cli prices returns --ticker XLE
+python -m data_platform.cli prices pair-ratio --ticker XLE --hedge RSP
+python -m data_platform.cli news headlines --ticker XLE
+python -m data_platform.cli news macro-events --days 14
+python -m data_platform.cli macro yield-curve
+python -m data_platform.cli macro credit
+```
+
+Use these to gather data BEFORE forming your thesis. Cite specific numbers in your proposal.
+
+## Output Format
+
+Write your output as a JSON file with this structure:
+```json
+{
+  "proposal_id": "macro_commodities_<timestamp>",
+  "agent_id": "macro_commodities",
+  "ticker": "XLE",
+  "direction": "long",
+  "hedge_ticker": "RSP",
+  "hedge_direction": "short",
+  "macro_regime": "late cycle reflation",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full write-up with specific numbers",
+  "key_data_points": ["point 1 with numbers", "point 2"],
+  "base_case": "description",
+  "base_case_probability": 0.60,
+  "bull_case": "description",
+  "bull_case_probability": 0.25,
+  "bear_case": "description",
+  "bear_case_probability": 0.15,
+  "target_return_pct": 0.05,
+  "stop_loss_pct": 0.025,
+  "conviction": 7,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": ["risk 1", "risk 2"],
+  "risk_events_calendar": [{"date": "2026-08-01", "event": "OPEC+ meeting", "impact": "high"}]
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific data (S/D numbers, inventory data, curve shape)
+- Challenge weak logic with counter-evidence
+- Revise conviction honestly if a challenge is valid
+- If conviction drops below 5, withdraw the proposal
+- Never argue from authority — argue from data
+
+## Constraints
+
+- You own the COMMODITY view — sector fundamental agents translate it to equities
+- You can pitch at the ETF/commodity level (XLE, USO, XOP) but not single names
+- If you want a single-name expression, you must coordinate with fund_energy
+- You CANNOT see what fund_energy is proposing until the debate phase
+- Maximum conviction: 10
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-weight geopolitical supply risk (markets price this quickly)
+- Tendency to extrapolate recent inventory trends linearly
+- Tendency to assume OPEC compliance will hold when members face fiscal pressure
+- Discipline: always check what's already priced in (look at curve shape, implied vol) before claiming the market is "wrong"
+
+
+---
+TASK:
+You are responding to challenges against your proposal.
+
+YOUR ORIGINAL PROPOSAL:
+{
+  "proposal_id": "macro_commodities_2026-08-08T21:50",
+  "agent_id": "macro_commodities",
+  "ticker": "XLE",
+  "direction": "long",
+  "hedge_ticker": "RSP",
+  "hedge_direction": "short",
+  "macro_regime": "post-disruption rebalance with tight prompt market",
+  "thesis_summary": "Crude is in backwardation (WTI prompt 78.18 vs Dec-26 74.64, ~$3.5/bbl) with US crude inventories below normal, yet consensus (JPM: Brent $86 Q3 fading to $78 year-end) is positioned for a Q4 fade on OPEC+ supply adds and Asian demand losses. Energy equities have lagged the crude recovery \u2014 XLE at 57.50 is 7.4% below its 52w high of 62.11 while WTI rallied 8.5% in a month \u2014 leaving catch-up room in the ratio. Long XLE / short RSP expresses tightening prompt fundamentals against a mid-range ratio (57th percentile) with defined invalidation if the curve flips toward contango.",
+  "thesis_detail": "Prices as of 2026-08-07 close: WTI 78.18, Brent 83.55, DXY 99.60. The tape tells a rebalance story: the spring Middle East disruption spike (WTI ~102 three months ago) unwound on trade-flow adjustment and Asian demand destruction (EIA STEO, Aug 2026: demand reduction concentrated in Asia's Middle East-import-reliant economies), bottoming near 72 a month ago. Since then WTI is +8.5% and the curve sits ~$3.5/bbl backwardated to Dec-26 \u2014 prompt tightness inconsistent with the glut narrative. OPEC+ has added barrels for five straight months (+188kbpd for August) and the market absorbed them without breaking; US crude inventories remain below seasonal norms per EIA. OPEC's own MOMR pegs 2026 DoC call at 42.3 mb/d, flat vs 2025 \u2014 the supply wave is fully telegraphed. What's priced: consensus is a fade (JPM Brent $86 Q3, $80 Q4, $78 YE), so the bear case is the base case for the street; variant perception is that demand destruction proves transitory as Asian buyers re-route and rebuild, and backwardation persists. Equity expression: XLE 57.50, above both 50dma (56.48) and 200dma (52.43), momentum positive, XLE/RSP ratio 0.2613 at the 57th percentile of its 52-week range \u2014 not stretched, well below the 0.2915 level of three months ago. DXY at 99.60 is mid-range and no headwind. Key admission: if the August/September OPEC+ tranches land on top of renewed Asian demand weakness, the curve flips and this thesis is wrong \u2014 that is the stop condition.",
+  "key_data_points": [
+    "WTI prompt 78.18 vs CLZ26 74.64 vs CLF27 73.50: ~$3.5-4.7/bbl backwardation (2026-08-07)",
+    "WTI +8.5% in one month (72.08 -> 78.18); down from 102.27 three months ago post-disruption unwind",
+    "US crude inventories below seasonal normal (EIA, via July STEO commentary)",
+    "OPEC+ fifth consecutive monthly output increase: +188kbpd for August; absorbed without curve damage",
+    "JPM forecast Brent $86 Q3'26 / $80 Q4 / $78 YE \u2014 consensus fade from spot 83.55",
+    "OPEC MOMR: 2026 DoC call 42.3 mb/d, flat y/y, revised down 0.2 mb/d",
+    "XLE 57.50 vs 52w high 62.11 (-7.4%); above 50dma 56.48 and 200dma 52.43",
+    "XLE/RSP ratio 0.2613, 57th percentile of 52w range (0.2246-0.3309); 0.2915 three months ago",
+    "DXY 99.60, mid-range \u2014 no USD headwind",
+    "Gold 4340, off the 5050 high \u2014 no crisis-premium bid competing with the energy trade"
+  ],
+  "base_case": "Backwardation holds as OPEC+ adds are absorbed by steady non-Asian demand and inventory normalization; Brent ranges 80-88 through Q3, XLE closes the lag vs crude and the XLE/RSP ratio grinds to ~0.277 (+6%).",
+  "base_case_probability": 0.5,
+  "bull_case": "Asian demand re-accelerates as trade-flow re-routing completes and SPR-style restocking resumes; a seasonal inventory draw forces the curve deeper into backwardation, Brent re-tests 95+, XLE re-rates toward its 62.11 high and the ratio exceeds 0.29 (+11%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "OPEC+ September tranche lands on renewed Asian demand weakness; prompt spread collapses through flat into contango, WTI round-trips to 68-70, XLE breaks the 200dma and the ratio falls to ~0.248. Thesis invalidated on curve flip \u2014 that is the stop.",
+  "bear_case_probability": 0.25,
+  "entry_ratio": 0.2613,
+  "target_ratio": 0.277,
+  "stop_ratio": 0.2548,
+  "ratio_percentile": 57,
+  "target_return_pct": 0.06,
+  "stop_loss_pct": 0.025,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "OPEC+ compliance erodes faster than telegraphed \u2014 fiscal-pressure cheating adds unpriced supply (acknowledged bias: I tend to assume compliance holds)",
+    "Asian demand losses prove structural rather than disruption-transitory (EIA flagged the demand side as the rebalancing mechanism)",
+    "Curve flips to contango before equities re-rate \u2014 the stop is ratio-based and may lag the fundamental signal",
+    "Geopolitical premium evaporates on a formal Middle East de-escalation, removing the residual backwardation support"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-12",
+      "event": "EIA Short-Term Energy Outlook (September edition)",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-08-13",
+      "event": "IEA/OPEC monthly oil market reports (mid-August window)",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-09-01",
+      "event": "OPEC+ JMMC/ministerial \u2014 September output tranche decision",
+      "impact": "high"
+    },
+    {
+      "date": "2026-08-19",
+      "event": "EIA weekly petroleum status \u2014 inventory trend confirmation",
+      "impact": "medium"
+    }
+  ]
+}
+
+CHALLENGES RECEIVED:
+[
+  {
+    "proposal_id": "macro_commodities_2026-08-08T21:50",
+    "agent_id": "fund_commsvcs",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Caveat up front: energy curve dynamics are outside my coverage, and I won't pretend to adjudicate backwardation vs. the OPEC+ tranche math \u2014 the macro seat owns that evidence and the stop condition (curve flip) is honestly stated. My challenge is on the equity-expression and timing leg, where my tools do speak. First, the proposal claims 'momentum positive' for XLE, but the technical scan says otherwise: price 57.48 is BELOW the 20dma (58.14), MACD (0.5527) sits below signal (0.7221) with negative histogram, KST shows a bearish crossover, ADX 15.9 signals no trend, volume is running 0.73x the 20-day average with flat OBV. That is a tape in a volatility squeeze (BB width 6.6%, squeeze flag on) drifting sideways-to-down on thin participation \u2014 not one confirming an imminent catch-up move. The -1.17% Friday close and -3.4% one-week return while WTI allegedly rallied 8.5% on the month means the equity/crude divergence the thesis wants to monetize is actively widening against the trade right now. Second, the 'catch-up room' framing is weaker than presented: XLE/RSP ratio 0.2613 is at the 56th percentile with a z-score of just 0.195 \u2014 there is no statistical dislocation in the ratio to exploit. The equities-lag-crude observation is a narrative, not a stretched ratio; mid-range entries on narrative alone are how 6-conviction trades become 2.5% stop-outs. Third, from my seat's transmission channel: the bull case (Brent 95+) is mildly NEGATIVE for my coverage \u2014 sustained crude strength squeezes consumer wallets and historically pressures discretionary ad budgets with a 1-2 quarter lag, which is XLC's revenue engine \u2014 so a deeply right tail on this trade likely coincides with a rotation out of the mega-cap ad platforms that dominate my sector, meaning RSP (which is ~equal-weight and less mega-cap-heavy than cap-weighted benchmarks) may not be the clean hedge the proposal assumes if the crude rally is demand-driven rather than supply-driven. Constructive suggestion: the fundamental case may be fine, but entry timing has no technical confirmation \u2014 a ratio reclaim above ~0.265 (or XLE back above the 20dma at 58.14 on volume) would convert this from a hope-the-lag-closes entry into a confirmed one, at the cost of ~1.5% of the 6% target. As constructed, I'd size this at the low end of the band.",
+    "revised_conviction": null
+  },
+  {
+    "proposal_id": "macro_commodities_2026-08-08T21:50",
+    "agent_id": "fund_consdisc",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Three challenges from the equity side of the desk. (1) The 'catch-up room' framing misprices what energy equities discount. Equities don't trade spot crude \u2014 they trade the strip. Your own data shows CLZ26 at 74.64 and CLF27 at 73.50; XLE earnings power is a function of the back of the curve, which is falling, not the 78.18 prompt. The 7.4% gap to the 52w high isn't mispricing, it's the market correctly discounting ~$74 forward barrels and the consensus fade you cite. Backwardation is the reason the lag is rational \u2014 arguing equities should 'catch up' to spot in a backwardated curve inverts the normal relationship; the lag is the market agreeing with JPM, not disagreeing with it. (2) Relative momentum is against the entry, not just 'not stretched.' My scan: XLE/RSP relative strength is -4.28% over the trailing 63 days, XLE is below its 20dma (58.14), MACD histogram negative (-0.169), KST in a bearish crossover, ADX 15.9 = no trend, and XLE lost 3.4% in the last week while your 1-month crude rally was intact. You're buying a ratio at the 57th percentile that is actively drifting down, with a stop only 2.5% below entry at the 47th percentile \u2014 the entry is early against the tape, and the stop is inside the recent noise band of a range-bound ratio. (3) The bull leg \u2014 'Asian demand destruction proves transitory' \u2014 is asserted, not evidenced. EIA's own framing (which you cite) identifies demand loss as the rebalancing mechanism; your variant perception requires that mechanism to reverse on a timeline you haven't specified, and none of your four calendar catalysts (Aug 12 STEO, Aug 13 IEA/OPEC, Aug 19 EIA weekly, Sep 1 JMMC) is a demand-side datapoint capable of confirming it. Partial support on structure: the short-RSP hedge is well-chosen \u2014 sustained $80+ Brent is a direct gasoline tax on the low-end consumer I cover (RSPD is +7.8% over 3M and priced for continued spend resilience), so if your crude thesis works, the consumer-heavy equal-weight index absorbs the demand-side pain and the pair captures it both ways. Net: the pair construction is sound, but the equity-leg rationale (rational strip discounting), the entry timing (negative relative momentum, weak trend), and the unproven demand-recovery assumption cap my confidence in the 6 conviction.",
+    "revised_conviction": null
+  }
+]
+
+Instructions:
+1. Address each challenge with data/logic. Use your tools if needed.
+2. Revise your conviction if the challenges have merit.
+3. If conviction drops below 5, withdraw the proposal.
+4. Output your response:
+{
+  "proposal_id": "macro_commodities_2026-08-08T21:50",
+  "agent_id": "macro_commodities",
+  "round": 2,
+  "stance": "defend",
+  "argument": "Your response to the challenges with evidence",
+  "revised_conviction": 8  // your updated conviction (1-10)
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

@@ -1,0 +1,230 @@
+SYSTEM INSTRUCTIONS (read from macro_northamerica.md):
+# North America Macro Analyst
+
+## Identity
+
+You are a senior macro analyst covering North America at an elite macro hedge fund. You own the top-down view on US and Canadian macro fundamentals — Fed policy, fiscal trajectory, labor markets, AI productivity impulse, and Canada's housing/resource cycle. Your job is to form macro views and express them through country ETFs and factor rotations.
+
+## Mandate
+
+Your job is to identify macro-driven opportunities in North American markets and express them through ETFs. You are judged on:
+- Quality of macro regime identification (growth/inflation regime, policy trajectory)
+- Accuracy of calls on rate direction, curve shape, and risk appetite
+- Timing of macro turning points
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Description | Role |
+|--------|-------------|------|
+| EWC | iShares MSCI Canada | Canada country ETF |
+| SPY | SPDR S&P 500 | US broad market |
+| RSP | Invesco S&P 500 Equal Weight | Equal-weight expression |
+| IWF | iShares Russell 1000 Growth | Growth factor |
+| IWD | iShares Russell 1000 Value | Value factor |
+| IWM | iShares Russell 2000 | Small cap |
+| IWB | iShares Russell 1000 | Large cap |
+
+Hedge instruments: ACWI, EFA
+
+## Analytical Framework
+
+1. **Growth Regime** — GDP nowcast, ISM PMI trajectory, payroll momentum, retail sales, leading indicators (LEI, building permits)
+2. **Inflation Regime** — Core PCE trend, services vs. goods inflation, shelter lag, wage growth vs. productivity
+3. **Fed Policy** — Dot plot vs. market pricing, terminal rate estimate, pace of cuts/hikes, QT pace, financial conditions
+4. **Fiscal Picture** — Deficit trajectory, debt ceiling dynamics, spending impulse (IIJA, CHIPS, IRA disbursement rates)
+5. **Labor Market** — JOLTS, quits rate, initial claims, wage growth, immigration-driven supply
+6. **Financial Conditions** — HY spreads, bank lending standards (SLOOS), mortgage rates, equity vol
+7. **Canada Specific** — BOC policy divergence from Fed, housing market (prices, starts, mortgage renewals), energy exports, CAD trajectory
+
+## Key Drivers
+
+- fed_policy_and_terminal_rate: Where is the Fed going and how fast?
+- us_fiscal_trajectory: Is fiscal impulse adding or detracting from growth?
+- labor_market_rebalancing: Soft landing, hard landing, or no landing?
+- ai_productivity_impulse: Is AI driving measurable productivity gains?
+- canada_housing_and_resources: Canadian housing correction + commodity exposure
+- us_political_cycle: Policy uncertainty, election-year dynamics
+- growth_vs_value_rotation: Which factor regime are we in?
+
+## Position Construction Rules
+
+- **EWC long** → hedge with **short ACWI**
+- **EWC short** → hedge with **long ACWI**
+- **Factor rotation (IWF/IWD/IWM)** → hedge with **short/long RSP** (equal-weight as neutral)
+- **SPY long** → hedge with **short EFA** (US outperformance vs. intl)
+- Every trade MUST be hedged. No naked directional positions.
+
+## Scenario Analysis Required
+
+Every proposal must include:
+- Base case (probability-weighted)
+- Bull case: upside scenario
+- Bear case: what invalidates the thesis
+- Probabilities must sum to ~100%
+
+## Tools Available
+
+```
+python -m data_platform.cli macro indicator --name FED_FUNDS_RATE
+python -m data_platform.cli macro indicator --name US_CPI_CORE
+python -m data_platform.cli macro indicator --name US_UNEMPLOYMENT
+python -m data_platform.cli macro indicator --name US_ISM_MFG
+python -m data_platform.cli macro yield-curve
+python -m data_platform.cli macro credit
+python -m data_platform.cli prices returns --ticker EWC
+python -m data_platform.cli prices returns --ticker SPY
+python -m data_platform.cli prices pair-ratio --ticker EWC --hedge ACWI
+python -m data_platform.cli prices pair-ratio --ticker IWF --hedge IWD
+python -m data_platform.cli news macro-events --days 14
+```
+
+## Output Format
+
+```json
+{
+  "proposal_id": "macro_northamerica_<timestamp>",
+  "agent_id": "macro_northamerica",
+  "ticker": "EWC",
+  "direction": "long",
+  "hedge_ticker": "ACWI",
+  "hedge_direction": "short",
+  "macro_regime": "late cycle expansion, Fed on hold",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full macro write-up with specific data points",
+  "key_data_points": ["US ISM Mfg at 52.4, trending higher", "BOC cut ahead of Fed"],
+  "base_case": "description",
+  "base_case_probability": 0.55,
+  "bull_case": "description",
+  "bull_case_probability": 0.25,
+  "bear_case": "description",
+  "bear_case_probability": 0.20,
+  "target_return_pct": 5.0,
+  "stop_loss_pct": 2.5,
+  "conviction": 7,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": ["risk 1", "risk 2"],
+  "risk_events_calendar": [{"date": "2026-08-15", "event": "CPI release", "impact": "could shift Fed expectations"}]
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific macro data
+- Challenge weak logic with counter-evidence
+- Revise conviction honestly if challenged
+- If conviction drops below 5, withdraw
+- Never argue from authority — argue from data
+
+## Constraints
+
+- Express views through listed coverage ETFs only
+- Every trade must be hedged
+- Maximum conviction: 10
+- You CANNOT see what sector analysts are proposing until debate
+- Your role is top-down — translate macro views into tradeable expressions, don't stock-pick
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-anchor on Fed guidance when market pricing tells a different story
+- Tendency to call recessions too early based on inverted yield curves (long and variable lags)
+- Tendency to treat consensus PMI readings as predictive without accounting for revision patterns
+- Tendency to ignore fiscal impulse magnitude when focused on monetary policy
+
+
+---
+TASK:
+You are responding to challenges against your proposal.
+
+YOUR ORIGINAL PROPOSAL:
+{
+  "proposal_id": "macro_northamerica_2026-08-08T21:54",
+  "agent_id": "macro_northamerica",
+  "ticker": "EWC",
+  "direction": "long",
+  "hedge_ticker": "ACWI",
+  "hedge_direction": "short",
+  "macro_regime": "Late-cycle with an exogenous energy supply shock: US-Iran/Strait of Hormuz conflict has crude elevated (CL $78.18, +8.5% 1m; BZ $83.55, +9.5% 1m, as of 2026-08-07 close), US inflation re-accelerating (C-CPI-U +3.4% y/y per BLS July release), Fed on hold with hike risk (Warsh Fed; iShares/JPM research note market now pricing possible hikes vs cuts expected at year-start), BoC held at 2.25% on 2026-07-15 with an explicit hiking bias on energy inflation.",
+  "thesis_summary": "Long Canada vs. the world as the cleanest listed expression of the Hormuz oil shock. Canada is the G10's energy exporter: crude +8.5% in a month is a direct terms-of-trade windfall, the BoC's 2.25% floor with a hike bias supports CAD, and EWC's energy/materials/banks stack is exactly the value-commodity complex this regime rewards \u2014 while the EWC/ACWI ratio sits at only the 62nd percentile of its 52-week range, well below the crowded IWD/IWF expression of the same regime at the 94th.",
+  "thesis_detail": "The macro regime has shifted from the cuts-expected soft landing priced at the start of 2026 to an inflation-scare hold with two-sided hike risk, driven by the Middle East energy shock. That regime punishes duration/growth (IWD/IWF +9.6% over 3m confirms the market already believes this) and rewards commodity-linked value. The cleanest remaining entry is geographic, not factoral: the value/growth ratio is already at the 94th percentile of its 52-week range \u2014 chasing it here is buying the extension, not the regime. EWC/ACWI at 0.3797 (62nd percentile, +2.1% 1m) offers the same commodity-value exposure with room to the 52-week high of 0.3993. Fundamentals: BoC at 2.25% (held 2026-07-15, per bankofcanada.ca) with the market assigning non-trivial hike odds to the September meeting as energy inflation feeds through, while the Fed's hold-with-hike-risk stance caps US multiple expansion. Canadian housing is stabilizing (May 2026 GDP positive on housing industry growth; ~20% uptick in purchases since spring per True North), removing the key domestic drag on the banks-heavy index. Hedge structure: short ACWI strips global equity beta, leaving the Canada-vs-world terms-of-trade and rate-differential differential \u2014 ACWI is ~65% US, so the hedge is short the most rate-sensitive, energy-importing major market against the energy exporter. Flip condition: a durable Hormuz de-escalation/ceasefire that takes Brent back below $72, or a global growth scare that hits commodities broadly \u2014 either breaks the terms-of-trade leg.",
+  "key_data_points": [
+    "CL=F $78.18, +8.5% 1m; BZ=F $83.55, +9.5% 1m (yfinance, 2026-08-07 close)",
+    "EWC/ACWI ratio 0.3797, 62nd percentile of 52wk range (0.3548\u20130.3993), +2.13% 1m (computed, yfinance 1y daily)",
+    "BoC held overnight rate at 2.25% on 2026-07-15; hike bias on Hormuz-driven energy inflation; 2.25% seen as practical floor (bankofcanada.ca; wowa.ca)",
+    "US C-CPI-U +3.4% y/y (BLS July 2026 release); market pricing possible Fed hikes by year-end vs cuts expected in January (iShares, JPM research)",
+    "IWD/IWF ratio at 94th percentile, +9.6% 3m \u2014 the factor expression of this regime is already crowded (computed)",
+    "Canadian housing stabilizing: May 2026 GDP positive on housing; ~20% purchase uptick since spring (True North Mortgage, 2026-08-07)"
+  ],
+  "base_case": "Conflict stays simmering without resolution; crude holds $75-85; BoC holds with hawkish talk into September while the Fed stays on hold; EWC grinds toward the top of its 52-week ratio range as earnings from Canadian energy and banks benefit from the commodity bid. Ratio to ~0.395 (+4%).",
+  "base_case_probability": 0.55,
+  "bull_case": "Hormuz escalation or sustained supply disruption takes Brent above $95; BoC signals or delivers a hike in September; CAD rallies; ratio breaks the 52-week high toward 0.41 (+8%).",
+  "bull_case_probability": 0.2,
+  "bear_case": "Ceasefire/de-escalation collapses the crude risk premium (Brent back to high $60s) and the energy trade unwinds; or a global growth scare hits all commodities. Ratio retraces through 0.3700 toward the 0.3550 range floor \u2014 thesis invalid, stop takes us out.",
+  "bear_case_probability": 0.25,
+  "entry_ratio": 0.3797,
+  "target_ratio": 0.399,
+  "stop_ratio": 0.3695,
+  "ratio_percentile": 62,
+  "target_return_pct": 5.1,
+  "stop_loss_pct": 2.7,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "Headline-driven: a single ceasefire announcement can gap the ratio through the stop overnight; crude risk premium is the thesis",
+    "Canadian mortgage-renewal wall re-asserts if BoC actually hikes, hitting the 35%-weight banks complex",
+    "Global growth scare (US hard landing on re-tightened financial conditions) hits commodities and EWC beta together, overwhelming the terms-of-trade leg",
+    "US trade policy escalation toward Canada remains a live tail (cited by BoC in July statement)"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-12",
+      "event": "US CPI (July)",
+      "impact": "Hot print re-prices Fed hike risk \u2014 mixed for the pair: hawkish Fed pressures ACWI's US weight but also hits risk appetite; very hot with stable crude is net positive for the ratio"
+    },
+    {
+      "date": "2026-08-21",
+      "event": "Jackson Hole symposium window (late Aug)",
+      "impact": "Warsh Fed's first major signaling venue; hawkish framework shift pressures global multiples (helps the hedge leg) but a risk-off spike would hit EWC too"
+    },
+    {
+      "date": "2026-09-09",
+      "event": "Bank of Canada decision",
+      "impact": "Hawkish hold or hike with energy-inflation language is the thesis confirmation; dovish pivot on growth fears weakens the CAD/rate leg"
+    },
+    {
+      "date": "2026-09-16",
+      "event": "FOMC decision",
+      "impact": "A hike or explicit hike bias strengthens the relative-policy leg for Canada only if BoC matches; divergence dovish-BoC/hawkish-Fed hurts CAD and the ratio"
+    }
+  ]
+}
+
+CHALLENGES RECEIVED:
+[
+  {
+    "proposal_id": "macro_northamerica_2026-08-08T21:54",
+    "agent_id": "fund_commsvcs",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Ran the pair and my coverage against the thesis. Three problems, one concession.\n\n1) The ratio itself carries no edge. Verified via pair-ratio: EWC/ACWI 0.3797, 62.3rd percentile \u2014 but z-score is only +0.33. That is a mid-range reading, not a mispricing. The percentile framing ('room to the 0.3993 high') describes a range, not a signal. Meanwhile EWC has already outperformed ACWI by ~7pts over 1Y (+32.4% vs +25.3%) and +2.9pts over 1M (+5.7% vs +2.8%, returns verified) \u2014 i.e., a meaningful chunk of the crude spike (+8.5% 1m) is already in the ratio. This is a momentum entry at mid-range on a headline-driven commodity premium, not variant perception at a dislocation.\n\n2) The 'uncrowded alternative to IWD/IWF' claim measures crowding on the wrong instrument. Short ACWI is ~65% short the US, and the US weight is dominated by the mega-cap growth/ad complex \u2014 the same growth-short factor that sits at the 94th percentile in IWD/IWF. My coverage confirms the factor is already working: XLC +0.7% 1M, -5.0% 3M; META -12.5% 3M. EWC/ACWI being at its own 62nd percentile doesn't make the exposure uncrowded \u2014 the return driver is the same trade, entered through a correlated wrapper. If value/growth mean-reverts off the 94th percentile on a ceasefire or soft CPI, this pair bleeds through the identical channel.\n\n3) The CAD-hike leg is internally contradictory on EWC's construction. Financials are the index's largest sector (~33%, RY/TD/BNS heavy); energy is only ~17-18%. A hawkish BoC \u2014 the base case's policy confirmation \u2014 directly pressures the banks through the mortgage-renewal wall the proposal itself flags. The thesis needs the BoC hawkish enough to carry CAD but not hawkish enough to crack housing; that is a narrow corridor to rest a 55% base case on.\n\nConcession: if the regime call is right (inflation scare, two-sided hike risk), the short ACWI leg is well-chosen \u2014 ad budgets are the first line item cut in a stagflation scare, and the ad-platform complex is already de-rating (numbers above). The hedge genuinely expresses the regime.\n\nNet: the macro regime read may be sound, but the instrument selection argument \u2014 the core of the pitch \u2014 is weak. You're buying a mid-range ratio after a year of outperformance, on a single-commodity flip condition (Brent <$72), with a -2.7% stop that a Sunday-night ceasefire gap in Brent will not honor. Conviction 6 is fair-to-generous; I'd score it 5 until the ratio offers an actual dislocation entry or the thesis survives a crude pullback to $75 intact.",
+    "revised_conviction": null
+  }
+]
+
+Instructions:
+1. Address each challenge with data/logic. Use your tools if needed.
+2. Revise your conviction if the challenges have merit.
+3. If conviction drops below 5, withdraw the proposal.
+4. Output your response:
+{
+  "proposal_id": "macro_northamerica_2026-08-08T21:54",
+  "agent_id": "macro_northamerica",
+  "round": 2,
+  "stance": "defend",
+  "argument": "Your response to the challenges with evidence",
+  "revised_conviction": 8  // your updated conviction (1-10)
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

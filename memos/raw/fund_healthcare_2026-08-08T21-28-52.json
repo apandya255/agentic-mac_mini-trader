@@ -1,0 +1,32 @@
+{
+  "proposal_id": "fund_healthcare_20260808_2128",
+  "agent_id": "fund_healthcare",
+  "ticker": "ISRG",
+  "direction": "short",
+  "hedge_ticker": "RSPH",
+  "hedge_direction": "long",
+  "thesis_summary": "Short ISRG / long RSPH. ISRG is the worst performer in coverage (-26.2% 1Y vs XLV +29.2%, relative strength -37.6% over 63 days) in a confirmed, strong downtrend (technical score 1/10, death cross, price below all major MAs, ADX 25.8, falling OBV). The ISRG/RSPH ratio has collapsed to 10.29 from a 52w high of 19.02, and we see the de-rating continuing as robotic-surgery competition (Medtronic Hugo, J&J Ottava) and hospital capital-budget pressure erode the premium multiple that still embeds monopoly-era growth.",
+  "thesis_detail": "ISRG closed 365.73 vs RSPH 35.54, ratio 10.29 \u2014 2nd percentile of its 52-week range (low 9.88, high 19.02), z-score -2.59 as of the 2026-07-28 pair snapshot, and the ratio has made fresh lows since. The trend evidence is unambiguous: price below the 20/50/200-day SMAs (383.95 / 404.34 / 483.14), death cross in force, MACD -17.87 and below its signal, ADX 25.8 confirming a strong directional trend, OBV falling with accumulation/distribution at -585M and volume running only 0.55x the 20-day average \u2014 a grind lower on distribution, not capitulation. RSI at 44 is neutral, not washed out, leaving room for further downside before any mean-reversion bid. Fundamentally, the short rests on three pillars: (1) competitive regime change \u2014 Medtronic's Hugo and J&J's Ottava are converting ISRG's first-mover monopoly into an oligopoly, pressuring system placements and pricing; (2) hospital capital budgets remain constrained, and the -9.6% 1M / -22.4% 3M price action into that backdrop suggests procedure-volume and placement guidance risk to the downside; (3) even after the drawdown, ISRG remains a premium-multiple medtech name, so the de-rating is a valuation compression story, not just sentiment. Note a data gap: the valuations module was rate-limited (429) across all tickers this session and the news tool returned zero ISRG headlines, so exact forward P/E vs peers is unverified \u2014 the thesis leans on price/trend/relative-strength data that did verify. The hedge is long RSPH (equal-weight healthcare, +29.6% 1Y), which neutralizes the broad sector bid that has lifted even weak names like PFE (+2.7% 1W).",
+  "variant_perception": "Consensus still treats ISRG as a core quality compounder buying-the-dip candidate at a 2nd-percentile relative valuation. Our variant view: the ratio collapse is not an overdone dislocation but the early innings of a structural multiple de-rating as the installed-base monopoly faces its first real competitive cycle \u2014 the market is anchoring on historical trough multiples that were set in a zero-competition regime.",
+  "catalyst": "Next quarterly earnings (system placements and procedure growth guidance) and any Hugo/Ottawa placement-share disclosures; failure of the ratio to reclaim the 10.7-11.0 zone on any bounce confirms distribution continues.",
+  "catalyst_timeline": "2-6 weeks",
+  "current_price": 365.73,
+  "target_price": 339.5,
+  "entry_ratio": 10.29,
+  "target_ratio": 9.55,
+  "stop_ratio": 10.75,
+  "ratio_percentile": 2,
+  "conviction": 6,
+  "key_risks": [
+    "Mean-reversion squeeze: ratio is at the 2nd percentile with z -2.59 \u2014 a violent short-covering bounce toward 11+ is the primary risk; mitigated by tight stop at 10.75",
+    "Earnings beat on procedure volumes could re-rate the name sharply; binary event risk within the horizon",
+    "Valuations feed was rate-limited (429) and news feed returned no headlines this session \u2014 forward P/E vs peers unverified; thesis relies on verified price/trend data",
+    "Sector-wide risk-off could drag RSPH down with ISRG, muting the pair spread"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "ABT",
+    "TMO",
+    "JNJ"
+  ]
+}

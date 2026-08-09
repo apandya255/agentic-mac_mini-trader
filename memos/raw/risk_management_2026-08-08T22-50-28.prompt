@@ -1,0 +1,324 @@
+SYSTEM INSTRUCTIONS (read from risk_management.md):
+# Risk Management Agent
+
+## Identity
+
+You are the Chief Risk Officer at an elite macro hedge fund. You are the system's gatekeeper — no trade enters the book without your explicit approval. You are disciplined, quantitative, and empowered to reject or modify any proposal regardless of how confident the originating analyst is.
+
+## Mandate
+
+Your job is to determine whether trade proposals meet the risk management guidelines. You ensure factor exposure, idiosyncratic exposure, and leverage stay within limits. You protect the book from catastrophic drawdowns.
+
+You are judged on:
+- Zero factor beta breaches (hard limit ±0.6 — if this is ever violated, you failed)
+- Drawdown management (did you deleverage in time?)
+- False rejection rate (did you block good trades without quantitative justification?)
+- Leverage calibration (was leverage appropriate for the regime?)
+
+## Risk Framework
+
+### Position-Level Limits
+- Max single position: 5% NAV (8% for high-conviction tier, max 2 slots)
+- Stop-loss: 2–3% TRAILING from peak (ratchets up, never down)
+- Gain target: +5% triggers PM review (take is default)
+- Max sector gross: 25% NAV
+- Correlation limit: no two active positions > 0.7 pairwise correlation
+
+### Portfolio-Level Limits
+- Factor beta limit: ±0.6 per factor (HARD — no exceptions)
+- Factors: DXY, SPX, USGG10Yr, VIX, Growth/Value, CL1, Large/Small, CDX HY 5Y, XAU
+- Max gross leverage: 3.0x (absolute ceiling)
+- Target net exposure: ±0.3 (near market neutral)
+- Max downside volatility: 6% annualized
+
+### Circuit Breaker
+- 0–4% drawdown from peak: normal operations
+- 4–6% drawdown: WARNING — reduce sizing 20%, review lowest-conviction positions
+- 6%+ drawdown: HALT — no new positions, deleverage to 0.3x, joint review with PM
+- Recovery: re-lever only after 5 consecutive positive days
+
+### Leverage Management
+- Positive P&L + low correlation: 1.5x – 2.5x gross
+- Positive P&L + high correlation: 1.0x – 1.5x gross
+- Negative P&L + low correlation: 0.8x – 1.2x gross
+- Negative P&L + high correlation: 0.3x – 0.8x gross
+
+## Pre-Trade Risk Check Process
+
+For every proposal, evaluate:
+1. Is the hedge present and valid? (correct instrument, correct direction)
+2. Would this position breach any factor beta limit? (project new betas)
+3. Is the position correlated > 0.7 with any existing position?
+4. Does it fit within sector concentration limits?
+5. Is the proposed size within the allowed range for this conviction level?
+6. Would adding this trade push gross leverage beyond the regime limit?
+7. Is the circuit breaker in normal mode? (if warning/breaker, sizing is restricted)
+
+## Tools Available
+
+```
+python -m data_platform.cli risk circuit-breaker --nav <current_nav>
+python -m data_platform.cli risk trailing-stop --ticker <T> --direction <D> --entry-price <E> --peak-price <P> --current-price <C> --trail-pct <pct>
+python -m data_platform.cli risk correlation --tickers <T1> <T2> <T3>
+python -m data_platform.cli risk crowding --tickers <T1> <T2> <T3>
+python -m data_platform.cli sizing compute --conviction <N>
+python -m data_platform.cli universe hedge --ticker <T> --direction <D>
+```
+
+Use these tools to QUANTIFY your decision. Don't reject on vibes — reject on numbers.
+
+## Output Format
+
+Write your output as a JSON file:
+```json
+{
+  "proposal_id": "risk_<original_proposal_id>",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "All checks pass. Factor betas within limits. Position uncorrelated with existing book.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.25,
+  "projected_factor_betas": {"DXY": -0.10, "SPX": 0.16, "CL1": 0.19, "...": "..."},
+  "factor_breach": false,
+  "projected_gross_leverage": 1.44,
+  "max_allowed_size_pct": 0.04,
+  "risk_warnings": ["CL1 beta at 0.19 — monitor if oil spikes"],
+  "modifications": null
+}
+```
+
+For rejections:
+```json
+{
+  "decision": "rejected",
+  "rationale": "Adding this position would push CL1 factor beta to 0.65, breaching the ±0.6 limit.",
+  "factor_breach": true,
+  "projected_factor_betas": {"CL1": 0.65}
+}
+```
+
+For modifications:
+```json
+{
+  "decision": "approved_with_modifications",
+  "rationale": "Approved at reduced size to keep CL1 beta within limits.",
+  "max_allowed_size_pct": 0.02,
+  "modifications": {"reduce_size_to": 0.02, "reason": "CL1 beta constraint"}
+}
+```
+
+## Constraints
+
+- You RUN ON A DIFFERENT MODEL than the originating agent (per system design — you are independent)
+- You can ONLY reject with quantitative justification (cite the specific limit that would be breached)
+- You cannot reject because you "disagree with the thesis" — that's the debate's job
+- If all quantitative checks pass, you MUST approve (possibly with sizing modifications)
+- You read the current book state from `memos/state/book.json`
+
+## Occupational Biases (Be Aware)
+
+- Tendency to be excessively conservative (rejecting trades that are within limits)
+- Tendency to over-weight tail risks that are already hedged
+- Tendency to treat correlation as causation (0.4 correlation ≠ same trade)
+- Discipline: if the numbers pass, approve it. Your job is limits enforcement, not thesis assessment.
+
+
+---
+TASK:
+Evaluate this trade proposal against risk limits.
+
+PROPOSAL:
+{
+  "proposal_id": "fund_consstaples_20260808_2120",
+  "agent_id": "fund_consstaples",
+  "ticker": "PEP",
+  "direction": "long",
+  "hedge_ticker": "RSPS",
+  "hedge_direction": "short",
+  "thesis_summary": "PEP has de-rated to the 4th percentile of its 52-week range vs the equal-weight staples basket (z \u2248 -1.96) on post-Q2 downgrades and a guidance cut, but the affordability re-investment is showing early volume response and the technical base is turning. Long PEP / short RSPS is a mean-reversion pair with a 4.3% dividend yield floor and sell-side capitulation already in the price.",
+  "thesis_detail": "PEP trades at a ~4th-percentile ratio vs RSPS (4.4704 as of the 8/7 close: PEP $139.02 / RSPS $31.095) after a -6.8% 3-month slide driven by the mid-July Q2 print: management guided to the low end of the EPS range, leaned heavily on a Q4 ramp, and drew downgrades (Citi Buy\u2192Neutral, target $170\u2192$145; Barclays, Wells Fargo, TD Cowen also cut). That is the consensus position \u2014 we are buying after the capitulation, not before it. The variant is that the affordability price investments are working: reporting post-print (Motley Fool, 7/31) indicates price cuts are producing the intended volume response in Frito-Lay North America. Volume-led organic recovery is exactly the decomposition this desk demands \u2014 price/mix has been exhausted across staples and PEP is the one name explicitly re-investing for volume. Technicals confirm the inflection: price back above the 20- and 50-day SMAs, RSI 55.5 and rising, MACD histogram positive, +5.3% on the week while XLP was flat. The $5.92 annualized dividend yields ~4.26% at $139, a level that has historically capped downside in this name. KHC's split-pause (announced ~3 weeks ago) and WMT's -10.8% 3-month slide confirm consumer weakness \u2014 but both are already consensus, and PEP's pair structure isolates the idiosyncratic recovery from the sector tape. Note: the valuations feed was 429-rate-limited this session, so the multiples leg of the thesis is qualitative; the pair ratio and technicals are computed and fresh.",
+  "variant_perception": "Consensus just downgraded PEP on guidance risk and back-loaded Q4 delivery. Our variant view: the affordability pivot is producing volume response NOW, the downgrades mark peak pessimism, and a 4th-percentile pair ratio with a 4.3% yield misprices a name whose volume trajectory is inflecting while the sector's pricing-led model is rolling over (KHC split pause, MDLZ -8.6% 1Y).",
+  "catalyst": "Monthly Nielsen/scanner reads confirming Frito-Lay volume stabilization; Q3 earnings (mid-October) where low-end guidance plus any volume beat forces estimate re-rating; further sell-side capitulation is exhausted, so revisions skew asymmetrically positive from here",
+  "catalyst_timeline": "4-8 weeks (scanner data within 2-4 weeks, Q3 print ~8-10 weeks)",
+  "current_price": 139.02,
+  "target_price": 147.5,
+  "entry_ratio": 4.4704,
+  "target_ratio": 4.75,
+  "stop_ratio": 4.35,
+  "ratio_percentile": 4,
+  "conviction": 6,
+  "key_risks": [
+    "Q4-loaded guidance is an execution trap \u2014 if Q3 shows no volume inflection, the low end of the range gets cut again and the ratio makes new 52-week lows (this is the stop condition)",
+    "Consumer trade-down accelerates beyond what affordability pricing can offset; WMT's slide and KHC's volume weakness say the backdrop is genuinely soft",
+    "GLP-1 and salty-snack secular pressure make PEP a value trap \u2014 cheap gets cheaper in a sector de-rating",
+    "Valuations feed was rate-limited this session \u2014 multiples cross-check not verified"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "KO",
+    "MDLZ",
+    "KHC"
+  ],
+  "final_conviction": 6,
+  "_tech_score": {
+    "proposal_id": "fund_consstaples_20260808_2120",
+    "agent_id": "tech_equity",
+    "technical_score": 3,
+    "trend_alignment": "opposed",
+    "momentum_regime": "no_trend_mean_reversion_attempt",
+    "support_levels": [
+      138.2,
+      135.5,
+      133.4
+    ],
+    "resistance_levels": [
+      141.1,
+      143.5,
+      146.2
+    ],
+    "fibonacci_levels": {
+      "38.2%": 141.1,
+      "50%": 143.4,
+      "61.8%": 145.7,
+      "swing": "153.09 (5/11) -> 133.73 (7/23)"
+    },
+    "suggested_entry": 143.6,
+    "suggested_stop_loss": 132.9,
+    "suggested_take_profit": 145.7,
+    "trailing_stop_method": "ATR-based 2x (14d ATR = $3.14; trail $6.28 below peak once entry is in profit)",
+    "active_signals": [
+      {
+        "signal": "macd_histogram_turn",
+        "strength": "weak",
+        "note": "Hist +0.23 but both MACD lines still below zero \u2014 a slowing decline, not a reversal"
+      },
+      {
+        "signal": "price_above_20d",
+        "strength": "weak",
+        "note": "139.02 vs 20d 138.22 \u2014 marginal, no follow-through"
+      }
+    ],
+    "warning_signals": [
+      {
+        "signal": "thesis_technical_claims_inaccurate",
+        "note": "Proposal claims price above 20/50 SMA, RSI 55.5 rising, +5.3% on week. Computed as of 8/7 close: below 50d (140.39), RSI 48.7, 1w -0.4%. Originating seat's technicals are stale or wrong."
+      },
+      {
+        "signal": "below_all_major_MAs",
+        "note": "Below 50d (140.39), 100d (146.20), 200d (147.34); 50 < 200 = death-cross structure intact"
+      },
+      {
+        "signal": "no_trend",
+        "note": "ADX 12.7 with +DI 28.4 \u2248 -DI 25.0 \u2014 chop, not a trending turn; mean-reversion longs in no-trend regimes have no systematic edge"
+      },
+      {
+        "signal": "volume_divergence",
+        "note": "Friday volume 0.60x 20d avg; OBV down ~25M shares over 20 days \u2014 the bounce off 133.73 has no accumulation behind it"
+      },
+      {
+        "signal": "target_at_resistance",
+        "note": "Fundamental target 147.5 sits inside the 100/200d + 61.8% fib cluster (145.7-147.3) \u2014 asymmetrically poor location for a first target"
+      }
+    ],
+    "volume_confirmation": false,
+    "timing_recommendation": "wait",
+    "timing_rationale": "This is a counter-trend long in a name below the 50/100/200d stack with a live death cross, ADX 12.7 (no trend), RSI 48.7 neutral, and declining OBV with 0.6x volume on the latest session. The base at 133.4-133.7 is real but unconfirmed \u2014 one test, no volume, no momentum thrust. The technical entry is not 'buy here at 139'; it is either (a) a confirmed reclaim of 143.5/50% fib (which also recaptures the 50d on a weekly basis) with volume >1.2x 20d, or (b) a successful retest of 134-135 that holds with RSI divergence. Entry at current levels pays full resistance-cluster risk for an unproven turn. If the PM proceeds on the pair regardless, size at the low end, stop the ratio leg on a PEP close below 132.90 (below the 133.40/133.73 double low), and cap the first target at 145.70 rather than 147.50."
+  }
+}
+
+TECHNICAL SCORE:
+{
+  "proposal_id": "fund_consstaples_20260808_2120",
+  "agent_id": "tech_equity",
+  "technical_score": 3,
+  "trend_alignment": "opposed",
+  "momentum_regime": "no_trend_mean_reversion_attempt",
+  "support_levels": [
+    138.2,
+    135.5,
+    133.4
+  ],
+  "resistance_levels": [
+    141.1,
+    143.5,
+    146.2
+  ],
+  "fibonacci_levels": {
+    "38.2%": 141.1,
+    "50%": 143.4,
+    "61.8%": 145.7,
+    "swing": "153.09 (5/11) -> 133.73 (7/23)"
+  },
+  "suggested_entry": 143.6,
+  "suggested_stop_loss": 132.9,
+  "suggested_take_profit": 145.7,
+  "trailing_stop_method": "ATR-based 2x (14d ATR = $3.14; trail $6.28 below peak once entry is in profit)",
+  "active_signals": [
+    {
+      "signal": "macd_histogram_turn",
+      "strength": "weak",
+      "note": "Hist +0.23 but both MACD lines still below zero \u2014 a slowing decline, not a reversal"
+    },
+    {
+      "signal": "price_above_20d",
+      "strength": "weak",
+      "note": "139.02 vs 20d 138.22 \u2014 marginal, no follow-through"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "thesis_technical_claims_inaccurate",
+      "note": "Proposal claims price above 20/50 SMA, RSI 55.5 rising, +5.3% on week. Computed as of 8/7 close: below 50d (140.39), RSI 48.7, 1w -0.4%. Originating seat's technicals are stale or wrong."
+    },
+    {
+      "signal": "below_all_major_MAs",
+      "note": "Below 50d (140.39), 100d (146.20), 200d (147.34); 50 < 200 = death-cross structure intact"
+    },
+    {
+      "signal": "no_trend",
+      "note": "ADX 12.7 with +DI 28.4 \u2248 -DI 25.0 \u2014 chop, not a trending turn; mean-reversion longs in no-trend regimes have no systematic edge"
+    },
+    {
+      "signal": "volume_divergence",
+      "note": "Friday volume 0.60x 20d avg; OBV down ~25M shares over 20 days \u2014 the bounce off 133.73 has no accumulation behind it"
+    },
+    {
+      "signal": "target_at_resistance",
+      "note": "Fundamental target 147.5 sits inside the 100/200d + 61.8% fib cluster (145.7-147.3) \u2014 asymmetrically poor location for a first target"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "wait",
+  "timing_rationale": "This is a counter-trend long in a name below the 50/100/200d stack with a live death cross, ADX 12.7 (no trend), RSI 48.7 neutral, and declining OBV with 0.6x volume on the latest session. The base at 133.4-133.7 is real but unconfirmed \u2014 one test, no volume, no momentum thrust. The technical entry is not 'buy here at 139'; it is either (a) a confirmed reclaim of 143.5/50% fib (which also recaptures the 50d on a weekly basis) with volume >1.2x 20d, or (b) a successful retest of 134-135 that holds with RSI divergence. Entry at current levels pays full resistance-cluster risk for an unproven turn. If the PM proceeds on the pair regardless, size at the low end, stop the ratio leg on a PEP close below 132.90 (below the 133.40/133.73 double low), and cap the first target at 145.70 rather than 147.50."
+}
+
+CURRENT BOOK STATE:
+{
+  "nav": 650000000,
+  "initial_nav": 650000000,
+  "cash_pct": 1.0,
+  "positions": [],
+  "trade_journal": [],
+  "last_marked": "2026-08-08T22:49:33.862366"
+}
+
+Instructions:
+1. Check if adding this position would breach factor beta or concentration limits.
+2. Verify hedge is appropriate for the direction.
+3. Verify sizing is within limits for this conviction level.
+4. Respond with a JSON object containing:
+   - "proposal_id": "fund_consstaples_20260808_2120"
+   - "decision": "approved" or "rejected"
+   - "rationale": one sentence
+   - "position_size_ok": true/false
+   - "hedge_present_and_valid": true/false
+   - "sector_concentration_ok": true/false
+   - "risk_warnings": list of strings (or empty list)
+
+You are running on a DIFFERENT MODEL than the originating agent. Be independent.
+Reject ONLY with quantitative justification. If numbers pass, approve.
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

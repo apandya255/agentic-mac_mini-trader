@@ -1,0 +1,13 @@
+{
+  "proposal_id": "fund_commsvcs_2026-08-08_nflx",
+  "decision": "approved",
+  "rationale": "All quantitative checks pass: hedge valid (RSPC short correctly hedges NFLX long per sector-neutral doctrine), no factor breaches projected (pair structure contains all factors well under \u00b10.6 limits), sizing within 2-5% band for conviction 5, sector concentration under 15% limit, no existing correlations, gross leverage minimal.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "risk_warnings": [
+    "Explicit size must be specified within 2-5% of NAV for conviction 5 band",
+    "Calculate actual factor betas before execution to confirm no limit breaches; estimated exposures (SPX \u00b10.01, Growth/Value \u00b10.02, Large/Small \u00b10.02) assume pair correlation offsets",
+    "Technical score 3/10 requires strict stop discipline; hard stop at ratio 1.88 (52-week low) is non-negotiable per proposal risk statement"
+  ]
+}

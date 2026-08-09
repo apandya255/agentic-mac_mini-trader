@@ -1,0 +1,444 @@
+SYSTEM INSTRUCTIONS (read from portfolio_manager.md):
+# Portfolio Manager
+
+## Identity
+
+You are the Portfolio Manager at an elite macro hedge fund. You are the final decision-maker — you receive risk-approved proposals and determine whether a trade enters the book, at what size, and with what parameters. You synthesize fundamental, macro, technical, and risk inputs into a cohesive portfolio.
+
+## Mandate
+
+Your job is to construct and manage a portfolio that targets 12–15% annualized returns with ≤6% downside volatility. You decide:
+1. Whether to execute a risk-approved trade (yes/no)
+2. Position sizing within risk-approved limits
+3. Entry approach (market, limit, scale-in)
+4. Final stop-loss and take-profit calibration
+5. How the trade fits the overall book narrative
+
+You are judged on:
+- Portfolio return vs. target (12–15%)
+- Drawdown management (max 6% from peak)
+- Sharpe ratio (target ≥2.0)
+- Decision quality (did your sizing and timing add value vs. uniform allocation?)
+
+## Decision Framework
+
+### Minimum Thresholds
+- Post-debate conviction must be ≥ 6 to consider
+- Technical score must be ≥ 5 to proceed
+- Risk must have approved (possibly with modifications)
+
+### Sizing Model
+| Conviction | Standard Size | Notes |
+|-----------|--------------|-------|
+| 6 | 2% NAV | Minimum viable |
+| 7 | 3% NAV | |
+| 8 | 4% NAV | |
+| 9 | 5% NAV | |
+| 10 | 5% NAV | Very rare |
+| HC (8+) | 8% NAV | Max 2 slots, must out-hit standard book or self-revokes |
+
+Adjustments:
+- Technical score < 6: reduce by 30%
+- Technical score > 8: increase by 20%
+- Circuit breaker in warning: apply 0.8x multiplier
+- Position correlated > 0.5 with existing: reduce by 20% per correlated position
+
+### Portfolio Construction Rules
+- Max 3 new positions per day
+- Review existing positions before adding new ones
+- Weekly full book review (are any theses stale?)
+- Maximum book: 8–12 positions at any time in the POC
+
+### Exit Framework
+- **Trailing stop hit:** Immediate exit. No exceptions, no "let me hold a little longer."
+- **+5% from entry:** Take profit is the DEFAULT. Extending requires the originator to re-affirm with a documented flip-condition (what would make you exit if it doesn't keep going).
+- **Thesis invalidated:** Exit regardless of P&L. If the fundamental/macro reason is gone, the position is gone.
+- **60 days without catalyst:** Forced reassessment. If nothing has changed, exit.
+- **Better opportunity:** May exit lower-conviction position to fund higher (capital rotation).
+
+## Tools Available
+
+```
+python -m data_platform.cli sizing compute --conviction <N>
+python -m data_platform.cli sizing compute --conviction <N> --high-conviction
+python -m data_platform.cli sizing table
+python -m data_platform.cli risk circuit-breaker --nav <NAV>
+python -m data_platform.cli carry cash --cash-pct <P>
+python -m data_platform.cli carry position-cost --direction <D> --notional <N>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge <H>
+```
+
+## Input
+
+You read from:
+- `memos/proposals/` — the surviving trade proposals (post-debate)
+- `memos/scores/` — technical scores for each proposal
+- `memos/risk/` — risk decisions (approved/modified/rejected)
+- `memos/state/book.json` — current portfolio state
+
+## Output Format
+
+Write your output as a JSON file:
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "agent_id": "portfolio_manager",
+  "execute": true,
+  "pm_rationale": "Why this trade fits the book. How it interacts with existing positions. Why now.",
+  "ticker": "XOM",
+  "direction": "long",
+  "size_pct_nav": 0.04,
+  "entry_approach": "market",
+  "stop_loss_method": "trailing 2.5% from peak",
+  "take_profit": "5% triggers review, take is default",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "hedge_size_pct_nav": 0.04,
+  "portfolio_thesis": "Adding energy single-name alpha on top of existing sector view. Low correlation to current book. Catalyst within 4 weeks.",
+  "expected_holding_period": "4-8 weeks",
+  "review_date": "2026-08-10",
+  "priority": "normal"
+}
+```
+
+For a pass (no execution):
+```json
+{
+  "order_id": "order_<proposal_id>",
+  "proposal_id": "<original_proposal_id>",
+  "execute": false,
+  "pm_rationale": "Technical setup is weak (score 5) and we already have sector exposure via XLE position. Adding single-name doesn't improve the book risk/reward."
+}
+```
+
+## Constraints
+
+- You can ONLY execute risk-approved proposals (you cannot override a risk rejection)
+- If risk approved with modifications (e.g., max size 2%), you must respect that limit
+- You read the full pipeline output before deciding — don't ignore the debate or technical score
+- You manage the book as a whole — every position should have a role in the portfolio narrative
+- Cash is a position. If nothing looks good, stay in cash. Cash earns SOFR.
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-trade (adding positions because "something should always be on")
+- Tendency to hold losers too long ("it'll come back")
+- Tendency to size winners too small and losers too large (disposition effect)
+- Discipline: let the rules work. Trailing stop hit = exit. +5% = take. No exceptions without documented re-affirmed flip-condition.
+
+
+---
+TASK:
+Decide whether to execute this risk-approved trade.
+
+PROPOSAL (post-debate, conviction = 6):
+{
+  "proposal_id": "macro_asia_japan_2026-08-08T21:45",
+  "agent_id": "macro_asia_japan",
+  "ticker": "EWJ",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "BOJ normalization (policy rate 1.0%, hawkish dissent) + intervention-backed yen stabilization + governance re-rating, versus an extended relative-price starting point",
+  "thesis_summary": "Long EWJ vs short EFA. The BOJ is mid-hiking cycle (1.0% after a June hike, July hold passed only 8-1 with Takata dissenting for 1.25%, guidance flagging core inflation 'clearly above 2%' from H2 FY26) while the ECB/EAFE bloc is on hold \u2014 that rate-path divergence plus MOF's demonstrated intervention line (~164) puts a floor under the yen and supports EWJ in USD terms. FY26 GDP was upgraded to ~0.8% and the governance/buyback bid remains structural. The honest caveats: the EWJ/EFA ratio is already at the 82nd percentile of its 52-week range, foreign investors were net sellers (-\u00a5392.5bn, week ending Aug 1), and core-core CPI softened to 1.7% \u2014 this is a trend-continuation trade, not a valuation layup.",
+  "thesis_detail": "Data as of 2026-08-07 close. EWJ 96.88 (+1.82% Fri), EFA 108.55 (+1.11%), USDJPY 157.74. EWJ/EFA ratio 0.8927 \u2014 82.5th percentile of the 52w range (0.8423\u20130.9272), above the 200dma (0.8781), roughly at the 50dma (0.8943); ratio +4.4% over 12m, -0.8% over 1m, so the pair has consolidated for a month after a strong run rather than extended further. Policy: BOJ hiked to 1.0% in June (first since December), held July 31 by 8-1 with Takata dissenting for 1.25% \u2014 the dissent and the 'clearly above 2%' core-inflation language keep September live; each hike widens the policy gap vs the ECB and compresses the case for new yen shorts. Yen: USDJPY peaked at 163.86 (52w high), MOF intervened late July, spot now 157.74 (-2.95% 1m). Tokyo has drawn a line; the left tail in yen (a run to 170+) is now policy-capped, which de-risks EWJ's FX translation for USD holders. DXJ/EWJ +13.2% over 12m shows hedged Japan massively outperformed during yen weakness \u2014 if the yen regime has even shifted to sideways-to-firmer, unhedged EWJ closes that gap, a direct ratio tailwind vs EFA's ~20% Japan-diluted basket. Growth: FY26 GDP forecast upgraded to ~0.8% from 0.5%; Tankan and wage momentum support the reflation narrative. Counterweights (checked per flow discipline): foreigners net sold \u00a5392.5bn in the latest MOF week, core-core CPI at 1.7% (softest since Aug 2022) cuts against the BOJ's own hawkish framing, and a sharp disorderly yen spike (carry-unwind style, Aug-2024 analog) historically hits the EWJ/EFA ratio hard \u2014 that is the bear case, not the base case, because intervention and gradualism argue for an orderly path. US 10Y at 4.66% keeps the differential wide enough that rapid yen appreciation requires a Fed catalyst \u2014 watch the September FOMC as much as the BOJ.",
+  "key_data_points": [
+    "EWJ/EFA ratio 0.8927, 82.5th percentile of 52w range (0.8423-0.9272), above 200dma 0.8781",
+    "BOJ policy rate 1.0% after June 2026 hike; July 31 hold passed 8-1, Takata dissented for 1.25%; BOJ sees core inflation 'clearly above 2%' from H2 FY26",
+    "USDJPY 157.74, off the 163.86 52w high after late-July MOF intervention; -2.95% over 1m, flat over 3m",
+    "Japan FY26 GDP forecast upgraded to ~0.8% from 0.5% at July BOJ meeting",
+    "Foreign investors net sold \u00a5392.5bn of Japanese equities in week ending Aug 1 \u2014 flows not confirming the rally",
+    "Core-core CPI (ex fresh food & energy) 1.7% y/y in June, softest since Aug 2022 \u2014 soft under the BOJ's hawkish language",
+    "US 10Y 4.66%; differential still wide, capping the pace of yen appreciation absent a Fed turn",
+    "DXJ/EWJ +13.2% over 12m \u2014 yen weakness was the drag; regime shift favors unhedged EWJ closing the gap"
+  ],
+  "entry_ratio": 0.8927,
+  "target_ratio": 0.925,
+  "stop_ratio": 0.874,
+  "ratio_percentile": 82.5,
+  "base_case": "BOJ holds in September but signals an October/December hike; yen grinds firmer to 152-156 on intervention credibility and narrowing differentials; EWJ/EFA drifts back toward the 52w high as the FX translation tailwind and governance bid offset soft core-core prints. Ratio reaches ~0.925 (+3.6%).",
+  "base_case_probability": 0.5,
+  "bull_case": "BOJ hikes in September (Takata's dissent becomes consensus) and/or the Fed cuts, USDJPY breaks below 150, foreign flows flip positive on the rate-divergence story; ratio pushes through 0.927 to new 52w highs ~0.94+ (+5-6%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "Disorderly yen spike (carry unwind or risk-off) replays Aug 2024 \u2014 local equities fall faster than the FX gain, EWJ/EFA breaks the 200dma; alternatively core-core keeps decelerating and the BOJ blinks, removing the normalization premium. Ratio to ~0.87 or below (-2.5%).",
+  "bear_case_probability": 0.25,
+  "target_return_pct": 0.036,
+  "stop_loss_pct": 0.021,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "Sharp non-linear yen spike (carry unwind) hits Japanese equities faster than FX translation helps \u2014 Aug 2024 analog; intervention caps gradual weakness, not gap moves",
+    "Core-core CPI at 1.7% and decelerating undermines the BOJ-hike thesis; a dovish surprise unwinds the normalization premium",
+    "Foreign flows already negative (-\u00a5392.5bn latest week) \u2014 if that accelerates, the ratio's 82nd-percentile starting point has no marginal buyer",
+    "EFA hedge is ~20% Japan \u2014 the short leg partially shorts my own long, diluting the Japan-specific expression; acceptable vs ACWI's 60%+ US beta, but noted",
+    "China slowdown spillover hits Japanese cyclicals/exporters (machinery, semis) even with a stable yen"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-28",
+      "event": "Tokyo CPI (August) \u2014 lead indicator for national core",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-09-04",
+      "event": "US employment report \u2014 Fed path and USDJPY driver",
+      "impact": "high"
+    },
+    {
+      "date": "2026-09-19",
+      "event": "BOJ Monetary Policy Meeting \u2014 live hike risk per July dissent",
+      "impact": "high"
+    },
+    {
+      "date": "2026-09-17",
+      "event": "FOMC decision \u2014 differential side of the yen equation",
+      "impact": "high"
+    },
+    {
+      "date": "2026-08-14",
+      "event": "Weekly MOF flow data \u2014 confirmation check on foreign selling",
+      "impact": "medium"
+    }
+  ],
+  "yen_view": "Sideways-to-firmer, 152-160 range: intervention line drawn near 164 caps the top, BOJ hike path and hawkish dissent bias spot lower; orderly appreciation is a modest net positive for EWJ in USD and for the ratio, a disorderly spike is the bear case",
+  "final_conviction": 6,
+  "_tech_score": {
+    "proposal_id": "tech_macro_asia_japan_2026-08-08T21:45",
+    "agent_id": "tech_equity",
+    "technical_score": 6,
+    "trend_alignment": "aligned",
+    "momentum_regime": "weak_trend_consolidation",
+    "support_levels": [
+      0.885,
+      0.8781,
+      0.874
+    ],
+    "resistance_levels": [
+      0.9,
+      0.91,
+      0.9272
+    ],
+    "fibonacci_levels": {
+      "note": "EWJ price fibs off 88.69-97.52 swing",
+      "38.2%": 94.15,
+      "50%": 93.1,
+      "61.8%": 92.06,
+      "127.2%_ext": 99.92
+    },
+    "suggested_entry": 0.8927,
+    "suggested_stop_loss": 0.874,
+    "suggested_take_profit": 0.925,
+    "trailing_stop_method": "2x ATR trail on EWJ price (ATR14 = $1.75, 1.81%) = trail ~$3.50 below peak; on the ratio, enforce the proposed 0.874 hard stop which sits just under the 200dma (0.8781) \u2014 correct placement, breach invalidates the structure",
+    "active_signals": [
+      {
+        "signal": "golden_cross",
+        "strength": "strong",
+        "note": "EWJ 50dma (92.85) > 200dma (86.72); price 96.88 above all major MAs \u2014 bullish structure on the long leg"
+      },
+      {
+        "signal": "MACD_positive",
+        "strength": "moderate",
+        "note": "Histogram +0.563 and rising, line 0.676 vs signal 0.113"
+      },
+      {
+        "signal": "RSI_constructive",
+        "strength": "moderate",
+        "note": "RSI 63.8, not overbought, room to run"
+      },
+      {
+        "signal": "OBV_rising",
+        "strength": "moderate",
+        "note": "Accumulation confirmed on price, though volume only 1.01x 20-day avg"
+      }
+    ],
+    "warning_signals": [
+      {
+        "signal": "ADX_no_trend",
+        "note": "ADX 13.3 on EWJ, 14.4 on EFA \u2014 neither leg is trending. This is a trend-continuation thesis with no confirmed trend; treat as range until ADX > 20"
+      },
+      {
+        "signal": "bollinger_stretched",
+        "note": "EWJ BB position 1.06 \u2014 Friday's +1.82% pop closed it above the upper band (96.43). Chasing Monday open is poor timing"
+      },
+      {
+        "signal": "ratio_rich_no_relative_momentum",
+        "note": "EWJ/EFA at 82.5th percentile, z-score +1.1, but 63-day relative strength vs EFA is FLAT (-0.0042) and ratio -0.8% over 1m \u2014 the pair has consolidated, not confirmed. EFA itself scores 8/bullish, so the short leg fights a bullish tape; the trade needs EWJ outperformance that RS data does not yet show"
+      },
+      {
+        "signal": "flow_divergence",
+        "note": "Foreign net selling (-\u00a5392.5bn latest week) diverges from rising OBV \u2014 price up on thin domestic volume is fragile at this percentile"
+      }
+    ],
+    "volume_confirmation": false,
+    "timing_recommendation": "wait",
+    "timing_rationale": "Structure supports the long (golden cross, above all MAs, MACD positive, RSI not extended), so this is not an avoid. But entry quality is mediocre: ratio at the 82.5th percentile with flat 63-day relative strength, ADX showing no trend on either leg, and EWJ closing above its upper Bollinger band after Friday's pop. Two acceptable triggers: (1) pullback entry toward 0.8850 on the ratio / 94.15-95.40 on EWJ price (38.2% fib to upper-band retest), or (2) breakout confirmation \u2014 ratio closes above 0.9000 with volume >1.5x 20-day avg and ADX turning up. Proposed stop 0.874 is well-placed under the 200dma; target 0.925 sits just under the 52w high 0.9272, which is the right place to take profit given resistance there. Risk/reward at current entry: +3.6% vs -2.1% \u2248 1.7:1 \u2014 adequate, not compelling; improves to ~2.4:1 on the pullback entry."
+  },
+  "risk_decision": {
+    "proposal_id": "macro_asia_japan_2026-08-08T21:45",
+    "agent_id": "risk_management",
+    "decision": "approved",
+    "rationale": "Empty book; hedge valid per sleeve doctrine; pair trade creates near-zero net leverage and minimal factor exposure; no beta or concentration breaches; conviction-6 sizing within 2\u20135% standard band.",
+    "position_size_ok": true,
+    "hedge_present_and_valid": true,
+    "sector_concentration_ok": true,
+    "correlation_to_existing": 0.0,
+    "projected_gross_leverage": 0.1,
+    "projected_net_leverage": 0.0,
+    "max_allowed_size_pct": 0.05,
+    "projected_factor_betas": {
+      "DXY": -0.15,
+      "SPX": -0.2,
+      "USGG10Yr": 0.05,
+      "VIX": -0.05,
+      "Growth_Value": 0.1,
+      "CL1": 0.0,
+      "Large_Small": 0.0,
+      "CDX_HY_5Y": 0.0,
+      "XAU": 0.0
+    },
+    "factor_breach": false,
+    "risk_warnings": [
+      "Technical timing rec 'wait': ratio 82.5th percentile, ADX 13.3 (no trend), 63-day RS flat; EWJ closed above upper Bollinger Friday\u2014pullback entry ~0.8850 or breakout >0.9000 with vol >1.5x avg preferred over current spot",
+      "Volume confirmation absent (1.01x 20-day avg); flow divergence (\u00a5392.5bn foreign selling vs rising OBV) signals fragility if selling accelerates",
+      "EFA hedge ~20% Japan; net Japan position diluted but acceptable vs ACWI per sleeve doctrine"
+    ]
+  }
+}
+
+TECHNICAL SCORE:
+{
+  "proposal_id": "tech_macro_asia_japan_2026-08-08T21:45",
+  "agent_id": "tech_equity",
+  "technical_score": 6,
+  "trend_alignment": "aligned",
+  "momentum_regime": "weak_trend_consolidation",
+  "support_levels": [
+    0.885,
+    0.8781,
+    0.874
+  ],
+  "resistance_levels": [
+    0.9,
+    0.91,
+    0.9272
+  ],
+  "fibonacci_levels": {
+    "note": "EWJ price fibs off 88.69-97.52 swing",
+    "38.2%": 94.15,
+    "50%": 93.1,
+    "61.8%": 92.06,
+    "127.2%_ext": 99.92
+  },
+  "suggested_entry": 0.8927,
+  "suggested_stop_loss": 0.874,
+  "suggested_take_profit": 0.925,
+  "trailing_stop_method": "2x ATR trail on EWJ price (ATR14 = $1.75, 1.81%) = trail ~$3.50 below peak; on the ratio, enforce the proposed 0.874 hard stop which sits just under the 200dma (0.8781) \u2014 correct placement, breach invalidates the structure",
+  "active_signals": [
+    {
+      "signal": "golden_cross",
+      "strength": "strong",
+      "note": "EWJ 50dma (92.85) > 200dma (86.72); price 96.88 above all major MAs \u2014 bullish structure on the long leg"
+    },
+    {
+      "signal": "MACD_positive",
+      "strength": "moderate",
+      "note": "Histogram +0.563 and rising, line 0.676 vs signal 0.113"
+    },
+    {
+      "signal": "RSI_constructive",
+      "strength": "moderate",
+      "note": "RSI 63.8, not overbought, room to run"
+    },
+    {
+      "signal": "OBV_rising",
+      "strength": "moderate",
+      "note": "Accumulation confirmed on price, though volume only 1.01x 20-day avg"
+    }
+  ],
+  "warning_signals": [
+    {
+      "signal": "ADX_no_trend",
+      "note": "ADX 13.3 on EWJ, 14.4 on EFA \u2014 neither leg is trending. This is a trend-continuation thesis with no confirmed trend; treat as range until ADX > 20"
+    },
+    {
+      "signal": "bollinger_stretched",
+      "note": "EWJ BB position 1.06 \u2014 Friday's +1.82% pop closed it above the upper band (96.43). Chasing Monday open is poor timing"
+    },
+    {
+      "signal": "ratio_rich_no_relative_momentum",
+      "note": "EWJ/EFA at 82.5th percentile, z-score +1.1, but 63-day relative strength vs EFA is FLAT (-0.0042) and ratio -0.8% over 1m \u2014 the pair has consolidated, not confirmed. EFA itself scores 8/bullish, so the short leg fights a bullish tape; the trade needs EWJ outperformance that RS data does not yet show"
+    },
+    {
+      "signal": "flow_divergence",
+      "note": "Foreign net selling (-\u00a5392.5bn latest week) diverges from rising OBV \u2014 price up on thin domestic volume is fragile at this percentile"
+    }
+  ],
+  "volume_confirmation": false,
+  "timing_recommendation": "wait",
+  "timing_rationale": "Structure supports the long (golden cross, above all MAs, MACD positive, RSI not extended), so this is not an avoid. But entry quality is mediocre: ratio at the 82.5th percentile with flat 63-day relative strength, ADX showing no trend on either leg, and EWJ closing above its upper Bollinger band after Friday's pop. Two acceptable triggers: (1) pullback entry toward 0.8850 on the ratio / 94.15-95.40 on EWJ price (38.2% fib to upper-band retest), or (2) breakout confirmation \u2014 ratio closes above 0.9000 with volume >1.5x 20-day avg and ADX turning up. Proposed stop 0.874 is well-placed under the 200dma; target 0.925 sits just under the 52w high 0.9272, which is the right place to take profit given resistance there. Risk/reward at current entry: +3.6% vs -2.1% \u2248 1.7:1 \u2014 adequate, not compelling; improves to ~2.4:1 on the pullback entry."
+}
+
+RISK DECISION:
+{
+  "proposal_id": "macro_asia_japan_2026-08-08T21:45",
+  "agent_id": "risk_management",
+  "decision": "approved",
+  "rationale": "Empty book; hedge valid per sleeve doctrine; pair trade creates near-zero net leverage and minimal factor exposure; no beta or concentration breaches; conviction-6 sizing within 2\u20135% standard band.",
+  "position_size_ok": true,
+  "hedge_present_and_valid": true,
+  "sector_concentration_ok": true,
+  "correlation_to_existing": 0.0,
+  "projected_gross_leverage": 0.1,
+  "projected_net_leverage": 0.0,
+  "max_allowed_size_pct": 0.05,
+  "projected_factor_betas": {
+    "DXY": -0.15,
+    "SPX": -0.2,
+    "USGG10Yr": 0.05,
+    "VIX": -0.05,
+    "Growth_Value": 0.1,
+    "CL1": 0.0,
+    "Large_Small": 0.0,
+    "CDX_HY_5Y": 0.0,
+    "XAU": 0.0
+  },
+  "factor_breach": false,
+  "risk_warnings": [
+    "Technical timing rec 'wait': ratio 82.5th percentile, ADX 13.3 (no trend), 63-day RS flat; EWJ closed above upper Bollinger Friday\u2014pullback entry ~0.8850 or breakout >0.9000 with vol >1.5x avg preferred over current spot",
+    "Volume confirmation absent (1.01x 20-day avg); flow divergence (\u00a5392.5bn foreign selling vs rising OBV) signals fragility if selling accelerates",
+    "EFA hedge ~20% Japan; net Japan position diluted but acceptable vs ACWI per sleeve doctrine"
+  ]
+}
+
+CURRENT BOOK STATE:
+{
+  "nav": 650000000,
+  "initial_nav": 650000000,
+  "cash_pct": 1.0,
+  "positions": [],
+  "trade_journal": [],
+  "last_marked": "2026-08-08T22:57:33.857956"
+}
+
+Instructions:
+1. Decide: execute or pass?
+2. If execute: size the position (1-5% NAV based on conviction).
+3. Set trailing stop method and review date.
+4. Respond with a JSON object containing these fields:
+   - "execute": true/false
+   - "ticker": the ticker
+   - "direction": "long" or "short"
+   - "hedge_ticker": the hedge ETF
+   - "hedge_direction": "short" or "long"
+   - "size_pct_nav": decimal (e.g. 0.03 for 3%)
+   - "conviction": number
+   - "stop_loss_method": string
+   - "take_profit": string
+   - "pm_rationale": one-sentence reason
+   - "portfolio_thesis": the thesis summary
+   - "expected_holding_period": string
+   - "review_date": ISO date string
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

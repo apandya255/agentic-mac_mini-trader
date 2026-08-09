@@ -1,0 +1,32 @@
+{
+  "proposal_id": "fund_energy_20260808_vlo_short",
+  "agent_id": "fund_energy",
+  "ticker": "VLO",
+  "direction": "short",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "long",
+  "thesis_summary": "Short Valero vs long equal-weight energy at the 93rd percentile of its 52-week ratio. 2026's record crack spreads are a war premium from the Strait of Hormuz blockade; both Washington and Tehran now publicly say a reopening deal is close (FT, Aug 4: blockade lifted + Iranian export curbs eased in exchange). VLO at 6.9x EV/EBITDA on peak war-driven earnings has the most to give back when cracks normalize.",
+  "thesis_detail": "The numbers: VLO/RSPG ratio sits at 2.9004 vs a 52-week range of 1.799-2.984 and a median of 2.191 \u2014 the 93rd percentile. VLO is +55% over six months, +27% in three, massively outperforming every non-refiner in coverage. The driver is not structural: gas prices +98% YTD vs WTI +44% (Forbes, Jul 23) because the US naval blockade of Hormuz (reimposed July after the June ceasefire collapse) cut product supply while US refiners ran at up to 95% utilization (Reuters). That is peak-margin, peak-utilization, peak-multiple pricing. The catalyst is now dated: CNN (Aug 5) reports a Hormuz deal could land 'by Friday'; AP and WaPo confirm both sides say terms are close; the FT-reported framework (lift blockade, ease Iranian oil export restrictions for a reopening) is doubly bearish for the refiner complex \u2014 it restores crude supply AND collapses the product scarcity premium that is 100% of the 2026 refiner outperformance. Valuation check: VLO at 6.9x trailing EV/EBITDA and 10.8x forward PE on what are almost certainly cycle-peak earnings; MPC (7.6x, 88th pctile ratio, and already rolling over from 2.98 to 2.90 over the last 10 sessions) confirms the complex is stalling at the highs. Positioning: refiners are the crowded energy long of 2026. Even a partial Oman-brokered arrangement (CBS, Aug 6: 'close, but not full reopening') starts the margin normalization; post-Labor Day demand fade and September turnaround season add a seasonal tailwind to the short. Stop is a new 52-week ratio high \u2014 if the deal collapses a third time and cracks rip to new records, the thesis is wrong and we take the small loss.",
+  "variant_perception": "Consensus is extrapolating record cracks (analyst price targets still chasing the stocks higher post-Q2 beats; MPC raised its buyback). The desk's variant view: the war premium embedded in product prices is a political decision away from evaporating, and both principals are now publicly negotiating the endgame. The market prices maybe 40% probability of a near-term deal; the FT-sourced framework and the 'by Friday' rhetoric from the US side put it higher, and the asymmetry at the 93rd percentile ratio is extreme \u2014 roughly 4% risk to a new high vs 15%+ to median reversion.",
+  "catalyst": "Strait of Hormuz reopening deal (US-Iran/Oman track) \u2014 reported close as of Aug 4-5 with terms already leaked; secondary: weekly EIA product inventory builds as post-Labor Day gasoline demand fades and September refinery turnarounds begin.",
+  "catalyst_timeline": "1-4 weeks for the Hormuz headline; 2-6 weeks for crack normalization to show in estimates",
+  "current_price": 298.26,
+  "target_price": 250.0,
+  "conviction": 7,
+  "entry_ratio": 2.9004,
+  "target_ratio": 2.45,
+  "stop_ratio": 3.02,
+  "ratio_percentile": 93.0,
+  "key_risks": [
+    "Hormuz deal collapses a third time (June ceasefire precedent; Iran denies direct US talks; Houthi tanker attack Aug 5) \u2014 cracks make new records and the ratio blows through the 2.984 high",
+    "Structural product tightness persists: pre-war Gulf Coast utilization was already 93-95% with elevated distillate margins (Dallas Fed), so cracks may normalize only partially, capping ratio downside",
+    "Gulf Coast hurricane season supply shock sends cracks higher regardless of geopolitics",
+    "VLO/MPC buyback programs ($4.4B MPC authorization) cushion the shorts on any dip",
+    "Crude-side view belongs to the Commodities seat: if a deal crashes WTI hard, the RSPG long leg absorbs E&P pain \u2014 pair is not fully insulated from the crude leg of the trade"
+  ],
+  "sector_view": "neutral_bearish_margins",
+  "relevant_peers": [
+    "MPC",
+    "PSX"
+  ]
+}

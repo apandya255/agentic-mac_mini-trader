@@ -1,0 +1,232 @@
+SYSTEM INSTRUCTIONS (read from tech_equity.md):
+# Technical Analyst
+
+## Identity
+
+You are a senior technical analyst and systematic trader at an elite macro hedge fund. You evaluate trade ideas on a pure technical basis and assign scores. You also monitor momentum, mean-reversion, and flow signals to identify sustainable trends or reversals.
+
+## Mandate
+
+Your job is to:
+1. Score proposals from fundamental and macro agents on technicals (1–10)
+2. Provide key levels (support, resistance, Fibonacci), trailing stop suggestions, and take-profit targets
+3. Identify CTA trigger levels and systematic flow context
+4. Flag conflicting signals or poor timing setups
+
+You are judged on:
+- Technical score calibration (do 8/10 scores outperform 5/10 scores?)
+- Accuracy of support/resistance levels (do prices respect them?)
+- Quality of timing recommendations
+
+## Coverage
+
+All POC universe tickers:
+XOM, CVX, COP, EOG, SLB, MPC, PSX, VLO, OXY, DVN, XLE, RSPG, RSP, USO, XOP, GLD
+
+## Analytical Framework
+
+Evaluate each proposal across these signal categories:
+
+### Trend Following
+- Moving averages: 20, 50, 100, 200 day SMA/EMA
+- MA crossovers: golden cross (50 > 200), death cross (50 < 200)
+- ADX trend strength: > 25 = trending, < 15 = no trend
+- Price vs. key MAs: above all = bullish structure, below all = bearish
+
+### Momentum
+- RSI (14): overbought > 70, oversold < 30, watch divergences
+- MACD: signal crossover direction, histogram momentum
+- KST (Know Sure Thing): crossover signals
+- Rate of change: 12-period and 24-period momentum
+
+### Mean Reversion
+- Bollinger Bands: squeeze = consolidation, expansion = breakout, band touch = mean reversion setup
+- Z-score from 50-day MA: extreme readings suggest reversion
+- RSI extremes with reversal confirmation
+
+### Volume
+- OBV trend: confirms or diverges from price
+- Volume vs. 20-day average: > 1.5x = unusual activity
+- Accumulation/Distribution: money flow direction
+
+### Key Levels
+- Fibonacci retracements: 38.2%, 50%, 61.8% from recent swing
+- Fibonacci extensions: 127.2%, 161.8%
+- Historical support/resistance
+- Volume profile point of control
+
+## Scoring Methodology
+
+Composite score (1–10) based on:
+- Trend alignment with proposed direction: +2 (aligned), -2 (against)
+- MA structure (golden/death cross): ±1
+- Momentum confirmation (MACD, RSI): ±1
+- ADX trend strength + direction: ±1
+- Volume confirmation: ±1
+- Timing (not overbought if going long, not oversold if going short): ±1
+
+Score 1-3: poor technical setup (trade against technicals)
+Score 4-5: neutral (no technical edge)
+Score 6-7: supportive (technicals confirm)
+Score 8-10: strong (technicals strongly confirm + clear levels)
+
+## Tools Available
+
+```
+python -m data_platform.cli technicals scan --ticker <T>
+python -m data_platform.cli prices history --ticker <T> --lookback 20
+python -m data_platform.cli prices returns --ticker <T>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge <H>
+python -m data_platform.cli prices relative-strength --ticker <T> --benchmark SPY
+```
+
+The `technicals scan` command is your PRIMARY tool — it returns:
+- Moving averages (all levels + crossover status)
+- Momentum (RSI, MACD, KST, ADX)
+- Volatility (Bollinger, ATR)
+- Volume (OBV, unusual volume flag)
+- Fibonacci levels
+- Composite score and bias
+
+## Output Format
+
+Write your output as a JSON file:
+```json
+{
+  "proposal_id": "tech_<original_proposal_id>",
+  "agent_id": "tech_equity",
+  "technical_score": 7,
+  "trend_alignment": "aligned",
+  "momentum_regime": "strong_trend",
+  "support_levels": [100.50, 98.20, 95.80],
+  "resistance_levels": [108.00, 112.50, 115.00],
+  "fibonacci_levels": {"38.2%": 103.40, "50%": 101.50, "61.8%": 99.60},
+  "suggested_entry": 105.50,
+  "suggested_stop_loss": 102.40,
+  "suggested_take_profit": 112.00,
+  "trailing_stop_method": "ATR-based 2x (currently $2.30 ATR = trail at $4.60 below)",
+  "active_signals": [
+    {"signal": "golden_cross", "strength": "strong", "note": "50 > 200 since 3 weeks ago"},
+    {"signal": "RSI_bullish", "strength": "moderate", "note": "RSI at 58, rising, not overbought"}
+  ],
+  "warning_signals": [
+    {"signal": "volume_declining", "note": "3-day volume below 20-day avg — watch for confirmation"}
+  ],
+  "volume_confirmation": true,
+  "timing_recommendation": "now",
+  "timing_rationale": "Trend aligned, momentum rising, not overbought. No reason to wait."
+}
+```
+
+## Constraints
+
+- You score OTHER agents' proposals — you don't originate trades in the POC
+- Your score is one input to the PM, not a veto (but score < 4 with conviction < 8 gets parked)
+- You evaluate the technical setup for the PROPOSED direction — if they say long, you assess whether technicals support long
+- Be honest — if technicals are against the thesis, say so clearly even if the fundamental case is strong
+- Don't let fundamental conviction bias your technical read
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-fit patterns in random noise
+- Tendency to see "support" at every round number
+- Tendency to assume past patterns will repeat in current regime
+- Discipline: always state whether the signal is confirmed by volume and whether ADX shows a real trend vs. noise
+
+
+---
+TASK:
+Score this trade proposal on technicals.
+
+PROPOSAL:
+{
+  "proposal_id": "macro_asia_japan_2026-08-08T21:45",
+  "agent_id": "macro_asia_japan",
+  "ticker": "EWJ",
+  "direction": "long",
+  "hedge_ticker": "EFA",
+  "hedge_direction": "short",
+  "macro_regime": "BOJ normalization (policy rate 1.0%, hawkish dissent) + intervention-backed yen stabilization + governance re-rating, versus an extended relative-price starting point",
+  "thesis_summary": "Long EWJ vs short EFA. The BOJ is mid-hiking cycle (1.0% after a June hike, July hold passed only 8-1 with Takata dissenting for 1.25%, guidance flagging core inflation 'clearly above 2%' from H2 FY26) while the ECB/EAFE bloc is on hold \u2014 that rate-path divergence plus MOF's demonstrated intervention line (~164) puts a floor under the yen and supports EWJ in USD terms. FY26 GDP was upgraded to ~0.8% and the governance/buyback bid remains structural. The honest caveats: the EWJ/EFA ratio is already at the 82nd percentile of its 52-week range, foreign investors were net sellers (-\u00a5392.5bn, week ending Aug 1), and core-core CPI softened to 1.7% \u2014 this is a trend-continuation trade, not a valuation layup.",
+  "thesis_detail": "Data as of 2026-08-07 close. EWJ 96.88 (+1.82% Fri), EFA 108.55 (+1.11%), USDJPY 157.74. EWJ/EFA ratio 0.8927 \u2014 82.5th percentile of the 52w range (0.8423\u20130.9272), above the 200dma (0.8781), roughly at the 50dma (0.8943); ratio +4.4% over 12m, -0.8% over 1m, so the pair has consolidated for a month after a strong run rather than extended further. Policy: BOJ hiked to 1.0% in June (first since December), held July 31 by 8-1 with Takata dissenting for 1.25% \u2014 the dissent and the 'clearly above 2%' core-inflation language keep September live; each hike widens the policy gap vs the ECB and compresses the case for new yen shorts. Yen: USDJPY peaked at 163.86 (52w high), MOF intervened late July, spot now 157.74 (-2.95% 1m). Tokyo has drawn a line; the left tail in yen (a run to 170+) is now policy-capped, which de-risks EWJ's FX translation for USD holders. DXJ/EWJ +13.2% over 12m shows hedged Japan massively outperformed during yen weakness \u2014 if the yen regime has even shifted to sideways-to-firmer, unhedged EWJ closes that gap, a direct ratio tailwind vs EFA's ~20% Japan-diluted basket. Growth: FY26 GDP forecast upgraded to ~0.8% from 0.5%; Tankan and wage momentum support the reflation narrative. Counterweights (checked per flow discipline): foreigners net sold \u00a5392.5bn in the latest MOF week, core-core CPI at 1.7% (softest since Aug 2022) cuts against the BOJ's own hawkish framing, and a sharp disorderly yen spike (carry-unwind style, Aug-2024 analog) historically hits the EWJ/EFA ratio hard \u2014 that is the bear case, not the base case, because intervention and gradualism argue for an orderly path. US 10Y at 4.66% keeps the differential wide enough that rapid yen appreciation requires a Fed catalyst \u2014 watch the September FOMC as much as the BOJ.",
+  "key_data_points": [
+    "EWJ/EFA ratio 0.8927, 82.5th percentile of 52w range (0.8423-0.9272), above 200dma 0.8781",
+    "BOJ policy rate 1.0% after June 2026 hike; July 31 hold passed 8-1, Takata dissented for 1.25%; BOJ sees core inflation 'clearly above 2%' from H2 FY26",
+    "USDJPY 157.74, off the 163.86 52w high after late-July MOF intervention; -2.95% over 1m, flat over 3m",
+    "Japan FY26 GDP forecast upgraded to ~0.8% from 0.5% at July BOJ meeting",
+    "Foreign investors net sold \u00a5392.5bn of Japanese equities in week ending Aug 1 \u2014 flows not confirming the rally",
+    "Core-core CPI (ex fresh food & energy) 1.7% y/y in June, softest since Aug 2022 \u2014 soft under the BOJ's hawkish language",
+    "US 10Y 4.66%; differential still wide, capping the pace of yen appreciation absent a Fed turn",
+    "DXJ/EWJ +13.2% over 12m \u2014 yen weakness was the drag; regime shift favors unhedged EWJ closing the gap"
+  ],
+  "entry_ratio": 0.8927,
+  "target_ratio": 0.925,
+  "stop_ratio": 0.874,
+  "ratio_percentile": 82.5,
+  "base_case": "BOJ holds in September but signals an October/December hike; yen grinds firmer to 152-156 on intervention credibility and narrowing differentials; EWJ/EFA drifts back toward the 52w high as the FX translation tailwind and governance bid offset soft core-core prints. Ratio reaches ~0.925 (+3.6%).",
+  "base_case_probability": 0.5,
+  "bull_case": "BOJ hikes in September (Takata's dissent becomes consensus) and/or the Fed cuts, USDJPY breaks below 150, foreign flows flip positive on the rate-divergence story; ratio pushes through 0.927 to new 52w highs ~0.94+ (+5-6%).",
+  "bull_case_probability": 0.25,
+  "bear_case": "Disorderly yen spike (carry unwind or risk-off) replays Aug 2024 \u2014 local equities fall faster than the FX gain, EWJ/EFA breaks the 200dma; alternatively core-core keeps decelerating and the BOJ blinks, removing the normalization premium. Ratio to ~0.87 or below (-2.5%).",
+  "bear_case_probability": 0.25,
+  "target_return_pct": 0.036,
+  "stop_loss_pct": 0.021,
+  "conviction": 6,
+  "time_horizon": "medium-term (1-3 months)",
+  "key_risks": [
+    "Sharp non-linear yen spike (carry unwind) hits Japanese equities faster than FX translation helps \u2014 Aug 2024 analog; intervention caps gradual weakness, not gap moves",
+    "Core-core CPI at 1.7% and decelerating undermines the BOJ-hike thesis; a dovish surprise unwinds the normalization premium",
+    "Foreign flows already negative (-\u00a5392.5bn latest week) \u2014 if that accelerates, the ratio's 82nd-percentile starting point has no marginal buyer",
+    "EFA hedge is ~20% Japan \u2014 the short leg partially shorts my own long, diluting the Japan-specific expression; acceptable vs ACWI's 60%+ US beta, but noted",
+    "China slowdown spillover hits Japanese cyclicals/exporters (machinery, semis) even with a stable yen"
+  ],
+  "risk_events_calendar": [
+    {
+      "date": "2026-08-28",
+      "event": "Tokyo CPI (August) \u2014 lead indicator for national core",
+      "impact": "medium"
+    },
+    {
+      "date": "2026-09-04",
+      "event": "US employment report \u2014 Fed path and USDJPY driver",
+      "impact": "high"
+    },
+    {
+      "date": "2026-09-19",
+      "event": "BOJ Monetary Policy Meeting \u2014 live hike risk per July dissent",
+      "impact": "high"
+    },
+    {
+      "date": "2026-09-17",
+      "event": "FOMC decision \u2014 differential side of the yen equation",
+      "impact": "high"
+    },
+    {
+      "date": "2026-08-14",
+      "event": "Weekly MOF flow data \u2014 confirmation check on foreign selling",
+      "impact": "medium"
+    }
+  ],
+  "yen_view": "Sideways-to-firmer, 152-160 range: intervention line drawn near 164 caps the top, BOJ hike path and hawkish dissent bias spot lower; orderly appreciation is a modest net positive for EWJ in USD and for the ratio, a disorderly spike is the bear case",
+  "final_conviction": 6
+}
+
+Instructions:
+1. Evaluate whether technicals SUPPORT or OPPOSE the proposed long direction for EWJ.
+2. Score the technical setup 1-10.
+3. Provide key levels (support, resistance), suggested entry, stop, and target.
+4. Respond with a JSON object containing:
+   - "proposal_id": "macro_asia_japan_2026-08-08T21:45"
+   - "agent_id": "tech_equity"
+   - "technical_score": number 1-10
+   - "trend_alignment": "aligned"/"opposed"/"neutral"
+   - "momentum_regime": string
+   - "suggested_entry": number
+   - "suggested_stop_loss": number
+   - "suggested_take_profit": number
+   - "trailing_stop_method": string
+   - "timing_recommendation": "now"/"wait"/"avoid"
+   - "timing_rationale": string
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.

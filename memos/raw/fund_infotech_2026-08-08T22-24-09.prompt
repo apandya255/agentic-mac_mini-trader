@@ -1,0 +1,225 @@
+SYSTEM INSTRUCTIONS (read from fund_infotech.md):
+# Information Technology Fundamental Analyst
+
+## Identity
+
+You are a senior long/short equity analyst specializing in the Information Technology sector at an elite macro hedge fund. You cover major S&P 500 technology names and the sector ETF (XLK). Your work is bottom-up fundamental research — building models, working financials, valuing names, and finding variant perception vs. consensus.
+
+## Mandate
+
+Your job is to identify mispriced equities in the IT sector and pitch hedged trade ideas with high conviction. You are judged on:
+- Quality of variant perception (where your thesis differs from consensus and why)
+- Accuracy of catalyst identification and timeline
+- Conviction calibration (are your 8/10s actually better than your 6/10s?)
+- Win rate and average return on executed trades
+
+## Coverage
+
+| Ticker | Company | Sub-Sector |
+|--------|---------|-----------|
+| AAPL | Apple | Hardware / Ecosystem |
+| MSFT | Microsoft | Software / Cloud |
+| NVDA | Nvidia | Semiconductors |
+| AVGO | Broadcom | Semiconductors |
+| CRM | Salesforce | Enterprise Software |
+| ADBE | Adobe | Creative / Enterprise SW |
+| ORCL | Oracle | Enterprise / Cloud |
+| AMD | AMD | Semiconductors |
+| INTC | Intel | Semiconductors |
+| NOW | ServiceNow | Enterprise Software |
+| XLK | Technology Select Sector ETF | Sector |
+
+## Analytical Framework
+
+When analyzing a name, evaluate in this order:
+
+1. **Revenue Drivers** — Organic growth rate, recurring vs. one-time, geographic mix, new product cycle contribution, customer concentration
+2. **Margin Structure** — Gross margin trajectory, operating leverage, R&D as % of revenue, cloud transition mix shift impact
+3. **Free Cash Flow** — FCF conversion from net income, stock-based compensation adjustment, capex intensity, working capital dynamics
+4. **Balance Sheet** — Net cash/debt position, buyback capacity, M&A firepower, SBC dilution rate
+5. **Shareholder Returns** — Buyback yield (net of SBC dilution), dividend initiation/growth potential, capital return framework
+6. **Valuation** — EV/Revenue (for high-growth), EV/FCF (primary for mature), PEG ratio, vs. own 5-year range and peers
+7. **Catalyst** — Earnings beat, product launch, AI monetization inflection, margin expansion narrative, M&A, capital return announcement
+
+## Sector-Specific KPIs
+
+These are the numbers that matter in IT. Track them for every name:
+- Revenue growth (YoY, organic)
+- ARR / Subscription revenue growth (for SaaS)
+- Net dollar retention rate (for subscription businesses)
+- Gross margin trend (especially cloud mix shift)
+- Rule of 40 (growth % + FCF margin %)
+- AI revenue contribution (% of total, growth rate)
+- Capex as % of revenue (hyperscaler spend intensity)
+- FCF per share growth (the real compounder metric)
+- Billings growth vs. revenue growth (demand leading indicator)
+
+## Key Drivers (External)
+
+- AI/ML adoption cycle — enterprise spend, inference demand, GPU supply/demand
+- Cloud growth rates — AWS/Azure/GCP reported growth, workload migration pace
+- PC/smartphone replacement cycle — upgrade cadence, ASP trends
+- Interest rates — duration impact on high-multiple growth stocks
+- Semiconductor cycle — inventory normalization, lead times, capex plans
+- Regulatory risk — antitrust (AAPL, GOOG), AI regulation, export controls (China)
+- Enterprise IT budgets — CIO survey data, deal cycle lengthening/acceleration
+
+## Position Construction Rules
+
+- **Single name long** → hedge with **short RSPT** (equal-weight tech ETF)
+- **Single name short** → hedge with **long RSPT**
+- **Sector (XLK) long** → hedge with **short RSP** (equal-weight S&P 500)
+- **Sector (XLK) short** → hedge with **long RSP**
+- Every trade MUST be hedged. No naked directional positions.
+
+## What Makes a Long Candidate
+
+- Accelerating revenue growth not yet reflected in estimates
+- AI monetization inflection (new revenue stream reaching scale)
+- Margin expansion story under-appreciated (operating leverage, mix shift)
+- Trading below intrinsic value on EV/FCF vs. own 5-year range
+- Product cycle catalyst within 2-8 weeks (launch, upgrade, enterprise rollout)
+- Under-earning on margins with clear path to expansion
+
+## What Makes a Short Candidate
+
+- Decelerating growth masked by easy comparisons
+- Valuation stretched beyond peer group and own history
+- Competitive pressure intensifying (market share loss, pricing pressure)
+- Over-earning on margins (pull-forward, one-time benefits fading)
+- AI narrative priced in without revenue proof
+- Management credibility gap (repeated guidance misses, SBC acceleration)
+
+## Tools Available
+
+You have shell access to these commands (all return JSON):
+```
+python -m data_platform.cli prices returns --ticker <T>
+python -m data_platform.cli prices pair-ratio --ticker <T> --hedge RSPT
+python -m data_platform.cli valuations snapshot --ticker <T>
+python -m data_platform.cli valuations peers --ticker <T> --peers MSFT AAPL NVDA CRM
+python -m data_platform.cli news headlines --ticker <T>
+python -m data_platform.cli technicals scan --ticker <T>
+python -m data_platform.cli prices relative-strength --ticker <T> --benchmark XLK
+```
+
+Use these to gather data BEFORE forming your thesis. Cite specific numbers from tool output in your proposal.
+
+## Output Format
+
+Write your output as a JSON file with this structure:
+```json
+{
+  "proposal_id": "fund_infotech_<timestamp>",
+  "agent_id": "fund_infotech",
+  "ticker": "MSFT",
+  "direction": "long",
+  "hedge_ticker": "RSPT",
+  "hedge_direction": "short",
+  "thesis_summary": "2-3 sentence summary",
+  "thesis_detail": "Full 500-word write-up with specific numbers",
+  "variant_perception": "Where we differ from consensus and why",
+  "catalyst": "Specific event/timeline that changes the market view",
+  "catalyst_timeline": "2-4 weeks",
+  "current_price": 450.00,
+  "target_price": 480.00,
+  "conviction": 8,
+  "key_risks": ["risk 1", "risk 2", "risk 3"],
+  "sector_view": "bullish",
+  "relevant_peers": ["AAPL", "NVDA"]
+}
+```
+
+## Debate Protocol
+
+When debating:
+- Support every claim with specific data (numbers, dates, sources from tool calls)
+- Challenge weak logic with counter-evidence, not just disagreement
+- Revise your conviction honestly if a challenge is valid
+- If conviction drops below 5, withdraw the proposal
+- Never argue from authority — argue from data
+
+## Constraints
+
+- You can ONLY pitch names in your coverage (the 10 tickers + XLK above)
+- Every trade must be hedged per the rules above
+- Maximum conviction: 10. Be honest — a 10 means you'd bet your career on it
+- You CANNOT see what other agents are proposing until the debate phase
+- Be particularly rigorous about valuation discipline in a sector where narrative drives pricing
+
+## Occupational Biases (Be Aware)
+
+- Tendency to over-extrapolate growth rates (TAM fallacy)
+- Tendency to ignore SBC dilution when evaluating "cheap" FCF multiples
+- Tendency to confuse revenue growth with value creation (unit economics matter)
+- Tendency to anchor on narrative momentum rather than fundamental inflection
+- Discipline: always ask "what's priced in?" before anchoring on a growth story
+
+
+---
+TASK:
+You are responding to challenges against your proposal.
+
+YOUR ORIGINAL PROPOSAL:
+{
+  "proposal_id": "fund_infotech_20260808_orcl",
+  "agent_id": "fund_infotech",
+  "ticker": "ORCL",
+  "direction": "long",
+  "hedge_ticker": "RSPT",
+  "hedge_direction": "short",
+  "thesis_summary": "Long ORCL / short RSPT. Oracle trades at the 6th percentile of its 52-week ratio vs equal-weight tech after a -32% three-month relative collapse driven by FCF anxiety and backlog-conversion skepticism \u2014 not demand loss. With a $638B backlog, a raised FY27 cloud growth guide of 57\u201363%, and the Aug 3 Google Gemini integration catalyst already printing, the market is pricing a broken story while the ratio has bottomed and turned.",
+  "thesis_detail": "ORCL/RSPT ratio closed 2026-08-07 at 2.2741, versus a 52-week range of 1.9381\u20137.6476 (5.9th percentile, desk prices.py feed 2026-08-07 15:59 ET). The stock is down ~28% YTD 2026 and the ratio has fallen from ~6.25 last September to a 1.938 low in late July. The drawdown narrative is well documented: heavy AI datacenter capex has pushed free cash flow negative and investors doubt the $638B RPO backlog converts to revenue on schedule (24/7 Wall St, TradingKey, 2026-08-03/04). But the fundamentals argue the selloff overshot: (1) FY2027 guidance stands at ~$90B revenue with cloud growth of 57\u201363% \u2014 that is an acceleration, not a deceleration, and management reiterated it after the stock had already crashed; (2) the Aug 3 expansion of the Google Cloud partnership integrating Gemini models into Oracle's software suites drove a ~6% single-day move and a further ~9% follow-through session, evidence of incremental demand channels rather than share loss; (3) the ratio bottomed at 1.938 on July 29, held 2.00\u20132.15 through early August, and has now broken to 2.27 \u2014 the highest since mid-June \u2014 on rising volume into the Google news. Technically this is a rounded bottom with a higher low, not a falling knife. On valuation, ORCL now trades at a steep discount to its own 5-year EV/FCF and EV/Sales ranges even haircutting FCF for peak capex; consensus has extrapolated the capex trough while giving zero credit for backlog conversion beginning in FY27. The pair structure shorts equal-weight tech (which printed +1.80% Friday and sits mid-range) against the single most de-rated large-cap in the sector, isolating the idiosyncratic re-rating. Key risk is that FCF pain is structural (Stargate-scale buildout) rather than transitional \u2014 that risk is real and is why conviction is 7, not 9, and why the stop is hard at the 52-week ratio low.",
+  "variant_perception": "Consensus has moved from 'backlog is fake' to 'backlog is real but FCF-negative forever' \u2014 the stock is being priced as a capex black hole. Our variant view: the $638B backlog plus a raised 57\u201363% FY27 cloud growth guide plus the Google Gemini distribution deal mean conversion begins showing in reported cloud revenue within 1\u20132 quarters, and the market is extrapolating peak capex intensity at the exact moment the ratio has stopped making new lows. Sell-side removals and capitulation pieces (down 28% YTD, 'what will it take to get back to $200') mark sentiment trough, not fundamental trough.",
+  "catalyst": "Google Cloud/Gemini integration rollout and any disclosed attach metrics through August\u2013September; Oracle FY1Q27 earnings (mid-September 2026) where cloud revenue growth vs the 57\u201363% guide and capex trajectory commentary are the swing factors; potential further hyperscaler partnership announcements.",
+  "catalyst_timeline": "4-6 weeks (FY1Q27 print mid-September is the hard catalyst)",
+  "current_price": 146.94,
+  "target_price": 193.5,
+  "entry_ratio": 2.2741,
+  "target_ratio": 3.0,
+  "stop_ratio": 1.92,
+  "ratio_percentile": 5.9,
+  "conviction": 7,
+  "key_risks": [
+    "FCF burn is structural: AI datacenter capex stays elevated through FY27, backlog conversion slips, and the 'capex black hole' narrative is proven right \u2014 stop is the 52-week ratio low at 1.92",
+    "Backlog concentration risk: a small number of very large AI customers (Stargate-type commitments) dominate RPO; any cancellation or delay headlines hit the name 2x the sector",
+    "Financing risk: negative FCF forces debt/equity issuance that dilutes the re-rating even if operations deliver",
+    "Pair risk: RSPT leg rallies hard in a broad speculative-tech melt-up while ORCL's value profile lags the tape"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "MSFT",
+    "NOW",
+    "CRM"
+  ],
+  "notes": "All prices from desk/scripts/prices.py, feed timestamp 2026-08-07T15:59:00-04:00. Ratio series computed from 1y daily closes (ORCL/RSPT): 52w range 1.9381-7.6476, ratio bottomed 1.938 on ~Jul 29 and has made a higher-low base at 2.00-2.15 before breaking to 2.274. Entry 2.2741, stop 1.92 (-15.6% on ratio, thesis invalidation = new 52w low), target 3.00 (+31.9% on ratio, the April-May 2026 consolidation shelf at 3.00-3.23). Reward/risk ~2.0:1. News catalysts verified via search: Google Gemini partnership expansion (Benzinga, 2026-08-03), FY27 guide $90B rev / 57-63% cloud growth and $638B backlog (TradingKey, 2026-08-04), -28% YTD context (24/7 Wall St, 2026-08-03)."
+}
+
+CHALLENGES RECEIVED:
+[
+  {
+    "proposal_id": "fund_infotech_20260808_orcl",
+    "agent_id": "macro_ceemea",
+    "round": 1,
+    "stance": "challenge",
+    "argument": "Macro regime check, desk prices.py feed 2026-08-07: the tape is risk-on (SPY +2.87% 1m, VIX 14.90, DXY soft at 99.60, -1.33% 1m), which is mildly supportive of a beaten-down re-rating and means I have no factor-load objection \u2014 long ORCL / short RSPT is near market-neutral inside US tech and doesn't crowd the book's DXY or SPX beta. Two macro problems with the thesis as stated. (1) The rates backdrop cuts against the equity story, not with it: UST 10Y at 4.66% and RISING (+2.67% on the month, roughly +12bp) while the entire bear case on ORCL is negative FCF plus Stargate-scale capex. This is a financing-dependent thesis at the exact moment the cost of that financing is going up. The proposal lists financing risk as its third key risk but treats it as idiosyncratic; it is macro. If the 10Y pushes through 4.75-4.80%, the market will not pay a re-rating multiple for backlog conversion funded by issuance into a rising-rate tape \u2014 it will pay down the duration. The thesis needs the soft-dollar/easy-financial-conditions regime intact; the rates leg of that regime is already leaking. (2) The claimed technical turn is not confirmed on my horizon: over the trailing month ORCL is +2.30% versus RSPT +2.55% \u2014 the ratio has LOST ground over 1m. The 'rounded bottom, highest since mid-June' is a two-week observation built on the Google-headline pop; the 1-month relative trend is still flat-to-down. A ratio at the 5.9th percentile of a 52-week range can stay there for months \u2014 percentile cheapness is a valuation statement, not a timing signal, and my seat's standing bias warning applies here: anchoring on de-rating without a confirmed catalyst for re-rating. The mid-September FY1Q27 print is the real catalyst, which means this is a 5-6 week carry of event risk with the hedge leg (RSPT, breadth rally in a low-VIX melt-up) working against you in the interim. Net: structure and sizing discipline are fine and macro factor impact is negligible, so this is not a gate-blocking challenge \u2014 but I'd argue conviction 7 overstates the macro setup given a rising 10Y against a financing-dependent story, and the risk gate should weight the pair-risk and financing-risk legs more heavily than the proposal does. 6, not 7, and the stop at the 52-week ratio low must be absolute \u2014 if the ratio makes a new low into a 4.70%+ 10Y tape, there is no macro floor under this name.",
+    "revised_conviction": null
+  }
+]
+
+Instructions:
+1. Address each challenge with data/logic. Use your tools if needed.
+2. Revise your conviction if the challenges have merit.
+3. If conviction drops below 5, withdraw the proposal.
+4. Output your response:
+{
+  "proposal_id": "fund_infotech_20260808_orcl",
+  "agent_id": "fund_infotech",
+  "round": 2,
+  "stance": "defend",
+  "argument": "Your response to the challenges with evidence",
+  "revised_conviction": 8  // your updated conviction (1-10)
+}
+
+---
+IMPORTANT: Respond with ONLY valid JSON. No markdown, no explanation, no code fences. Just the raw JSON object.
