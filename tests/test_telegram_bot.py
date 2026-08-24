@@ -175,7 +175,7 @@ class TestSendMessage:
         mock_post.return_value = True
         result = send_message("Hello world")
         assert result is True
-        mock_post.assert_called_once_with("token", "chat_id", "Hello world")
+        mock_post.assert_called_once_with("token", "chat_id", "INFO: Hello world")
 
     @patch("src.telegram_bot._log_delivery")
     @patch("src.telegram_bot._post_message")
@@ -250,7 +250,7 @@ class TestSendMessage:
         mock_config.return_value = ("token", "chat_id")
         mock_post.return_value = True
         send_message("Log test")
-        mock_log.assert_called_once_with("success", "Log test", attempt=1)
+        mock_log.assert_called_once_with("success", "INFO: Log test", attempt=1)
 
     @patch("src.telegram_bot._log_delivery")
     @patch("src.telegram_bot._post_message")

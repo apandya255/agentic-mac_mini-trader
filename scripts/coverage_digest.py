@@ -473,7 +473,7 @@ def deliver_summary(summary: str, today: date) -> None:
     full_message = header + summary
 
     try:
-        success = send_message(full_message)
+        success = send_message(full_message, severity="info")
         if success:
             logger.info("Summary delivered via Telegram.")
         else:

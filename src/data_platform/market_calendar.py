@@ -12,13 +12,20 @@ Usage:
         is_market_open,
         is_trading_day,
         is_fx_session_active,
+        is_equity_stale_check_suppressed,
+        is_fx_stale_check_suppressed,
         next_market_open,
     )
 
     if is_market_open():
         poll_prices()
-    else:
-        sleep_seconds = (next_market_open() - datetime.now(ET)).total_seconds()
+    elif is_equity_stale_check_suppressed():
+        # Don't flag equity tickers as stale when market is closed
+        pass
+
+    if is_fx_stale_check_suppressed():
+        # Don't flag FX tickers as stale during session gaps
+        pass
 """
 
 from __future__ import annotations
@@ -175,6 +182,51 @@ def is_fx_session_active(now: datetime | None = None) -> bool:
 
     # Monday through Thursday: always open
     return True
+
+
+def is_equity_stale_check_suppressed(now: datetime | None = None) -> bool:
+    """
+    True if equity staleness checks should be suppressed because the
+    US equity market is currently closed.
+
+    Staleness checks are suppressed when:
+    - It is a weekend (Saturday or Sunday)
+    - It is a US market holiday
+    - It is outside regular trading hours (before 09:30 or after 16:00 ET)
+
+    Parameters
+    ----------
+    now : datetime, optional
+        A timezone-aware or naive datetime. If None, uses the current time.
+
+    Returns
+    -------
+    bool
+        True if staleness checks should be suppressed (market closed).
+    """
+    return not is_market_open(now)
+
+
+def is_fx_stale_check_suppressed(now: datetime | None = None) -> bool:
+    """
+    True if FX staleness checks should be suppressed because the FX
+    session is inactive.
+
+    The FX session is inactive (and staleness checks suppressed) during:
+    - All of Saturday (weekday == 5)
+    - Sunday before 17:00 ET (session hasn't opened yet)
+
+    Parameters
+    ----------
+    now : datetime, optional
+        A timezone-aware or naive datetime. If None, uses the current time.
+
+    Returns
+    -------
+    bool
+        True if FX staleness checks should be suppressed (session inactive).
+    """
+    return not is_fx_session_active(now)
 
 
 def next_market_open(now: datetime | None = None) -> datetime:

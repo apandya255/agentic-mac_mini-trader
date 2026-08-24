@@ -349,7 +349,7 @@ def generate_structured_brief(data_context: dict) -> str:
 def deliver_telegram(briefing: str) -> bool:
     """Send the briefing via Telegram."""
     header = "📋 *Morning Brief*\n\n"
-    return send_message(header + briefing)
+    return send_message(header + briefing, severity="info")
 
 
 def log_to_runs(briefing: str) -> Path:

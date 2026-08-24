@@ -484,7 +484,7 @@ def notify_material_headlines(material_headlines: list[ScannedHeadline]) -> None
     lines.append(f"Routed to owning seats for flip-condition check.")
 
     message = "\n".join(lines)
-    send_message(message)
+    send_message(message, severity="info")
 
 
 # ---------------------------------------------------------------------------

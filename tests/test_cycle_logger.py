@@ -1,6 +1,6 @@
 """Unit tests for src/data_platform/cycle_logger.py
 
-Validates: Requirements 18.1, 18.2, 18.5
+Validates: Requirements 14.1, 14.2, 14.3, 14.4, 18.1, 18.2, 18.5
 """
 
 from __future__ import annotations
@@ -8,10 +8,18 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
-from src.data_platform.cycle_logger import log_cycle, LOGS_DIR
+from src.data_platform.cycle_logger import (
+    log_cycle,
+    log_cycle_start,
+    log_phase_complete,
+    log_cycle_complete,
+    _get_cycle_log_path,
+    LOGS_DIR,
+)
 
 
 class TestLogCycle:
@@ -211,3 +219,204 @@ class TestLogCycle:
             assert isinstance(path, Path)
         finally:
             self._cleanup(path)
+
+
+
+class TestPipelineCycleLogger:
+    """Tests for pipeline-specific cycle logging (Requirements 14.1-14.4)."""
+
+    def _cleanup_cycle(self, cycle_id: str):
+        """Remove a test cycle log file if it exists."""
+        path = _get_cycle_log_path(cycle_id)
+        if path.exists():
+            os.remove(path)
+
+    def test_log_cycle_start_creates_file_and_returns_cycle_id(self):
+        """log_cycle_start creates a JSON file and returns a valid cycle_id."""
+        cycle_id = log_cycle_start(trigger_source="manual")
+        try:
+            assert cycle_id is not None
+            # cycle_id should be an ISO timestamp format
+            assert "T" in cycle_id
+            assert len(cycle_id) == 19  # YYYY-MM-DDTHH:MM:SS
+
+            # File should exist
+            path = _get_cycle_log_path(cycle_id)
+            assert path.exists()
+
+            # File content should match expected structure
+            with open(path) as f:
+                data = json.load(f)
+            assert data["cycle_id"] == cycle_id
+            assert data["trigger_source"] == "manual"
+            assert data["phases"] == []
+            assert data["summary"] is None
+        finally:
+            self._cleanup_cycle(cycle_id)
+
+    def test_log_cycle_start_default_trigger_source(self):
+        """log_cycle_start defaults trigger_source to 'launchd'."""
+        cycle_id = log_cycle_start()
+        try:
+            path = _get_cycle_log_path(cycle_id)
+            with open(path) as f:
+                data = json.load(f)
+            assert data["trigger_source"] == "launchd"
+        finally:
+            self._cleanup_cycle(cycle_id)
+
+    def test_log_phase_complete_appends_phase(self):
+        """log_phase_complete appends a phase entry to the phases array."""
+        cycle_id = log_cycle_start(trigger_source="manual")
+        try:
+            log_phase_complete(cycle_id, "data_refresh", 12.345, "success")
+
+            path = _get_cycle_log_path(cycle_id)
+            with open(path) as f:
+                data = json.load(f)
+
+            assert len(data["phases"]) == 1
+            phase = data["phases"][0]
+            assert phase["name"] == "data_refresh"
+            assert phase["duration_s"] == 12.35  # rounded to 2 decimals
+            assert phase["outcome"] == "success"
+        finally:
+            self._cleanup_cycle(cycle_id)
+
+    def test_log_phase_complete_multiple_phases_accumulate(self):
+        """Multiple log_phase_complete calls accumulate phases in order."""
+        cycle_id = log_cycle_start(trigger_source="launchd")
+        try:
+            log_phase_complete(cycle_id, "data_refresh", 12.3, "success")
+            log_phase_complete(cycle_id, "proposals", 45.1, "success")
+            log_phase_complete(cycle_id, "debate", 90.2, "failure")
+
+            path = _get_cycle_log_path(cycle_id)
+            with open(path) as f:
+                data = json.load(f)
+
+            assert len(data["phases"]) == 3
+            assert data["phases"][0]["name"] == "data_refresh"
+            assert data["phases"][1]["name"] == "proposals"
+            assert data["phases"][2]["name"] == "debate"
+            assert data["phases"][2]["outcome"] == "failure"
+        finally:
+            self._cleanup_cycle(cycle_id)
+
+    def test_log_cycle_complete_adds_summary(self):
+        """log_cycle_complete sets the summary object."""
+        cycle_id = log_cycle_start(trigger_source="launchd")
+        try:
+            log_phase_complete(cycle_id, "data_refresh", 12.3, "success")
+            log_cycle_complete(cycle_id, 193.1, proposals=4, trades=1, exit_code=0)
+
+            path = _get_cycle_log_path(cycle_id)
+            with open(path) as f:
+                data = json.load(f)
+
+            assert data["summary"] is not None
+            assert data["summary"]["total_duration_s"] == 193.1
+            assert data["summary"]["proposals_generated"] == 4
+            assert data["summary"]["trades_booked"] == 1
+            assert data["summary"]["exit_code"] == 0
+        finally:
+            self._cleanup_cycle(cycle_id)
+
+    def test_full_cycle_produces_expected_structure(self):
+        """A complete cycle produces JSON matching the design data model."""
+        cycle_id = log_cycle_start(trigger_source="launchd")
+        try:
+            log_phase_complete(cycle_id, "data_refresh", 12.3, "success")
+            log_phase_complete(cycle_id, "proposals", 45.1, "success")
+            log_phase_complete(cycle_id, "debate", 90.2, "success")
+            log_phase_complete(cycle_id, "risk_gate", 30.5, "success")
+            log_phase_complete(cycle_id, "pm_decision", 15.0, "success")
+            log_cycle_complete(cycle_id, 193.1, proposals=4, trades=1, exit_code=0)
+
+            path = _get_cycle_log_path(cycle_id)
+            with open(path) as f:
+                data = json.load(f)
+
+            # Top-level keys
+            assert "cycle_id" in data
+            assert "trigger_source" in data
+            assert "phases" in data
+            assert "summary" in data
+
+            # Phases count
+            assert len(data["phases"]) == 5
+
+            # Each phase has required fields
+            for phase in data["phases"]:
+                assert "name" in phase
+                assert "duration_s" in phase
+                assert "outcome" in phase
+
+            # Summary has required fields
+            summary = data["summary"]
+            assert "total_duration_s" in summary
+            assert "proposals_generated" in summary
+            assert "trades_booked" in summary
+            assert "exit_code" in summary
+        finally:
+            self._cleanup_cycle(cycle_id)
+
+    def test_log_phase_complete_with_missing_cycle_creates_entry(self):
+        """log_phase_complete gracefully handles a missing cycle log."""
+        # Use a fake cycle_id that was never started
+        fake_cycle_id = "1999-01-01T00:00:00"
+        try:
+            log_phase_complete(fake_cycle_id, "data_refresh", 5.0, "success")
+
+            path = _get_cycle_log_path(fake_cycle_id)
+            assert path.exists()
+
+            with open(path) as f:
+                data = json.load(f)
+            assert data["cycle_id"] == fake_cycle_id
+            assert data["trigger_source"] == "unknown"
+            assert len(data["phases"]) == 1
+        finally:
+            self._cleanup_cycle(fake_cycle_id)
+
+    def test_log_cycle_complete_with_missing_cycle_creates_entry(self):
+        """log_cycle_complete gracefully handles a missing cycle log."""
+        fake_cycle_id = "1999-01-02T00:00:00"
+        try:
+            log_cycle_complete(fake_cycle_id, 50.0, proposals=2, trades=0, exit_code=1)
+
+            path = _get_cycle_log_path(fake_cycle_id)
+            assert path.exists()
+
+            with open(path) as f:
+                data = json.load(f)
+            assert data["summary"]["exit_code"] == 1
+            assert data["summary"]["proposals_generated"] == 2
+        finally:
+            self._cleanup_cycle(fake_cycle_id)
+
+    def test_cycle_log_file_naming_convention(self):
+        """Cycle log files follow cycle_{sanitized_timestamp}.json pattern."""
+        cycle_id = log_cycle_start(trigger_source="manual")
+        try:
+            path = _get_cycle_log_path(cycle_id)
+            assert path.name.startswith("cycle_")
+            assert path.name.endswith(".json")
+            # Should not contain colons (filesystem-unsafe)
+            assert ":" not in path.name
+        finally:
+            self._cleanup_cycle(cycle_id)
+
+    def test_duration_rounded_to_2_decimals(self):
+        """Phase durations are rounded to 2 decimal places."""
+        cycle_id = log_cycle_start()
+        try:
+            log_phase_complete(cycle_id, "test_phase", 12.3456789, "success")
+
+            path = _get_cycle_log_path(cycle_id)
+            with open(path) as f:
+                data = json.load(f)
+
+            assert data["phases"][0]["duration_s"] == 12.35
+        finally:
+            self._cleanup_cycle(cycle_id)

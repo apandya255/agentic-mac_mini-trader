@@ -1,0 +1,377 @@
+{
+  "pbtResults": {
+    "1.3 Write property tests for computation functions (Properties 1–2: Exposure calculations)": {
+      "status": "passed",
+      "lastRunTimestamp": 1787501420363
+    },
+    "1.4 Write property tests for computation functions (Properties 3–5: Position metrics)": {
+      "status": "passed",
+      "lastRunTimestamp": 1787501464466
+    },
+    "1.5 Write property tests for computation functions (Properties 6–8: Alerts, volatility, conviction)": {
+      "status": "passed",
+      "lastRunTimestamp": 1787501492512
+    }
+  },
+  "executionHistory": {
+    "1.1 Enhance `/api/alerts` endpoint in serve.py to merge monitor alerts from `memos/state/alerts.json`": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117149
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501131049
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501326591
+      }
+    ],
+    "1.2 Add client-side computation functions to dashboard.py JS generation": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117185
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501132042
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501327483
+      }
+    ],
+    "1.3 Write property tests for computation functions (Properties 1–2: Exposure calculations)": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117205
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501334041
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501717340
+      }
+    ],
+    "1.4 Write property tests for computation functions (Properties 3–5: Position metrics)": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117232
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501334910
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501718333
+      }
+    ],
+    "1.5 Write property tests for computation functions (Properties 6–8: Alerts, volatility, conviction)": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117249
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501335754
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501719337
+      }
+    ],
+    "2. Checkpoint - Ensure computation logic and API changes are solid": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117267
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501729509
+      }
+    ],
+    "3.1 Add autonomous status banner to the top of the dashboard HTML": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117303
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501336582
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501720280
+      }
+    ],
+    "3.2 Revamp Overview tab with autonomous trading summary": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117322
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501337465
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501721068
+      }
+    ],
+    "4.1 Add autonomous lifecycle fields to position rows in the Book tab": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117341
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501732786
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502082188
+      }
+    ],
+    "4.2 Add Book tab KPI strip with portfolio summary metrics": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117359
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501733591
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502083028
+      }
+    ],
+    "5.1 Build Risk tab alert summary and critical alert cards": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117382
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501734397
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502084020
+      }
+    ],
+    "5.2 Build Risk tab heatmap, factor grid, and correlation/volatility sections": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117398
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502092143
+      }
+    ],
+    "6. Checkpoint - Ensure Book and Risk tabs render correctly": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117418
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502414146
+      }
+    ],
+    "7.1 Build IC Debate tab with structured proposal cards": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117439
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502093116
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502410144
+      }
+    ],
+    "8.1 Build Technicals tab with ranked signal table and sector grouping": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117459
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502417328
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502794408
+      }
+    ],
+    "9.1 Build Run Log tab with pipeline cycle history and per-order breakdown": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117482
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502418301
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502795319
+      }
+    ],
+    "10.1 Wire all tabs together with error handling and data staleness indicators": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117498
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502799098
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787503158500
+      }
+    ],
+    "10.2 Write integration tests for the revamped dashboard": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117517
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787503161494
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787503406143
+      }
+    ],
+    "11. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501117532
+      },
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787503409728
+      }
+    ],
+    "1. Extend serve.py alerts endpoint and add computation utility functions": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501719366
+      }
+    ],
+    "3. Implement Autonomous Status Banner and Overview Tab": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787501721091
+      }
+    ],
+    "4. Implement Book Tab enhancements": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502083050
+      }
+    ],
+    "7. Implement IC Debate Tab — Decision Analysis": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502410171
+      }
+    ],
+    "8. Implement Technicals Tab — Signal Summary": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502794432
+      }
+    ],
+    "9. Implement Run Log Tab — Pipeline Execution Detail": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787502795348
+      }
+    ],
+    "10. Integration, error handling, and final wiring": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787503406173
+      }
+    ],
+    "5. Implement Risk Tab — Synthesized Dashboard": [
+      {
+        "executionId": "6bdb886e-dcb1-4d52-bc42-f283bfa5d9bb",
+        "chatSessionId": "sess_0017688f-a9c3-49e4-89da-40f1770bac76",
+        "timestamp": 1787503418693
+      }
+    ]
+  }
+}

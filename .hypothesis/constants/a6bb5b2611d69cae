@@ -1,0 +1,4 @@
+# file: /Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/src/trading/sigma_detector.py
+# hypothesis_version: 6.165.10
+
+[2.0, 'magnitude', 'threshold_2sigma', 'trailing_stddev', 'triggered']

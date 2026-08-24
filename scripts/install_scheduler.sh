@@ -1,394 +1,112 @@
 #!/bin/bash
-# Install all launchd agents for the Agentic Trading system.
-# Generates plist files with auto-detected paths and loads them via launchctl.
-set -e
+# install_scheduler.sh — Install/update all launchd plists for the Agentic Trading platform
+# Requirements: 4.1, 4.2
+#
+# Installs 6 core plists from the project's plists/ directory:
+#   1. com.agentic-trader.pipeline-0940 — Pipeline at 09:40 ET Mon-Fri
+#   2. com.agentic-trader.pipeline-1130 — Pipeline at 11:30 ET Mon-Fri
+#   3. com.agentic-trader.pipeline-1330 — Pipeline at 13:30 ET Mon-Fri
+#   4. com.agentic-trader.pipeline-1530 — Pipeline at 15:30 ET Mon-Fri
+#   5. com.agentic-trader.monitor       — Monitor with KeepAlive + ThrottleInterval=300
+#   6. com.agentic-trader.session-reset  — Session reset at 09:30 ET weekdays
 
-# --- Auto-detect paths ---
+set -euo pipefail
+
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-PYTHON_PATH="$(which python3)"
-PLIST_DIR="$HOME/Library/LaunchAgents"
+PLIST_DIR="${PROJECT_DIR}/plists"
+LAUNCH_AGENTS_DIR="${HOME}/Library/LaunchAgents"
 
-echo "=== Agentic Trading Scheduler Installer ==="
-echo "  Project dir:  $PROJECT_DIR"
-echo "  Python path:  $PYTHON_PATH"
-echo "  Plist dir:    $PLIST_DIR"
-echo ""
-
-# --- Create required directories ---
-mkdir -p "$PLIST_DIR"
-mkdir -p "$PROJECT_DIR/memos/logs"
-
-# --- Generate Price Poller plist (weekday 09:25 ET, Mon-Fri) ---
-cat > "$PLIST_DIR/com.agentictrading.pricepoller.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.pricepoller</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/price_poller.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartCalendarInterval</key>
-    <array>
-        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>9</integer><key>Minute</key><integer>25</integer></dict>
-        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>9</integer><key>Minute</key><integer>25</integer></dict>
-        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>9</integer><key>Minute</key><integer>25</integer></dict>
-        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>9</integer><key>Minute</key><integer>25</integer></dict>
-        <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>9</integer><key>Minute</key><integer>25</integer></dict>
-    </array>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/poller_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/poller_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-        <key>POLL_INTERVAL_MINUTES</key>
-        <string>5</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.pricepoller.plist"
-
-# --- Generate Daily Sweep plist (weekday 06:00 ET, Mon-Fri) ---
-cat > "$PLIST_DIR/com.agentictrading.dailysweep.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.dailysweep</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/daily_sweep.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartCalendarInterval</key>
-    <array>
-        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
-        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
-        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
-        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
-        <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
-    </array>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/sweep_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/sweep_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.dailysweep.plist"
-
-# --- Generate Full Desk Run plist (Saturday 10:00 ET) ---
-cat > "$PLIST_DIR/com.agentictrading.fulldesk.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.fulldesk</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/full_desk_run.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Weekday</key><integer>6</integer>
-        <key>Hour</key><integer>10</integer>
-        <key>Minute</key><integer>0</integer>
-    </dict>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/fulldesk_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/fulldesk_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.fulldesk.plist"
-
-# --- Generate Headline Scan plist (hourly; script gates on is_market_open internally) ---
-cat > "$PLIST_DIR/com.agentictrading.headlinescan.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.headlinescan</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/headline_scan.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartInterval</key>
-    <integer>3600</integer>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/headlinescan_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/headlinescan_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.headlinescan.plist"
-
-# --- Generate Asia Note plist (21:45 ET, Sun-Thu) ---
-cat > "$PLIST_DIR/com.agentictrading.asianote.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.asianote</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/asia_note.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartCalendarInterval</key>
-    <array>
-        <dict><key>Weekday</key><integer>0</integer><key>Hour</key><integer>21</integer><key>Minute</key><integer>45</integer></dict>
-        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>21</integer><key>Minute</key><integer>45</integer></dict>
-        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>21</integer><key>Minute</key><integer>45</integer></dict>
-        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>21</integer><key>Minute</key><integer>45</integer></dict>
-        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>21</integer><key>Minute</key><integer>45</integer></dict>
-    </array>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/asianote_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/asianote_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.asianote.plist"
-
-# --- Generate Morning Brief plist (05:30 ET, Mon-Fri) ---
-cat > "$PLIST_DIR/com.agentictrading.morningbrief.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.morningbrief</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/morning_brief.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartCalendarInterval</key>
-    <array>
-        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>5</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>5</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>5</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>5</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>5</integer><key>Minute</key><integer>30</integer></dict>
-    </array>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/morningbrief_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/morningbrief_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.morningbrief.plist"
-
-# --- Generate Post-Close Wrap plist (16:30 ET, Mon-Fri) ---
-cat > "$PLIST_DIR/com.agentictrading.postclosewrap.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.postclosewrap</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/post_close_wrap.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartCalendarInterval</key>
-    <array>
-        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>16</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>16</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>16</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>16</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>16</integer><key>Minute</key><integer>30</integer></dict>
-    </array>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/postclosewrap_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/postclosewrap_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.postclosewrap.plist"
-
-# --- Generate Coverage Digest plist (17:30 ET, Mon-Fri) ---
-cat > "$PLIST_DIR/com.agentictrading.coveragedigest.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.coveragedigest</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/coverage_digest.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartCalendarInterval</key>
-    <array>
-        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
-    </array>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/coveragedigest_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/coveragedigest_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.coveragedigest.plist"
-
-# --- Generate Week-Ahead plist (Sunday 18:00 ET) ---
-cat > "$PLIST_DIR/com.agentictrading.weekahead.plist" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.agentictrading.weekahead</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON_PATH}</string>
-        <string>${PROJECT_DIR}/scripts/week_ahead.py</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>${PROJECT_DIR}</string>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Weekday</key><integer>0</integer>
-        <key>Hour</key><integer>18</integer>
-        <key>Minute</key><integer>0</integer>
-    </dict>
-    <key>StandardOutPath</key>
-    <string>${PROJECT_DIR}/memos/logs/weekahead_stdout.log</string>
-    <key>StandardErrorPath</key>
-    <string>${PROJECT_DIR}/memos/logs/weekahead_stderr.log</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-</dict>
-</plist>
-EOF
-
-echo "  Generated com.agentictrading.weekahead.plist"
-
-# --- Load all plists ---
-echo ""
-echo "Loading launchd agents..."
-
-ALL_PLISTS=(
-    com.agentictrading.pricepoller
-    com.agentictrading.dailysweep
-    com.agentictrading.fulldesk
-    com.agentictrading.headlinescan
-    com.agentictrading.asianote
-    com.agentictrading.morningbrief
-    com.agentictrading.postclosewrap
-    com.agentictrading.coveragedigest
-    com.agentictrading.weekahead
+# The 6 core plists to install
+PLISTS=(
+    "com.agentic-trader.pipeline-0940"
+    "com.agentic-trader.pipeline-1130"
+    "com.agentic-trader.pipeline-1330"
+    "com.agentic-trader.pipeline-1530"
+    "com.agentic-trader.monitor"
+    "com.agentic-trader.session-reset"
 )
 
-for plist in "${ALL_PLISTS[@]}"; do
-    launchctl unload "$PLIST_DIR/$plist.plist" 2>/dev/null || true
-    launchctl load "$PLIST_DIR/$plist.plist"
-    echo "  Loaded $plist"
+echo "=== Agentic Trading Scheduler Installer ==="
+echo "  Project dir:       $PROJECT_DIR"
+echo "  Source plists:     $PLIST_DIR"
+echo "  LaunchAgents dir:  $LAUNCH_AGENTS_DIR"
+echo ""
+
+# --- Pre-flight checks ---
+if [ ! -d "$PLIST_DIR" ]; then
+    echo "ERROR: Source plist directory not found: $PLIST_DIR" >&2
+    exit 1
+fi
+
+# Ensure target directories exist
+mkdir -p "$LAUNCH_AGENTS_DIR"
+mkdir -p "$PROJECT_DIR/memos/logs"
+
+# --- Track results ---
+LOADED=0
+FAILED=0
+FAILED_LABELS=()
+
+echo "Installing ${#PLISTS[@]} launchd plists..."
+echo ""
+
+for label in "${PLISTS[@]}"; do
+    plist_file="${label}.plist"
+    source_path="${PLIST_DIR}/${plist_file}"
+    target_path="${LAUNCH_AGENTS_DIR}/${plist_file}"
+
+    echo -n "  ${label}: "
+
+    # Check source exists
+    if [ ! -f "$source_path" ]; then
+        echo "FAILED (source not found: ${source_path})"
+        FAILED=$((FAILED + 1))
+        FAILED_LABELS+=("$label")
+        continue
+    fi
+
+    # Unload existing version (if loaded) — suppress errors
+    launchctl unload "$target_path" 2>/dev/null || true
+
+    # Copy plist to LaunchAgents directory
+    cp "$source_path" "$target_path"
+
+    # Load the plist
+    if launchctl load "$target_path" 2>&1; then
+        echo "loaded successfully"
+        LOADED=$((LOADED + 1))
+    else
+        load_error=$?
+        echo "FAILED (launchctl load exit code: ${load_error})" >&2
+        FAILED=$((FAILED + 1))
+        FAILED_LABELS+=("$label")
+    fi
 done
 
 echo ""
-echo "All schedulers installed successfully."
+echo "--- Results ---"
+echo "  Loaded:  ${LOADED}/${#PLISTS[@]}"
+echo "  Failed:  ${FAILED}/${#PLISTS[@]}"
+
+if [ ${FAILED} -gt 0 ]; then
+    echo ""
+    echo "Failed plists:" >&2
+    for failed_label in "${FAILED_LABELS[@]}"; do
+        echo "  - ${failed_label}" >&2
+    done
+    echo ""
+    echo "To verify: launchctl list | grep agentic-trader"
+    echo "To uninstall: bash ${PROJECT_DIR}/scripts/uninstall_scheduler.sh"
+    exit 1
+fi
+
 echo ""
-echo "Quiet_Hours note: Non-exempt scripts (headline scan, post-close wrap, coverage digest)"
-echo "  check Quiet_Hours (22:00-07:00 ET) internally and skip execution during that window."
-echo "  Exempt scripts (Asia note, morning brief) fire regardless of Quiet_Hours."
+echo "All ${#PLISTS[@]} plists installed and loaded successfully."
 echo ""
-echo "To verify: launchctl list | grep agentictrading"
-echo "To uninstall: bash $PROJECT_DIR/scripts/uninstall_scheduler.sh"
+echo "Schedule summary:"
+echo "  Pipeline cycles: 09:40, 11:30, 13:30, 15:30 ET (Mon-Fri)"
+echo "  Monitor:         every 300s (KeepAlive + ThrottleInterval)"
+echo "  Session reset:   09:30 ET (Mon-Fri)"
+echo ""
+echo "To verify: launchctl list | grep agentic-trader"
+echo "To uninstall: bash ${PROJECT_DIR}/scripts/uninstall_scheduler.sh"

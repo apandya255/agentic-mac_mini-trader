@@ -1,0 +1,4 @@
+# file: /Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/src/data_platform/prices.py
+# hypothesis_version: 6.165.10
+
+[60.0, 126, 252, 400, 1024, '%Y-%m-%d', '+', '--full', '--lookback', '--tickers', '1. open', '1D', '1M', '1W', '1Y', '2. high', '3. low', '3M', '4. close', '5. volume', '6M', 'ALPHAVANTAGE_API_KEY', 'Close', 'Date', 'Error Message', 'Fetch full universe', 'High', 'Low', 'Note', 'Open', 'SPY', 'Time Series (Daily)', 'Volume', '__main__', 'alpha_vantage', 'close', 'data', 'date', 'levels', 'long', 'ok', 'prices.db', 'short', 'store_true', 'unfetchable', 'unknown', 'utf-8', 'yfinance']

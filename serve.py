@@ -44,6 +44,7 @@ HISTORY_PATH = BASE_DIR / "memos" / "state" / "pnl_history.json"
 DASHBOARD_PATH = BASE_DIR / "dashboard.html"
 CALENDAR_PATH = BASE_DIR / "desk" / "calendar.md"
 FACTORS_PATH = BASE_DIR / "memos" / "state" / "factors.json"
+ALERTS_PATH = BASE_DIR / "memos" / "state" / "alerts.json"
 
 # --- Configuration ---
 POLL_INTERVAL_MINUTES = int(os.environ.get("POLL_INTERVAL_MINUTES", "5"))
@@ -294,200 +295,29 @@ def api_pending():
 
 @app.route("/api/accept/<order_id>", methods=["POST"])
 def api_accept(order_id: str):
-    """Accept a pending order — adds it to the book at current market price."""
-    # Find the order
-    pending = get_pending_orders()
-    target = None
-    for o in pending:
-        if o.get("order_id") == order_id or o.get("proposal_id") == order_id:
-            target = o
-            break
-
-    if not target:
-        return jsonify({"error": "Order not found or already processed"}), 404
-
-    # Get current prices for entry
-    ticker = target.get("ticker", "")
-    hedge_ticker = target.get("hedge_ticker", "")
-    entry_price = get_price(ticker)
-    hedge_entry_price = get_price(hedge_ticker) if hedge_ticker else None
-
-    if entry_price is None:
-        return jsonify({"error": f"Cannot get price for {ticker}"}), 400
-
-    # Build position
-    position = {
-        "ticker": ticker,
-        "direction": target.get("direction", "long"),
-        "hedge_ticker": hedge_ticker,
-        "hedge_direction": target.get("hedge_direction", "short"),
-        "pair_ratio": round(entry_price / hedge_entry_price, 4) if hedge_entry_price else None,
-        "size_pct_nav": target.get("size_pct_nav", 0.02),
-        "conviction": target.get("conviction", 7),
-        "entry_price": entry_price,
-        "hedge_entry_price": hedge_entry_price,
-        "current_price": entry_price,
-        "hedge_current_price": hedge_entry_price,
-        "entry_date": datetime.now().strftime("%Y-%m-%d"),
-        "status": "active",
-        "stop_loss_method": target.get("stop_loss_method", "trailing 2.5%"),
-        "take_profit": target.get("take_profit", ""),
-        "proposal_id": target.get("proposal_id", ""),
-        "unrealized_pnl_pct": 0.0,
-        "hedge_unrealized_pnl_pct": 0.0,
-        "combined_pnl_pct": 0.0,
-    }
-
-    # Update book
-    book = load_book()
-    book["positions"].append(position)
-    book["cash_pct"] -= position["size_pct_nav"] * 2  # both legs
-
-    # Gather all pipeline data linked to this proposal for the journal
-    pid = target.get("proposal_id", "")
-    linked_debates = []
-    if DEBATE_DIR.exists():
-        for f in DEBATE_DIR.glob("*.json"):
-            try:
-                d = json.loads(f.read_text())
-                if d.get("proposal_id") == pid:
-                    linked_debates.append(d)
-            except (json.JSONDecodeError, KeyError):
-                continue
-
-    linked_tech = None
-    if SCORES_DIR.exists():
-        for f in SCORES_DIR.glob("*.json"):
-            try:
-                s = json.loads(f.read_text())
-                if s.get("proposal_id") == pid and s.get("technical_score") is not None:
-                    linked_tech = s
-                    break
-            except (json.JSONDecodeError, KeyError):
-                continue
-
-    linked_risk = None
-    if RISK_DIR.exists():
-        for f in RISK_DIR.glob("*.json"):
-            try:
-                r = json.loads(f.read_text())
-                if r.get("proposal_id") == pid and r.get("decision"):
-                    linked_risk = r
-                    break
-            except (json.JSONDecodeError, KeyError):
-                continue
-
-    book["trade_journal"].append({
-        "action": "open",
-        "order": target,
-        "timestamp": datetime.now().isoformat(),
-        "entry_price": entry_price,
-        "hedge_entry_price": hedge_entry_price,
-        "debates": linked_debates,
-        "tech_score": linked_tech,
-        "risk_decision": linked_risk,
-    })
-    save_book(book)
-
-    # Record NAV snapshot
-    record_nav_snapshot(book)
-
+    """Disabled in autonomous mode."""
     return jsonify({
-        "status": "accepted",
-        "ticker": ticker,
-        "entry_price": entry_price,
-        "hedge_entry_price": hedge_entry_price,
-        "position": position,
-    })
+        "error": "autonomous_mode_active",
+        "message": "Manual trade approval is disabled in autonomous mode"
+    }), 403
 
 
 @app.route("/api/deny/<order_id>", methods=["POST"])
 def api_deny(order_id: str):
-    """Deny a pending order — marks it as rejected."""
-    pending = get_pending_orders()
-    target = None
-    for o in pending:
-        if o.get("order_id") == order_id or o.get("proposal_id") == order_id:
-            target = o
-            break
-
-    if not target:
-        return jsonify({"error": "Order not found or already processed"}), 404
-
-    # Add to denied list
-    denied_path = BASE_DIR / "memos" / "state" / "denied.json"
-    denied = []
-    if denied_path.exists():
-        denied = json.loads(denied_path.read_text())
-    denied.append(target.get("proposal_id", order_id))
-    denied_path.write_text(json.dumps(denied, indent=2))
-
-    # Log to journal
-    book = load_book()
-    book["trade_journal"].append({
-        "action": "denied",
-        "order": target,
-        "timestamp": datetime.now().isoformat(),
-        "reason": request.json.get("reason", "User denied") if request.is_json else "User denied",
-    })
-    save_book(book)
-
-    return jsonify({"status": "denied", "proposal_id": target.get("proposal_id")})
+    """Disabled in autonomous mode."""
+    return jsonify({
+        "error": "autonomous_mode_active",
+        "message": "Manual trade approval is disabled in autonomous mode"
+    }), 403
 
 
 @app.route("/api/close/<ticker>", methods=["POST"])
 def api_close(ticker: str):
-    """Close an active position at current market price."""
-    book = load_book()
-    target_pos = None
-    for pos in book.get("positions", []):
-        if pos.get("ticker") == ticker and pos.get("status") == "active":
-            target_pos = pos
-            break
-
-    if not target_pos:
-        return jsonify({"error": f"No active position for {ticker}"}), 404
-
-    # Get exit prices
-    exit_price = get_price(ticker)
-    hedge_exit = get_price(target_pos.get("hedge_ticker", "")) if target_pos.get("hedge_ticker") else None
-
-    # Compute realized P&L
-    entry = target_pos.get("entry_price", 0)
-    direction = target_pos.get("direction", "long")
-    if direction == "long":
-        realized_pnl = (exit_price - entry) / entry if entry else 0
-    else:
-        realized_pnl = (entry - exit_price) / entry if entry else 0
-
-    # Mark position closed
-    target_pos["status"] = "closed"
-    target_pos["exit_price"] = exit_price
-    target_pos["hedge_exit_price"] = hedge_exit
-    target_pos["exit_date"] = datetime.now().strftime("%Y-%m-%d")
-    target_pos["realized_pnl_pct"] = realized_pnl
-
-    # Restore cash
-    book["cash_pct"] += target_pos.get("size_pct_nav", 0) * 2
-
-    # Journal
-    book["trade_journal"].append({
-        "action": "close",
-        "ticker": ticker,
-        "exit_price": exit_price,
-        "realized_pnl_pct": realized_pnl,
-        "timestamp": datetime.now().isoformat(),
-    })
-
-    save_book(book)
-    record_nav_snapshot(book)
-
+    """Disabled in autonomous mode."""
     return jsonify({
-        "status": "closed",
-        "ticker": ticker,
-        "exit_price": exit_price,
-        "realized_pnl_pct": realized_pnl,
-    })
+        "error": "autonomous_mode_active",
+        "message": "Manual position close is disabled in autonomous mode"
+    }), 403
 
 
 @app.route("/api/mark")
@@ -692,32 +522,46 @@ def api_logs():
 
 @app.route("/api/alerts")
 def api_alerts():
-    """Return alerts (trail breaches, target touches, 2σ interrupts, telegram deliveries) and system health."""
-    if not LOGS_DIR.exists():
-        return jsonify({"alerts": [], "health": []})
-
+    """Return alerts (trail breaches, target touches, 2σ interrupts, telegram deliveries),
+    monitor alerts from alerts.json, and system health."""
     alerts = []
     health = []
     today = datetime.now().strftime("%Y-%m-%d")
 
-    for log_file in LOGS_DIR.glob("*.json"):
-        try:
-            entry = json.loads(log_file.read_text())
-            cycle_type = entry.get("cycle_type", "")
-            timestamp = entry.get("timestamp", "")
+    if LOGS_DIR.exists():
+        for log_file in LOGS_DIR.glob("*.json"):
+            try:
+                entry = json.loads(log_file.read_text())
+                cycle_type = entry.get("cycle_type", "")
+                timestamp = entry.get("timestamp", "")
 
-            # Alerts: telegram deliveries (these contain trail/target/2σ/feed outage messages)
-            if cycle_type == "telegram_delivery":
-                alerts.append(entry)
-            # Health: price_poll, daily_sweep, full_desk_run from today
-            elif timestamp.startswith(today):
-                health.append(entry)
-        except (json.JSONDecodeError, OSError):
-            continue
+                # Alerts: telegram deliveries (these contain trail/target/2σ/feed outage messages)
+                if cycle_type == "telegram_delivery":
+                    alerts.append(entry)
+                # Health: price_poll, daily_sweep, full_desk_run from today
+                elif timestamp.startswith(today):
+                    health.append(entry)
+            except (json.JSONDecodeError, OSError):
+                continue
 
     alerts.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
     health.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
-    return jsonify({"alerts": alerts[:50], "health": health[:50]})
+
+    # Load monitor alerts from memos/state/alerts.json
+    monitor_alerts = []
+    if ALERTS_PATH.exists():
+        try:
+            monitor_alerts = json.loads(ALERTS_PATH.read_text())
+            if not isinstance(monitor_alerts, list):
+                monitor_alerts = []
+        except (json.JSONDecodeError, OSError):
+            monitor_alerts = []
+
+    return jsonify({
+        "alerts": alerts[:50],
+        "monitor_alerts": monitor_alerts,
+        "health": health[:50]
+    })
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -814,9 +658,6 @@ TRADE JOURNAL:
 {json.dumps(book.get('trade_journal', [])[-10:], indent=2)}
 """
     return context
-
-
-ALERTS_PATH = BASE_DIR / "memos" / "state" / "alerts.json"
 
 
 @app.route("/api/chat", methods=["POST"])

@@ -382,7 +382,7 @@ def main():
 
     # Step 5: Deliver via Telegram (Requirement 6.4)
     logger.info("Delivering via Telegram...")
-    delivery_success = send_message(note)
+    delivery_success = send_message(note, severity="info")
 
     duration = time.time() - cycle_start
 

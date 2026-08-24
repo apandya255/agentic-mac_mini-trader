@@ -1,0 +1,4 @@
+# file: /Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/src/trading/circuit_breaker.py
+# hypothesis_version: 6.165.10
+
+[-0.04, -0.03, -0.02, 'critical', 'deleverage', 'emergency', 'memos', 'nav', 'session_nav.json', 'session_open_nav', 'state']

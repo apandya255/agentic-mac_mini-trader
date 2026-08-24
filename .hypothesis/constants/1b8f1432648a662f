@@ -1,0 +1,4 @@
+# file: /Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/src/trading/slippage.py
+# hypothesis_version: 6.165.10
+
+[10000, '5', 'SLIPPAGE_BPS', 'entry', 'exit', 'long', 'short']

@@ -280,18 +280,7 @@ td, th, .metric-value, .metric-sub, .kpi-strip-value, .topbar-stat .value,
 .position-filter-input:focus { border-color:var(--brand-gold); }
 .position-filter-input::placeholder { color:var(--text-muted); }
 
-/* SECTOR FILTER DROPDOWN (Recommendations) */
-.sector-filter-select {
-    background:var(--bg-card); border:1px solid var(--border); border-radius:8px;
-    padding:9px 14px; font-size:0.88em; color:var(--text-primary); width:220px;
-    outline:none; transition:var(--ease); font-family:inherit; margin-bottom:14px;
-    cursor:pointer; appearance:none; -webkit-appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23b0b0b0' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
-    background-repeat:no-repeat; background-position:right 12px center;
-    padding-right:32px;
-}
-.sector-filter-select:focus { border-color:var(--brand-gold); }
-.sector-filter-select option { background:var(--bg-secondary); color:var(--text-primary); }
+/* SORTABLE HEADERS */
 .sortable-header {
     cursor:pointer; user-select:none; white-space:nowrap; position:relative;
     transition:var(--ease);
@@ -350,26 +339,33 @@ td, th, .metric-value, .metric-sub, .kpi-strip-value, .topbar-stat .value,
 .badge-neutral { background:rgba(160,160,160,0.1); color:var(--text-secondary); }
 .badge-blue { background:rgba(91,138,181,0.12); color:var(--steel-blue); }
 
+/* TRIM STATUS BADGES */
+.trim-badge { display:inline-flex; align-items:center; padding:3px 8px; border-radius:12px; font-size:0.72em; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+.trim-badge.untrimmed { background:rgba(160,160,160,0.12); color:var(--text-secondary); }
+.trim-badge.half_trimmed { background:rgba(255,171,0,0.15); color:var(--warning); }
+.trim-badge.fully_exited { background:rgba(0,200,83,0.15); color:var(--positive); }
+
+/* THESIS STATUS */
+.thesis-warning { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:12px; font-size:0.72em; font-weight:700; background:rgba(255,23,68,0.12); color:var(--negative); }
+
+/* SIGMA EVENT BADGE */
+.sigma-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:12px; font-size:0.72em; font-weight:700; background:rgba(156,39,176,0.15); color:#ce93d8; }
+
+/* TRAIL STOP DISPLAY */
+.trail-stop-info { font-size:0.82em; white-space:nowrap; }
+.trail-stop-info .trail-price { font-weight:600; }
+.trail-stop-info .trail-pct { margin-left:4px; font-size:0.9em; color:var(--text-secondary); }
+
+/* AUTONOMOUS DETAIL SECTION in position detail panel */
+.pdp-autonomous-section { border-top:1px solid var(--border); padding-top:12px; margin-top:12px; }
+.pdp-autonomous-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; }
+
 /* P&L */
 .positive { color:var(--positive); }
 .negative { color:var(--negative); }
 .neutral { color:var(--text-muted); }
 
-/* PENDING ORDER CARD */
-.pending-card {
-    background:var(--bg-card); border:1px solid var(--border); border-radius:14px;
-    padding:18px; margin-bottom:16px; position:relative; overflow:hidden;
-    transition:var(--ease);
-}
-.pending-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--brand-gold), var(--steel-blue)); }
-.pending-card:hover { border-color:#3a3a3a; }
-.pending-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-.pending-header h3 { font-size:1.2em; font-weight:800; }
-.pending-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-bottom:16px; }
-.pending-field .pf-label { font-size:0.7em; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
-.pending-field .pf-value { font-size:0.95em; font-weight:600; margin-top:3px; }
-.pending-rationale { font-size:0.88em; color:var(--text-secondary); line-height:1.6; padding:14px 0; border-top:1px solid var(--border); }
-.pending-actions { display:flex; gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid var(--border); }
+/* BUTTONS */
 .btn {
     padding:10px 24px; border-radius:8px; font-size:0.88em; font-weight:700;
     border:none; cursor:pointer; transition:var(--ease); letter-spacing:0.3px;
@@ -417,16 +413,51 @@ td, th, .metric-value, .metric-sub, .kpi-strip-value, .topbar-stat .value,
 .drawdown-chart { margin-top:12px; }
 .drawdown-chart svg { width:100%; height:100px; }
 
-/* TIMELINE */
-.timeline { position:relative; padding-left:28px; }
-.timeline::before { content:''; position:absolute; left:8px; top:0; bottom:0; width:2px; background:var(--border); }
-.tl-item { position:relative; padding-bottom:24px; }
-.tl-item::before { content:''; position:absolute; left:-24px; top:6px; width:10px; height:10px; border-radius:50%; background:var(--steel-blue); border:2px solid var(--bg-primary); }
-.tl-time { font-size:0.72em; color:var(--text-muted); }
-.tl-content { margin-top:4px; font-size:0.88em; color:var(--text-secondary); }
-.tl-stats { display:flex; gap:16px; margin-top:6px; }
-.tl-stat { font-size:0.78em; color:var(--text-muted); }
-.tl-stat strong { color:var(--text-primary); }
+/* RUN LOG */
+.runlog-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.runlog-header .section-title { margin-bottom:0; }
+.runlog-cycle { background:var(--bg-secondary); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:12px; transition:var(--ease); }
+.runlog-cycle:hover { border-color:#4a7a9e; }
+.runlog-cycle-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; cursor:pointer; }
+.runlog-cycle-left { display:flex; align-items:center; gap:12px; }
+.runlog-ts { font-size:0.78em; color:var(--text-muted); font-family:monospace; }
+.runlog-type { font-size:0.72em; text-transform:uppercase; letter-spacing:0.05em; padding:2px 8px; border-radius:4px; background:var(--bg-primary); color:var(--text-secondary); font-weight:600; }
+.runlog-cycle-right { display:flex; align-items:center; gap:12px; }
+.runlog-stat { font-size:0.78em; color:var(--text-muted); }
+.runlog-stat strong { color:var(--text-primary); }
+.runlog-stat.passed strong { color:var(--positive); }
+.runlog-stat.rejected strong { color:var(--negative); }
+.runlog-cb-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:4px; background:rgba(255,23,68,0.12); color:var(--negative); font-size:0.72em; font-weight:600; }
+.runlog-expand-icon { font-size:0.8em; color:var(--text-muted); transition:transform 0.2s ease; }
+.runlog-cycle.expanded .runlog-expand-icon { transform:rotate(180deg); }
+.runlog-orders { display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.runlog-cycle.expanded .runlog-orders { display:block; }
+.runlog-order { display:grid; grid-template-columns:1fr 0.6fr 0.8fr 0.6fr 1fr; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); align-items:center; font-size:0.82em; }
+.runlog-order:last-child { border-bottom:none; }
+.runlog-order-header { font-size:0.7em; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); font-weight:600; padding-bottom:4px; }
+.runlog-ticker { font-weight:700; color:var(--text-primary); }
+.runlog-conviction { color:var(--text-secondary); }
+.runlog-risk { font-size:0.82em; }
+.runlog-risk.approved { color:var(--positive); }
+.runlog-risk.rejected { color:var(--negative); }
+.runlog-pm { font-size:0.82em; }
+.runlog-pm.yes { color:var(--positive); }
+.runlog-pm.no { color:var(--negative); }
+.runlog-gate { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:4px; font-size:0.82em; font-weight:600; }
+.runlog-gate.passed { background:rgba(0,200,83,0.12); color:var(--positive); }
+.runlog-gate.failed { background:rgba(255,23,68,0.12); color:var(--negative); }
+.runlog-cb-held { display:flex; align-items:center; gap:6px; margin-top:4px; padding:6px 10px; background:rgba(255,23,68,0.08); border-radius:6px; font-size:0.78em; color:var(--negative); }
+.runlog-cb-held-icon { font-size:1.1em; }
+.runlog-load-more { display:block; margin:16px auto; padding:10px 24px; background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px; color:var(--text-secondary); font-size:0.85em; cursor:pointer; transition:var(--ease); }
+.runlog-load-more:hover { border-color:var(--steel-blue); color:var(--text-primary); }
+.runlog-skipped { font-size:0.75em; color:var(--warning); font-style:italic; margin-top:4px; }
+.runlog-error { font-size:0.75em; color:var(--negative); margin-top:4px; }
+@media (max-width:768px) {
+    .runlog-order { grid-template-columns:1fr 1fr; gap:4px; }
+    .runlog-order-header { display:none; }
+    .runlog-cycle-header { flex-direction:column; align-items:flex-start; }
+    .runlog-cycle-right { flex-wrap:wrap; }
+}
 
 /* DEBATE */
 .debate-entry { background:var(--bg-secondary); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:12px; transition:var(--ease); }
@@ -552,7 +583,7 @@ td, th, .metric-value, .metric-sub, .kpi-strip-value, .topbar-stat .value,
     .debate-header { flex-wrap:wrap; gap:6px; }
     .debate-body { font-size:0.84em; }
     .equity-chart svg { height:140px; }
-    .timeline { padding-left:22px; }
+    .runlog-cycle { padding:12px; }
     .tl-stats { flex-wrap:wrap; gap:8px; }
     .rec-grid { grid-template-columns:repeat(2,1fr); }
     .empty-state { padding:32px 16px; }
@@ -1189,6 +1220,126 @@ button:focus-visible,
 .pending-rationale {
     color: #9a9a9a;
 }
+
+/* AUTONOMOUS MODE BANNER */
+.autonomous-banner {
+    --banner-bg: linear-gradient(90deg, rgba(200,169,110,0.12), rgba(91,138,181,0.08));
+    --banner-border: var(--brand-gold-dim);
+    --banner-text: var(--brand-gold);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 32px;
+    background: var(--banner-bg);
+    border-bottom: 1px solid var(--banner-border);
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--banner-text);
+    flex-wrap: wrap;
+    transition: background 0.3s, border-color 0.3s;
+}
+.autonomous-banner.cb-halted {
+    --banner-bg: linear-gradient(90deg, rgba(220,53,69,0.15), rgba(220,53,69,0.08));
+    --banner-border: var(--negative);
+    --banner-text: var(--negative);
+}
+.autonomous-banner-icon {
+    font-size: 1.2em;
+}
+.autonomous-banner-text {
+    letter-spacing: 0.3px;
+}
+.autonomous-banner-cb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88em;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.autonomous-banner-stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.banner-stat-label {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+.banner-stat-value {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+.banner-stat-sep {
+    margin-left: 4px;
+}
+.banner-stat-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.82em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.badge-overlap {
+    background: rgba(255,193,7,0.15);
+    color: #ffc107;
+    border: 1px solid rgba(255,193,7,0.3);
+}
+.cb-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.cb-dot.cb-inactive {
+    background: var(--positive);
+}
+.cb-dot.cb-active {
+    background: var(--negative);
+    animation: pulse-dot 1.5s infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* AUTONOMOUS MODE LABEL (replaces manual controls) */
+.autonomous-mode-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--brand-gold);
+    background: rgba(200,169,110,0.1);
+    border: 1px solid var(--brand-gold-dim);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+@media(max-width:768px) {
+    .autonomous-banner {
+        padding: 8px 16px;
+        font-size: 0.78em;
+        gap: 8px;
+    }
+    .autonomous-banner-cb {
+        margin-left: 0;
+        width: 100%;
+        margin-top: 4px;
+    }
+    .autonomous-banner-stat {
+        width: 100%;
+        margin-top: 2px;
+    }
+}
 </style>
 """
 
@@ -1203,9 +1354,6 @@ def build_sidebar() -> str:
     <div class="sidebar-nav">
         <div class="nav-label">Dashboard</div>
         <div class="nav-item active" data-tab="overview" onclick="switchTab('overview')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('overview');}">Overview</div>
-        <div class="nav-item" data-tab="pending" onclick="switchTab('pending')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('pending');}">
-            Recommendations <span class="badge-count" id="pending-count" style="display:none;">0</span>
-        </div>
         <div class="nav-item" data-tab="positions" onclick="switchTab('positions')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('positions');}">Book</div>
         <div class="nav-item" data-tab="journal" onclick="switchTab('journal')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('journal');}">Blotter</div>
 
@@ -1213,7 +1361,6 @@ def build_sidebar() -> str:
         <div class="nav-item" data-tab="debate" onclick="switchTab('debate')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('debate');}">IC Debate</div>
         <div class="nav-item" data-tab="risk" onclick="switchTab('risk')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('risk');}">Risk</div>
         <div class="nav-item" data-tab="technical" onclick="switchTab('technical')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('technical');}">Technicals</div>
-        <div class="nav-item" data-tab="calendar" onclick="switchTab('calendar')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('calendar');}">Calendar</div>
 
         <div class="nav-label">History</div>
         <div class="nav-item" data-tab="timeline" onclick="switchTab('timeline')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('timeline');}">Run Log</div>
@@ -1232,6 +1379,32 @@ def build_sidebar() -> str:
 def build_main_shell() -> str:
     return """
 <div class="main">
+    <!-- Autonomous Mode Banner -->
+    <div class="autonomous-banner" id="autonomous-banner" role="alert" aria-live="polite">
+        <span class="autonomous-banner-icon">&#9889;</span>
+        <span class="autonomous-banner-text">Autonomous Mode</span>
+        <span class="autonomous-banner-cb" id="circuit-breaker-indicator">
+            <span class="cb-dot cb-inactive" id="cb-dot"></span>
+            <span id="cb-label">CB: Loading&hellip;</span>
+        </span>
+        <span class="autonomous-banner-stat" id="banner-last-cycle">
+            <span class="banner-stat-label">Last Cycle:</span>
+            <span class="banner-stat-value" id="banner-last-cycle-value">&mdash;</span>
+        </span>
+        <span class="autonomous-banner-stat" id="banner-overlap-guard" style="display:none;">
+            <span class="banner-stat-badge badge-overlap">Cycle Skipped</span>
+            <span class="banner-stat-value" id="banner-overlap-ts"></span>
+        </span>
+        <span class="autonomous-banner-stat" id="banner-trade-counts">
+            <span class="banner-stat-label">Auto-Booked:</span>
+            <span class="banner-stat-value" id="banner-lifetime-trades">&mdash;</span>
+            <span class="banner-stat-label banner-stat-sep">| Session:</span>
+            <span class="banner-stat-value" id="banner-session-count">&mdash;</span>
+        </span>
+        <span class="autonomous-banner-stat" id="banner-stale-indicator" style="display:none;">
+            <span class="banner-stat-badge" style="background:rgba(255,171,0,0.15);color:var(--warning);font-weight:700;padding:3px 10px;border-radius:12px;font-size:0.78em;">&#9888; Stale data</span>
+        </span>
+    </div>
     <header class="topbar">
         <div class="topbar-left"><h2 id="page-title">Jimothy Paper Trading LLC</h2></div>
         <div class="topbar-right">
@@ -1244,13 +1417,11 @@ def build_main_shell() -> str:
     <div id="dashboard-header"></div>
     <div class="content">
         <div class="panel active" id="panel-overview"></div>
-        <div class="panel" id="panel-pending"></div>
         <div class="panel" id="panel-positions"></div>
         <div class="panel" id="panel-journal"></div>
         <div class="panel" id="panel-debate"></div>
         <div class="panel" id="panel-risk"></div>
         <div class="panel" id="panel-technical"></div>
-        <div class="panel" id="panel-calendar"></div>
         <div class="panel" id="panel-timeline"></div>
         <div class="panel" id="panel-chat"></div>
     </div>
@@ -1262,11 +1433,6 @@ def build_main_shell() -> str:
         <div class="mobile-nav-item active" data-tab="overview" onclick="switchTab('overview')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('overview');}">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
             Home
-        </div>
-        <div class="mobile-nav-item" data-tab="pending" onclick="switchTab('pending')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('pending');}">
-            <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-            Orders
-            <span class="mob-badge" id="mob-pending-count" style="display:none;">0</span>
         </div>
         <div class="mobile-nav-item" data-tab="positions" onclick="switchTab('positions')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('positions');}">
             <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
@@ -1312,10 +1478,13 @@ let state = {{
     risks: EMBEDDED.risks || [],
     scores: EMBEDDED.scores || [],
     logs: EMBEDDED.logs || [],
+    alerts: [],
+    monitorAlerts: [],
     apiAvailable: false,
     derived: null,
-    calendar: null,
     factors: null,
+    fetchFailed: false,
+    lastSuccessfulFetch: null,
 }};
 
 // ─── API ────────────────────────────────────────────────────────────────────
@@ -1351,34 +1520,50 @@ async function apiPost(path, body) {{
 }}
 
 async function refreshAll() {{
-    const [bookData, pendingData, historyData] = await Promise.all([
+    let anyFetchFailed = false;
+
+    const [bookData, historyData] = await Promise.all([
         apiFetch('/api/book'),
-        apiFetch('/api/pending'),
         apiFetch('/api/history'),
     ]);
     if (bookData) state.book = bookData;
-    if (pendingData) {{ state.pending = pendingData.pending || []; }}
+    else anyFetchFailed = true;
     if (historyData) state.history = historyData.history || [];
+    else anyFetchFailed = true;
 
-    // Update debates/risk/scores/logs less frequently
-    const [debateData, riskData, scoreData, logData] = await Promise.all([
+    // Update debates/risk/scores/logs/alerts
+    const [debateData, riskData, scoreData, logData, alertsData] = await Promise.all([
         apiFetch('/api/debates'),
         apiFetch('/api/risk'),
         apiFetch('/api/scores'),
         apiFetch('/api/logs'),
+        apiFetch('/api/alerts'),
     ]);
     if (debateData) state.debates = debateData.debates || [];
+    else anyFetchFailed = true;
     if (riskData) state.risks = riskData.risks || [];
+    else anyFetchFailed = true;
     if (scoreData) state.scores = scoreData.scores || [];
+    else anyFetchFailed = true;
     if (logData) state.logs = logData.logs || [];
+    else anyFetchFailed = true;
+    if (alertsData) {{
+        state.alerts = alertsData.alerts || [];
+        state.monitorAlerts = alertsData.monitor_alerts || [];
+    }} else anyFetchFailed = true;
 
-    // Fetch calendar and factors data
-    const [calendarData, factorsData] = await Promise.all([
-        apiFetch('/api/calendar'),
+    // Fetch factors data
+    const [factorsData] = await Promise.all([
         apiFetch('/api/factors'),
     ]);
-    if (calendarData) state.calendar = calendarData;
     if (factorsData) state.factors = factorsData;
+    else anyFetchFailed = true;
+
+    // Track fetch failure state for staleness indicators
+    state.fetchFailed = anyFetchFailed;
+    if (!anyFetchFailed) {{
+        state.lastSuccessfulFetch = new Date().toISOString();
+    }}
 
     // Compute derived metrics from raw state
     state.derived = computeDerivedMetrics(state);
@@ -1499,17 +1684,15 @@ function closePosition(ticker) {{
 function renderAll() {{
     renderDashboardHeader();
     renderTopbar();
+    updateCircuitBreakerIndicator();
     renderOverview();
-    renderPending();
     renderPositions();
     renderJournal();
     renderDebate();
     renderRisk();
     renderTechnical();
-    renderCalendar();
     renderTimeline();
     renderChat();
-    updatePendingBadge();
 }}
 
 function renderDashboardHeader() {{
@@ -1527,21 +1710,137 @@ function renderDashboardHeader() {{
                     <h2>Jimothy Paper Trading LLC</h2>
                     <div class="dashboard-header-meta">Last updated: ${{lastUpdatedStr}}</div>
                 </div>
-                <span class="badge-paper">LIVE — PAPER BOOK</span>
+                <span class="badge-paper">AUTONOMOUS — PAPER BOOK</span>
             </div>
             <div class="header-actions">
                 <button class="btn-header" id="btn-refresh-data" onclick="handleRefreshData()">
                     Mark to Market
                 </button>
-                <button class="btn-header" id="btn-run-cycle" onclick="handleRunCycle()">
-                    Run IC Sweep
-                </button>
-                <button class="btn-header" disabled title="Coming soon">
-                    Export Report
-                </button>
             </div>
         </div>
     `;
+}}
+
+function updateCircuitBreakerIndicator() {{
+    const b = state.book;
+    const banner = document.getElementById('autonomous-banner');
+    const dot = document.getElementById('cb-dot');
+    const label = document.getElementById('cb-label');
+    const lastCycleEl = document.getElementById('banner-last-cycle-value');
+    const overlapEl = document.getElementById('banner-overlap-guard');
+    const overlapTsEl = document.getElementById('banner-overlap-ts');
+    const lifetimeTradesEl = document.getElementById('banner-lifetime-trades');
+    const sessionCountEl = document.getElementById('banner-session-count');
+
+    // --- Circuit Breaker State ---
+    const hasSessionNav = b.session_open_nav != null && b.session_open_nav !== undefined;
+    const sessionOpenNav = hasSessionNav ? b.session_open_nav : 0;
+    const currentNav = b.nav || 0;
+    let drawdownPct = 0;
+    let isActive = false;
+    let cbUnknown = !hasSessionNav;
+
+    if (sessionOpenNav > 0) {{
+        drawdownPct = ((currentNav - sessionOpenNav) / sessionOpenNav);
+        isActive = drawdownPct <= -0.02;
+    }}
+
+    if (dot && label) {{
+        if (cbUnknown) {{
+            dot.className = 'cb-dot cb-inactive';
+            label.textContent = 'CB state unknown';
+            label.style.color = 'var(--text-muted)';
+            label.style.fontWeight = '500';
+        }} else if (isActive) {{
+            dot.className = 'cb-dot cb-active';
+            const prefix = (b._stale || state.fetchFailed) ? 'Last known ' : '';
+            label.textContent = prefix + 'CB: HALTED (' + (drawdownPct * 100).toFixed(2) + '% DD)';
+            label.style.color = 'var(--negative)';
+            label.style.fontWeight = '700';
+        }} else {{
+            dot.className = 'cb-dot cb-inactive';
+            const ddStr = sessionOpenNav > 0 ? ' (' + (drawdownPct * 100).toFixed(2) + '% DD)' : '';
+            const prefix = (b._stale || state.fetchFailed) ? 'Last known ' : '';
+            label.textContent = prefix + 'CB: Inactive' + ddStr;
+            label.style.color = 'var(--text-secondary)';
+            label.style.fontWeight = '500';
+        }}
+    }}
+
+    // --- Stale Data Indicator in banner ---
+    const staleIndicator = document.getElementById('banner-stale-indicator');
+    if (staleIndicator) {{
+        if (state.fetchFailed || b._stale) {{
+            staleIndicator.style.display = 'flex';
+        }} else {{
+            staleIndicator.style.display = 'none';
+        }}
+    }}
+
+    // Toggle halted class on banner for red styling
+    if (banner) {{
+        if (isActive) {{
+            banner.classList.add('cb-halted');
+        }} else {{
+            banner.classList.remove('cb-halted');
+        }}
+    }}
+
+    // --- Last Pipeline Cycle Timestamp ---
+    const logs = state.logs || [];
+    // Find most recent pipeline cycle (not telegram deliveries)
+    const pipelineCycles = logs.filter(l => l.cycle_type !== 'telegram_delivery');
+    if (lastCycleEl) {{
+        if (pipelineCycles.length > 0) {{
+            const lastCycle = pipelineCycles[0]; // Already sorted desc by timestamp
+            lastCycleEl.textContent = formatTimestampET(lastCycle.timestamp);
+        }} else {{
+            lastCycleEl.textContent = '—';
+        }}
+    }}
+
+    // --- Overlap Guard "Cycle Skipped" Indicator ---
+    if (overlapEl) {{
+        // Look for any cycle with status "skipped" or cycle_type containing overlap indication
+        const skippedCycles = logs.filter(l =>
+            l.status === 'skipped' ||
+            (l.error && l.error.includes('cycle_skipped_overlap'))
+        );
+        if (skippedCycles.length > 0) {{
+            const lastSkipped = skippedCycles[0];
+            overlapEl.style.display = 'flex';
+            if (overlapTsEl) {{
+                overlapTsEl.textContent = formatTimestampET(lastSkipped.timestamp);
+            }}
+        }} else {{
+            overlapEl.style.display = 'none';
+        }}
+    }}
+
+    // --- Auto-Booked Trade Counts ---
+    // Lifetime: sum orders_executed across all cycle logs
+    // Session: count from today's cycles only
+    if (lifetimeTradesEl || sessionCountEl) {{
+        let lifetimeCount = 0;
+        let sessionCount = 0;
+        const today = new Date().toISOString().slice(0, 10);
+
+        for (const log of logs) {{
+            const executed = log.orders_executed || (log.metrics && log.metrics.orders_executed) || 0;
+            lifetimeCount += executed;
+            // Session = today's cycles
+            if (log.timestamp && log.timestamp.slice(0, 10) === today) {{
+                sessionCount += executed;
+            }}
+        }}
+
+        if (lifetimeTradesEl) {{
+            lifetimeTradesEl.textContent = lifetimeCount.toString();
+        }}
+        if (sessionCountEl) {{
+            sessionCountEl.textContent = sessionCount.toString();
+        }}
+    }}
 }}
 
 async function handleRefreshData() {{
@@ -1552,84 +1851,6 @@ async function handleRefreshData() {{
     await markToMarket();
     btn.disabled = false;
     btn.innerHTML = 'Refresh Data';
-}}
-
-async function handleRunCycle() {{
-    const btn = document.getElementById('btn-run-cycle');
-    if (!btn) return;
-    showConfirmModal('Run IC Sweep', 'This will trigger all sector and macro analysts to generate new relative-value trade recommendations. It may take several minutes. Continue?', async function() {{
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span> Running...';
-        const r = await apiPost('/api/run-cycle');
-        if (r) {{
-            showToast(r.message || 'IC sweep initiated', 'success');
-            showCycleOverlay();
-            pollCycleStatus();
-        }} else {{
-            btn.disabled = false;
-            btn.innerHTML = 'Run IC Sweep';
-        }}
-    }}, 'approve');
-}}
-
-// ─── CYCLE PROGRESS OVERLAY ──────────────────────────────────────────────────
-function showCycleOverlay() {{
-    if (document.getElementById('cycle-overlay')) return;
-    const overlay = document.createElement('div');
-    overlay.id = 'cycle-overlay';
-    overlay.innerHTML = `
-        <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);z-index:9500;display:flex;align-items:center;justify-content:center;">
-            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:36px 48px;max-width:480px;width:90%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
-                <div style="font-size:1.3em;font-weight:700;color:var(--text-primary);margin-bottom:8px;" id="cycle-phase">Initiating IC sweep...</div>
-                <div style="font-size:0.85em;color:var(--text-secondary);margin-bottom:20px;" id="cycle-detail">Screening universe...</div>
-                <div style="width:100%;height:8px;background:var(--bg-hover);border-radius:4px;overflow:hidden;margin-bottom:16px;">
-                    <div id="cycle-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--brand-gold),var(--positive));border-radius:4px;transition:width 0.8s ease;"></div>
-                </div>
-                <div style="font-size:0.75em;color:var(--text-muted);" id="cycle-pct">0%</div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(overlay);
-}}
-
-function hideCycleOverlay() {{
-    const overlay = document.getElementById('cycle-overlay');
-    if (overlay) overlay.remove();
-    const btn = document.getElementById('btn-run-cycle');
-    if (btn) {{ btn.disabled = false; btn.innerHTML = 'Run IC Sweep'; }}
-}}
-
-let cyclePolling = null;
-function pollCycleStatus() {{
-    if (cyclePolling) clearInterval(cyclePolling);
-    cyclePolling = setInterval(async () => {{
-        const data = await apiFetch('/api/cycle-status');
-        if (!data) return;
-
-        const phaseEl = document.getElementById('cycle-phase');
-        const detailEl = document.getElementById('cycle-detail');
-        const barEl = document.getElementById('cycle-progress-bar');
-        const pctEl = document.getElementById('cycle-pct');
-
-        if (phaseEl) phaseEl.textContent = data.phase || 'Working...';
-        if (detailEl) detailEl.textContent = data.detail || '';
-        if (barEl) barEl.style.width = (data.progress || 0) + '%';
-        if (pctEl) pctEl.textContent = (data.progress || 0) + '%';
-
-        if (!data.running) {{
-            clearInterval(cyclePolling);
-            cyclePolling = null;
-            if (data.progress === 100) {{
-                showToast('IC sweep complete — review recommendations', 'success');
-            }} else if (data.phase && data.phase.startsWith('Error')) {{
-                showToast('IC sweep failed: ' + data.phase, 'error');
-            }}
-            setTimeout(() => {{
-                hideCycleOverlay();
-                refreshAll();
-            }}, 1500);
-        }}
-    }}, 3000);
 }}
 
 // ─── SIDEBAR REFRESH HANDLER ─────────────────────────────────────────────────
@@ -1922,8 +2143,133 @@ function renderTopbar() {{
 function renderOverview() {{
     const b = state.book;
     const activePos = (b.positions || []).filter(p => p.status === 'active');
+    const nav = b.nav || b.initial_nav || 10000000;
+    const initialNav = b.initial_nav || 10000000;
+    const totalPnlDollar = nav - initialNav;
+    const totalPnlPct = initialNav > 0 ? (nav - initialNav) / initialNav : 0;
+    const cashPct = b.cash_pct != null ? b.cash_pct : 1.0;
 
-    let html = renderKPIStrip();
+    // Compute exposure using autonomous mode functions
+    const grossExp = computeGrossExposure(activePos);
+    const netExp = computeNetExposure(activePos);
+
+    // At-risk positions: within 1% of trail stop OR thesis_status "review_overdue"
+    let atRiskCount = 0;
+    for (const p of activePos) {{
+        const proximity = computeTrailStopProximity(p);
+        if (proximity != null && proximity <= 0.01) {{ atRiskCount++; continue; }}
+        if ((p.thesis_status || 'active') === 'review_overdue') {{ atRiskCount++; }}
+    }}
+
+    // Trims Today: positions with trim_status "half_trimmed" or "fully_exited"
+    const trimmedPositions = activePos.filter(p => p.trim_status === 'half_trimmed' || p.trim_status === 'fully_exited');
+    const trimsToday = trimmedPositions.length;
+    const capitalFreed = computeCapitalFreedByTrims(activePos, nav);
+
+    // Alerts summary
+    const allAlerts = state.monitorAlerts || [];
+    let criticalCount = 0, warningCount = 0, infoCount = 0;
+    let highestSeverityMsg = '';
+    for (const alert of allAlerts) {{
+        const level = (alert.level || '').toLowerCase();
+        if (level === 'critical') {{ criticalCount++; if (!highestSeverityMsg) highestSeverityMsg = alert.message || ''; }}
+        else if (level === 'warning') {{ warningCount++; if (!highestSeverityMsg && criticalCount === 0) highestSeverityMsg = alert.message || ''; }}
+        else {{ infoCount++; if (!highestSeverityMsg && criticalCount === 0 && warningCount === 0) highestSeverityMsg = alert.message || ''; }}
+    }}
+    const totalAlerts = criticalCount + warningCount + infoCount;
+
+    let html = '';
+
+    // ─── AUTONOMOUS TRADING SUMMARY KPIs ──────────────────────────────────
+    html += `<div class="section-title">Autonomous Trading Summary</div>`;
+    html += `<div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:24px;">`;
+
+    // NAV
+    html += `<div class="metric-card">
+        <div class="metric-label">NAV</div>
+        <div class="metric-value" style="color:var(--brand-gold);">${{formatCurrency(nav)}}</div>
+    </div>`;
+
+    // Total P&L ($ and %)
+    const pnlColor = totalPnlDollar >= 0 ? 'var(--positive)' : 'var(--negative)';
+    html += `<div class="metric-card">
+        <div class="metric-label">Total P&L</div>
+        <div class="metric-value" style="color:${{pnlColor}};">${{formatPctSigned(totalPnlPct)}}</div>
+        <div class="metric-sub" style="color:${{pnlColor}};">${{formatCurrency(totalPnlDollar)}}</div>
+    </div>`;
+
+    // Gross Exposure
+    html += `<div class="metric-card">
+        <div class="metric-label">Gross Exposure</div>
+        <div class="metric-value">${{(grossExp * 100).toFixed(1)}}%</div>
+    </div>`;
+
+    // Net Exposure
+    html += `<div class="metric-card">
+        <div class="metric-label">Net Exposure</div>
+        <div class="metric-value" style="color:var(--info-blue);">${{(netExp >= 0 ? '+' : '') + (netExp * 100).toFixed(1)}}%</div>
+    </div>`;
+
+    // Cash %
+    html += `<div class="metric-card">
+        <div class="metric-label">Cash</div>
+        <div class="metric-value">${{(cashPct * 100).toFixed(1)}}%</div>
+    </div>`;
+
+    // Active Positions
+    html += `<div class="metric-card">
+        <div class="metric-label">Active Positions</div>
+        <div class="metric-value">${{activePos.length}}</div>
+    </div>`;
+
+    // At-Risk Positions
+    const atRiskColor = atRiskCount > 0 ? 'var(--negative)' : 'var(--positive)';
+    html += `<div class="metric-card">
+        <div class="metric-label">At-Risk Positions</div>
+        <div class="metric-value" style="color:${{atRiskColor}};">${{atRiskCount}}</div>
+        <div class="metric-sub">Stop proximity / thesis overdue</div>
+    </div>`;
+
+    html += `</div>`;  // close kpi-grid
+
+    // ─── TRIMS TODAY ──────────────────────────────────────────────────────
+    if (trimsToday > 0) {{
+        html += `<div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--positive);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+            <div>
+                <div style="font-size:0.72em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;">Trims Today</div>
+                <div style="font-size:1.4em;font-weight:800;color:var(--positive);margin-top:4px;">${{trimsToday}}</div>
+            </div>
+            <div>
+                <div style="font-size:0.72em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;">Capital Freed</div>
+                <div style="font-size:1.4em;font-weight:800;color:var(--positive);margin-top:4px;">${{formatCurrency(capitalFreed)}}</div>
+            </div>
+            <div style="font-size:0.78em;color:var(--text-muted);margin-left:auto;">Positions trimmed via autonomous profit-taking</div>
+        </div>`;
+    }}
+
+    // ─── ALERT BADGE (Risk Summary) ───────────────────────────────────────
+    if (totalAlerts > 0) {{
+        const badgeColor = criticalCount > 0 ? 'var(--negative)' : warningCount > 0 ? 'var(--warning)' : 'var(--info-blue)';
+        const badgeBg = criticalCount > 0 ? 'rgba(255,23,68,0.12)' : warningCount > 0 ? 'rgba(255,171,0,0.12)' : 'rgba(91,138,181,0.12)';
+        html += `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="display:inline-flex;align-items:center;justify-content:center;background:${{badgeBg}};color:${{badgeColor}};font-size:0.85em;font-weight:800;padding:6px 12px;border-radius:16px;min-width:28px;text-align:center;">${{totalAlerts}}</span>
+                <span style="font-size:0.82em;font-weight:600;color:var(--text-primary);">Active Alerts</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">`;
+        if (criticalCount > 0) html += `<span class="badge badge-negative" style="font-size:0.72em;">${{criticalCount}} critical</span>`;
+        if (warningCount > 0) html += `<span class="badge badge-warning" style="font-size:0.72em;">${{warningCount}} warning</span>`;
+        if (infoCount > 0) html += `<span class="badge badge-blue" style="font-size:0.72em;">${{infoCount}} info</span>`;
+        html += `</div>`;
+        if (highestSeverityMsg) {{
+            html += `<div style="font-size:0.82em;color:${{badgeColor}};margin-left:auto;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${{escapeHtml(highestSeverityMsg)}}">${{escapeHtml(highestSeverityMsg)}}</div>`;
+        }}
+        html += `</div>`;
+    }}
+
+    // ─── EQUITY CURVE WITH DRAWDOWN AND CB MARKERS ────────────────────────
+    html += `<div class="section-title">Equity Curve</div>`;
+    html += renderOverviewEquityChart();
 
     // Sector Exposure Table (compact, one row per active sector)
     html += renderSectorExposure();
@@ -1964,19 +2310,13 @@ function renderOverview() {{
         </div>`;
     }}
 
-    // Action Required panel removed — recommendations have their own dedicated tab (Task 1)
-
-    // Agent Consensus removed from overview — IC Debate tab covers this (Task 1)
-
-    // Equity curve removed from overview — moved to Book tab (Task 3)
-
     // Quick position summary
     if (activePos.length) {{
         html += `<div class="section-title">Position Summary</div><table class="data-table"><thead><tr><th>Ticker</th><th>Direction</th><th>Hedge</th><th>Today</th><th>Total P&L</th><th>Size</th><th></th></tr></thead><tbody>`;
         for (const p of activePos) {{
             const cpnl = p.combined_pnl_pct;
             const dailyChg = p.daily_change_pct || 0;
-            html += `<tr><td style="font-weight:600;">${{p.ticker}}</td><td>${{p.direction?.toUpperCase()}}</td><td>${{p.hedge_ticker||'—'}}</td><td class="${{pnlState(dailyChg)}}" style="font-weight:600;">${{formatPctSigned(dailyChg)}}</td><td class="${{pnlState(cpnl)}}" style="font-weight:700;">${{formatPctSigned(cpnl)}}</td><td>${{(p.size_pct_nav*100).toFixed(1)}}%</td><td><button class="btn btn-close" onclick="closePosition('${{p.ticker}}')">Close</button></td></tr>`;
+            html += `<tr><td style="font-weight:600;">${{p.ticker}}</td><td>${{p.direction?.toUpperCase()}}</td><td>${{p.hedge_ticker||'—'}}</td><td class="${{pnlState(dailyChg)}}" style="font-weight:600;">${{formatPctSigned(dailyChg)}}</td><td class="${{pnlState(cpnl)}}" style="font-weight:700;">${{formatPctSigned(cpnl)}}</td><td>${{(p.size_pct_nav*100).toFixed(1)}}%</td><td><span class="autonomous-mode-label">Auto-Managed</span></td></tr>`;
         }}
         html += `</tbody></table>`;
     }}
@@ -1984,58 +2324,156 @@ function renderOverview() {{
     // System Health Panel (compact row at bottom of overview)
     html += renderSystemHealth();
 
-    // Compact Calendar Widget (Task 6.3)
-    html += renderCalendarCompact();
-
     document.getElementById('panel-overview').innerHTML = html;
 }}
 
-// ─── COMPACT CALENDAR WIDGET (Task 6.3) ─────────────────────────────────────
-function renderCalendarCompact() {{
-    if (!state.calendar || state.calendar.empty) {{
-        return `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:20px;">
-            <div style="font-size:0.78em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;">Week Ahead</div>
-            <div style="color:var(--text-muted);font-size:0.88em;">No calendar data available</div>
+// ─── OVERVIEW EQUITY CHART WITH DRAWDOWN & CB MARKERS ────────────────────────
+function renderOverviewEquityChart() {{
+    const history = state.history || [];
+
+    if (!history || history.length === 0) {{
+        return `<div class="equity-chart">
+            <div class="chart-empty-state">
+                <div class="ces-icon">&#128200;</div>
+                <div class="ces-text">No history data — mark positions to build equity curve</div>
+            </div>
         </div>`;
     }}
 
-    let items = [];
-    const cal = state.calendar;
+    if (history.length === 1) {{
+        const pt = history[0];
+        const nav = pt.nav || 10000000;
+        return `<div class="equity-chart"><svg viewBox="0 0 800 180" preserveAspectRatio="xMidYMid meet" style="width:100%;height:180px;" role="img" aria-label="Equity chart single point">
+            <circle cx="400" cy="90" r="6" fill="var(--brand-gold)" />
+            <text x="400" y="75" fill="var(--text-primary)" font-size="13" font-weight="700" text-anchor="middle">${{formatDollar(nav)}}</text>
+        </svg></div>`;
+    }}
 
-    // Gather up to 5-6 items across categories
-    if (cal.macro && cal.macro.length) {{
-        for (const e of cal.macro.slice(0, 2)) {{
-            items.push(`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;"><span style="font-size:0.7em;font-weight:700;color:var(--steel-blue);text-transform:uppercase;min-width:40px;">MACRO</span><span style="font-size:0.84em;color:var(--text-secondary);">${{escapeHtml(e.day || e.date || '')}} ${{escapeHtml(e.time || '')}} — ${{escapeHtml(e.release || e.event || '')}}</span><span style="font-size:0.75em;color:var(--text-muted);margin-left:auto;">${{escapeHtml(e.currency || '')}}</span></div>`);
+    const W = 800, H = 220, PAD_L = 60, PAD_R = 20, PAD_T = 16, PAD_B = 30;
+    const chartW = W - PAD_L - PAD_R;
+    const chartH = H - PAD_T - PAD_B;
+
+    const navs = history.map(h => h.nav || 10000000);
+    const initialCapital = state.book.initial_nav || 10000000;
+
+    const allValues = [...navs, initialCapital];
+    const minNav = Math.min(...allValues) * 0.998;
+    const maxNav = Math.max(...allValues) * 1.002;
+    const rangeNav = maxNav - minNav || 1;
+
+    const scaleX = (i) => PAD_L + (i / (navs.length - 1)) * chartW;
+    const scaleY = (v) => PAD_T + chartH - ((v - minNav) / rangeNav) * chartH;
+
+    // Line path
+    let pathD = `M ${{scaleX(0)}} ${{scaleY(navs[0])}}`;
+    for (let i = 1; i < navs.length; i++) {{
+        pathD += ` L ${{scaleX(i)}} ${{scaleY(navs[i])}}`;
+    }}
+
+    // Area fill
+    const baseY = PAD_T + chartH;
+    const areaD = pathD + ` L ${{scaleX(navs.length-1)}} ${{baseY}} L ${{scaleX(0)}} ${{baseY}} Z`;
+
+    // Color based on performance
+    const lastNav = navs[navs.length - 1];
+    const firstNav = navs[0];
+    const lineColor = lastNav > firstNav ? 'var(--positive)' : lastNav < firstNav ? 'var(--negative)' : 'var(--text-muted)';
+    const fillColor = lastNav > firstNav ? 'rgba(0,200,83,0.08)' : lastNav < firstNav ? 'rgba(255,23,68,0.08)' : 'rgba(160,160,160,0.05)';
+
+    // Initial capital reference line
+    const refY = scaleY(initialCapital);
+    const refLine = `<line x1="${{PAD_L}}" y1="${{refY}}" x2="${{W-PAD_R}}" y2="${{refY}}" stroke="var(--brand-gold-dim)" stroke-width="1" stroke-dasharray="5,4" opacity="0.7"/>`;
+
+    // Drawdown overlay: compute drawdowns and fill below peak line
+    let peak = navs[0];
+    let drawdownAreaD = `M ${{scaleX(0)}} ${{scaleY(navs[0])}}`;
+    let peakPathD = `M ${{scaleX(0)}} ${{scaleY(navs[0])}}`;
+    for (let i = 1; i < navs.length; i++) {{
+        if (navs[i] > peak) peak = navs[i];
+        peakPathD += ` L ${{scaleX(i)}} ${{scaleY(peak)}}`;
+        drawdownAreaD += ` L ${{scaleX(i)}} ${{scaleY(navs[i])}}`;
+    }}
+    // Close drawdown area by tracing back along peak path
+    let peakReverse = '';
+    peak = navs[0];
+    const peakYs = [scaleY(navs[0])];
+    for (let i = 1; i < navs.length; i++) {{
+        if (navs[i] > peak) peak = navs[i];
+        peakYs.push(scaleY(peak));
+    }}
+    for (let i = navs.length - 1; i >= 0; i--) {{
+        peakReverse += ` L ${{scaleX(i)}} ${{peakYs[i]}}`;
+    }}
+    drawdownAreaD += peakReverse + ' Z';
+
+    // Circuit Breaker activation markers
+    // CB activates when intraday drawdown exceeds -2% from session_open_nav
+    // Mark points where NAV drops below -2% of the first NAV in history segment
+    let cbMarkers = '';
+    const sessionOpenNav = state.book.session_open_nav || navs[0];
+    const cbThreshold = sessionOpenNav * 0.98;  // -2% triggers CB
+    let cbActive = false;
+    for (let i = 0; i < navs.length; i++) {{
+        const isCB = navs[i] <= cbThreshold;
+        if (isCB && !cbActive) {{
+            // CB activation point
+            cbMarkers += `<line x1="${{scaleX(i)}}" y1="${{PAD_T}}" x2="${{scaleX(i)}}" y2="${{baseY}}" stroke="var(--negative)" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>`;
+            cbMarkers += `<circle cx="${{scaleX(i)}}" cy="${{scaleY(navs[i])}}" r="5" fill="var(--negative)" opacity="0.8"><title>CB Activated</title></circle>`;
+            cbMarkers += `<text x="${{scaleX(i)}}" y="${{PAD_T + 10}}" fill="var(--negative)" font-size="9" font-weight="700" text-anchor="middle">CB</text>`;
+            cbActive = true;
+        }} else if (!isCB && cbActive) {{
+            cbActive = false;
         }}
     }}
-    if (cal.cb && cal.cb.length) {{
-        for (const e of cal.cb.slice(0, 2)) {{
-            items.push(`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;"><span style="font-size:0.7em;font-weight:700;color:var(--warning);text-transform:uppercase;min-width:40px;">CB</span><span style="font-size:0.84em;color:var(--text-secondary);">${{escapeHtml(e.date || '')}} — ${{escapeHtml(e.currency || '')}} ${{escapeHtml(e.action || '')}}</span></div>`);
+
+    // X-axis labels
+    let xLabels = '';
+    const xLabelCount = Math.min(5, navs.length);
+    for (let j = 0; j < xLabelCount; j++) {{
+        const idx = Math.round(j * (navs.length - 1) / (xLabelCount - 1));
+        const dateStr = formatChartDate(history[idx].date || history[idx].timestamp || '');
+        xLabels += `<text x="${{scaleX(idx)}}" y="${{H - 4}}" fill="var(--text-muted)" font-size="9.5" text-anchor="middle">${{dateStr}}</text>`;
+    }}
+
+    // Y-axis labels
+    const ySteps = 4;
+    let yLabels = '';
+    for (let j = 0; j <= ySteps; j++) {{
+        const val = minNav + (j / ySteps) * rangeNav;
+        const y = scaleY(val);
+        yLabels += `<text x="${{PAD_L - 6}}" y="${{y + 4}}" fill="var(--text-muted)" font-size="9.5" text-anchor="end">${{formatDollar(val)}}</text>`;
+        if (j > 0 && j < ySteps) {{
+            yLabels += `<line x1="${{PAD_L}}" y1="${{y}}" x2="${{W-PAD_R}}" y2="${{y}}" stroke="var(--border)" stroke-width="0.5" opacity="0.4"/>`;
         }}
     }}
-    if (cal.earnings && cal.earnings.length) {{
-        for (const e of cal.earnings.slice(0, 2)) {{
-            items.push(`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;"><span style="font-size:0.7em;font-weight:700;color:var(--positive);text-transform:uppercase;min-width:40px;">EARN</span><span style="font-size:0.84em;color:var(--text-secondary);">${{escapeHtml(e.date || '')}} — ${{escapeHtml(e.ticker || '')}} (${{escapeHtml(e.timing || '')}})</span></div>`);
-        }}
-    }}
 
-    // Limit to max 6
-    items = items.slice(0, 6);
-
-    if (items.length === 0) {{
-        return `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:20px;">
-            <div style="font-size:0.78em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;">Week Ahead</div>
-            <div style="color:var(--text-muted);font-size:0.88em;">No calendar data available</div>
-        </div>`;
-    }}
-
-    return `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:20px;">
-        <div style="font-size:0.78em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
-            <span>Week Ahead</span>
-            <a style="font-size:1em;color:var(--brand-gold);cursor:pointer;text-decoration:none;font-weight:600;text-transform:none;letter-spacing:0;" onclick="switchTab('calendar')">View All &rarr;</a>
+    let svg = `<div class="equity-chart">
+        <svg viewBox="0 0 ${{W}} ${{H}}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:220px;" role="img" aria-label="Portfolio equity curve with drawdown overlay and circuit breaker markers">
+            ${{yLabels}}
+            ${{refLine}}
+            <line x1="${{PAD_L}}" y1="${{baseY}}" x2="${{W-PAD_R}}" y2="${{baseY}}" stroke="var(--border)" stroke-width="1"/>
+            <!-- Drawdown overlay (shaded area between peak and NAV) -->
+            <path d="${{drawdownAreaD}}" fill="rgba(255,23,68,0.06)" />
+            <!-- Peak watermark line -->
+            <path d="${{peakPathD}}" fill="none" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.4"/>
+            <!-- Area fill -->
+            <path d="${{areaD}}" fill="${{fillColor}}" />
+            <!-- Equity line -->
+            <path d="${{pathD}}" fill="none" stroke="${{lineColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- CB activation markers -->
+            ${{cbMarkers}}
+            <!-- X axis labels -->
+            ${{xLabels}}
+        </svg>
+        <div style="display:flex;align-items:center;gap:16px;padding:8px 0 0;font-size:0.72em;color:var(--text-muted);">
+            <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:12px;height:2px;background:${{lineColor}};border-radius:1px;"></span> NAV</span>
+            <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:12px;height:2px;background:var(--text-muted);border-radius:1px;opacity:0.4;border-top:1px dashed var(--text-muted);"></span> HWM</span>
+            <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:8px;height:8px;background:rgba(255,23,68,0.06);border:1px solid rgba(255,23,68,0.3);border-radius:2px;"></span> Drawdown</span>
+            <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:8px;height:8px;background:var(--negative);border-radius:50%;opacity:0.8;"></span> CB Activation</span>
         </div>
-        ${{items.join('')}}
     </div>`;
+
+    return svg;
 }}
 
 // ─── ACTION REQUIRED PANEL ──────────────────────────────────────────────────
@@ -2128,10 +2566,10 @@ function renderActionRequired() {{
         // Rationale (truncated)
         html += `<div class="arc-rationale"><div class="arc-rationale-text">${{escapeHtml(rationale)}}</div></div>`;
 
-        // Actions: Approve, Reject, View Analysis
+        // Actions: Autonomous mode label (manual controls removed)
         html += `<div class="arc-actions">
-            <button class="arc-btn-approve" data-accept-id="${{id}}" onclick="acceptOrder('${{id}}')" aria-label="Approve trade for ${{ticker}}">Approve</button>
-            <button class="arc-btn-reject" data-deny-id="${{id}}" onclick="denyOrder('${{id}}')" aria-label="Reject trade for ${{ticker}}">Reject</button>
+            <span class="autonomous-mode-label">&#9889; Autonomous Mode</span>
+            <span style="font-size:0.82em;color:var(--text-muted);">Auto-booked by pipeline</span>
             <button class="arc-btn-analysis" onclick="toggleAnalysisDetail('${{id}}')" aria-label="View analysis for ${{ticker}}">View Analysis</button>
         </div>`;
 
@@ -2289,163 +2727,6 @@ function renderAgentConsensus() {{
     # Continue JavaScript in another script block
     js2 = f"""
 <script>
-let pendingSectorFilter = 'All';
-
-function filterPendingBySector(val) {{
-    pendingSectorFilter = val;
-    renderPending();
-}}
-
-function renderPending() {{
-    const panel = document.getElementById('panel-pending');
-    if (!state.pending.length) {{
-        panel.innerHTML = '<div class="empty-state"><div class="empty-icon">&#10003;</div><div class="empty-text">No pending recommendations. Run an IC sweep to generate new ideas.</div></div>';
-        return;
-    }}
-
-    // Sort by conviction descending (highest first)
-    const sorted = [...state.pending].sort((a, b) => {{
-        const ca = Number(a.conviction || (a._proposal && a._proposal.conviction) || 0);
-        const cb = Number(b.conviction || (b._proposal && b._proposal.conviction) || 0);
-        return cb - ca;
-    }});
-
-    // Derive sector for each item using HEDGE_TO_SECTOR mapping
-    const getSector = (o) => {{
-        const prop = o._proposal || {{}};
-        return o.sector || prop.sector || HEDGE_TO_SECTOR[o.hedge_ticker] || 'Unknown';
-    }};
-
-    // Collect unique sectors for the dropdown
-    const allSectors = [...new Set(sorted.map(o => getSector(o)))].sort();
-
-    // Apply sector filter
-    const filtered = pendingSectorFilter === 'All' ? sorted : sorted.filter(o => getSector(o) === pendingSectorFilter);
-
-    // Build header with filter
-    let html = '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">';
-    html += '<div class="section-title" style="margin-bottom:0;">Trade Recommendations Awaiting Approval</div>';
-    html += `<select class="sector-filter-select" onchange="filterPendingBySector(this.value)" aria-label="Filter by sector">`;
-    html += `<option value="All"${{pendingSectorFilter === 'All' ? ' selected' : ''}}>All Sectors</option>`;
-    for (const s of allSectors) {{
-        html += `<option value="${{escapeHtml(s)}}"${{pendingSectorFilter === s ? ' selected' : ''}}>${{escapeHtml(s)}}</option>`;
-    }}
-    html += `</select></div>`;
-
-    if (!filtered.length) {{
-        html += '<div class="empty-state" style="padding:32px 16px;"><div class="empty-icon">&#128269;</div><div class="empty-text">No recommendations in sector: ' + escapeHtml(pendingSectorFilter) + '</div></div>';
-        panel.innerHTML = html;
-        return;
-    }}
-    for (const o of filtered) {{
-        const prop = o._proposal || {{}};
-        const tech = o._tech_score || {{}};
-        const risk = o._risk || {{}};
-        const id = o.order_id || o.proposal_id;
-
-        // Core fields
-        const ticker = o.ticker || '—';
-        const direction = (o.direction || '').toUpperCase();
-        const hedgeTicker = o.hedge_ticker || '—';
-        const hedgeDir = (o.hedge_direction || 'short').toUpperCase();
-        const dirClass = direction === 'LONG' ? 'positive' : 'negative';
-
-        // Pair expression
-        const pairExpr = direction === 'LONG' 
-            ? `Long ${{ticker}} / Short ${{hedgeTicker}}`
-            : `Short ${{ticker}} / Long ${{hedgeTicker}}`;
-
-        // Ratio fields
-        const entryRatio = prop.entry_ratio || o.entry_ratio;
-        const targetRatio = prop.target_ratio || o.target_ratio;
-        const stopRatio = prop.stop_ratio || o.stop_ratio;
-        const ratioPctile = prop.ratio_percentile || o.ratio_percentile;
-
-        // Size & Risk
-        const sizePctNav = o.size_pct_nav != null ? o.size_pct_nav : null;
-        const sizeDisplay = sizePctNav != null ? (sizePctNav * 100).toFixed(1) + '%' : '—';
-        const conviction = o.conviction || prop.conviction || '—';
-        const trailPct = parseTrailPct(o.stop_loss_method);
-        let lossAtTrailBps = '—';
-        if (trailPct != null && sizePctNav != null) {{
-            lossAtTrailBps = Math.round((trailPct / 100) * sizePctNav * 10000) + ' bps';
-        }}
-
-        // Thesis
-        const thesis = prop.thesis_summary || prop.portfolio_thesis || o.portfolio_thesis || o.pm_rationale || '—';
-        const variant = prop.variant_perception || '';
-        const catalyst = prop.catalyst || '';
-        const catalystTimeline = prop.catalyst_timeline || '';
-        const keyRisks = prop.key_risks || [];
-
-        // Tech & Risk verdicts
-        const techScore = tech.technical_score != null ? tech.technical_score : null;
-        const riskDecision = risk.decision || 'pending';
-        const riskClass = riskDecision.includes('approved') ? 'badge-positive' : riskDecision === 'pending' ? 'badge-neutral' : 'badge-negative';
-
-        html += `
-        <div class="pending-card">
-            <!-- HEADER: Pair expression + badges -->
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-                <div>
-                    <div style="font-size:1.3em;font-weight:800;color:var(--text-primary);">${{pairExpr}}</div>
-                    <div style="font-size:0.78em;color:var(--text-muted);margin-top:2px;">${{o.proposal_id || ''}}</div>
-                </div>
-                <div style="display:flex;gap:8px;align-items:center;">
-                    <span class="badge badge-warning">AWAITING PM</span>
-                    ${{techScore != null ? `<span class="badge ${{techScore>=7?'badge-positive':techScore>=5?'badge-neutral':'badge-negative'}}">Tech ${{techScore}}/10</span>` : ''}}
-                    <span class="badge ${{riskClass}}">${{riskDecision.toUpperCase()}}</span>
-                </div>
-            </div>
-
-            <!-- TRADE PARAMETERS: ratio-driven grid -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px;padding:14px;background:var(--bg-secondary);border-radius:10px;border:1px solid var(--border);">
-                <div><div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Size</div><div style="font-size:1.1em;font-weight:700;margin-top:3px;">${{sizeDisplay}} NAV</div></div>
-                <div><div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Conviction</div><div style="font-size:1.1em;font-weight:700;margin-top:3px;">${{conviction}}/10</div></div>
-                <div><div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Entry Ratio</div><div style="font-size:1.1em;font-weight:700;margin-top:3px;">${{entryRatio != null ? Number(entryRatio).toFixed(4) : '—'}}</div></div>
-                <div><div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Target Ratio</div><div style="font-size:1.1em;font-weight:700;margin-top:3px;color:var(--positive);">${{targetRatio != null ? Number(targetRatio).toFixed(4) : '—'}}</div></div>
-                <div><div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Stop Ratio</div><div style="font-size:1.1em;font-weight:700;margin-top:3px;color:var(--negative);">${{stopRatio != null ? Number(stopRatio).toFixed(4) : '—'}}</div></div>
-                <div><div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Ratio %ile (52w)</div><div style="font-size:1.1em;font-weight:700;margin-top:3px;">${{ratioPctile != null ? ratioPctile + 'th' : '—'}}</div></div>
-                <div><div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Loss@Trail</div><div style="font-size:1.1em;font-weight:700;margin-top:3px;">${{lossAtTrailBps}}</div></div>
-                <div><div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Holding Period</div><div style="font-size:1.1em;font-weight:700;margin-top:3px;">${{escapeHtml(o.expected_holding_period || prop.holding_period || '—')}}</div></div>
-            </div>
-
-            <!-- THESIS -->
-            <div style="margin-bottom:14px;">
-                <div style="font-size:0.72em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Thesis</div>
-                <div style="font-size:0.9em;color:var(--text-secondary);line-height:1.6;">${{escapeHtml(thesis)}}</div>
-            </div>
-
-            <!-- VARIANT PERCEPTION -->
-            ${{variant ? `<div style="margin-bottom:14px;">
-                <div style="font-size:0.72em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Variant Perception</div>
-                <div style="font-size:0.88em;color:var(--text-secondary);line-height:1.5;">${{escapeHtml(variant)}}</div>
-            </div>` : ''}}
-
-            <!-- CATALYST -->
-            ${{catalyst ? `<div style="margin-bottom:14px;">
-                <div style="font-size:0.72em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Catalyst ${{catalystTimeline ? '(' + escapeHtml(catalystTimeline) + ')' : ''}}</div>
-                <div style="font-size:0.88em;color:var(--text-secondary);line-height:1.5;">${{escapeHtml(catalyst)}}</div>
-            </div>` : ''}}
-
-            <!-- KEY RISKS -->
-            ${{keyRisks.length > 0 ? `<div style="margin-bottom:14px;">
-                <div style="font-size:0.72em;font-weight:700;color:var(--brand-gold-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Key Risks</div>
-                <ul style="margin:0;padding-left:16px;font-size:0.85em;color:var(--text-secondary);line-height:1.5;">
-                    ${{keyRisks.map(r => `<li>${{escapeHtml(typeof r === 'string' ? r : JSON.stringify(r))}}</li>`).join('')}}
-                </ul>
-            </div>` : ''}}
-
-            <!-- ACTIONS -->
-            <div style="display:flex;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
-                <button class="btn btn-accept" data-accept-id="${{id}}" onclick="acceptOrder('${{id}}')">Approve &amp; Execute</button>
-                <button class="btn btn-deny" data-deny-id="${{id}}" onclick="denyOrder('${{id}}')">Pass</button>
-            </div>
-        </div>`;
-    }}
-    panel.innerHTML = html;
-}}
-
 // ─── POSITION TABLE STATE ────────────────────────────────────────────────────
 let positionSortCol = 'ticker';
 let positionSortDir = 'asc';
@@ -2503,6 +2784,16 @@ function getPositionSortValue(p, col) {{
         }}
         case 'size': return p.size_pct_nav || 0;
         case 'sector': return (p.sector || HEDGE_TO_SECTOR[p.hedge_ticker] || 'Unknown').toLowerCase();
+        case 'trim': return (p.trim_status || 'untrimmed').toLowerCase();
+        case 'trailstop': return p.trail_stop_level || 0;
+        case 'thesis': return (p.thesis_status || 'active').toLowerCase();
+        case 'sigma': return (p.sigma_event && p.sigma_event.magnitude) ? p.sigma_event.magnitude : 0;
+        case 'status': {{
+            const proximity = computeTrailStopProximity(p);
+            if (proximity != null && proximity <= 0.01) return 2;
+            if (p.sigma_event && p.sigma_event.magnitude != null) return 1;
+            return 0;
+        }}
         default: return '';
     }}
 }}
@@ -2518,12 +2809,22 @@ function renderPositions() {{
     }}
 
     // Empty state: no positions at all
-    if (!allPositions.length) {{
-        panel.innerHTML = `<div class="empty-state">
+    if (!allPositions.length || !allPositions.some(p => p.status === 'active')) {{
+        let emptyHtml = '';
+        // Still show staleness badge in empty state
+        if (state.book._stale) {{
+            const pollAge = state.book._last_poll_age_minutes || 0;
+            emptyHtml += `<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,171,0,0.12);border:1px solid rgba(255,171,0,0.3);border-radius:8px;padding:8px 14px;margin-bottom:12px;font-size:0.85em;">
+                <span style="color:var(--warning);font-weight:700;">&#9888; Data stale</span>
+                <span style="color:var(--text-secondary);">&mdash; last poll ${{Math.round(pollAge)}} min ago</span>
+            </div>`;
+        }}
+        emptyHtml += `<div class="empty-state">
             <div class="empty-icon">&#9898;</div>
             <div class="empty-text">No active positions</div>
             <div style="font-size:0.82em;color:var(--text-muted);margin-top:8px;">Accept a pending recommendation to open your first trade.</div>
         </div>`;
+        panel.innerHTML = emptyHtml;
         return;
     }}
 
@@ -2531,6 +2832,16 @@ function renderPositions() {{
 
     // Ticker filter input
     html += `<div class="section-title">Positions</div>`;
+
+    // Data staleness badge when _stale is true from /api/book
+    if (state.book._stale) {{
+        const pollAge = state.book._last_poll_age_minutes || 0;
+        html += `<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,171,0,0.12);border:1px solid rgba(255,171,0,0.3);border-radius:8px;padding:8px 14px;margin-bottom:12px;font-size:0.85em;">
+            <span style="color:var(--warning);font-weight:700;">&#9888; Data stale</span>
+            <span style="color:var(--text-secondary);">&mdash; last poll ${{Math.round(pollAge)}} min ago</span>
+        </div>`;
+    }}
+
     html += `<input class="position-filter-input" type="text" placeholder="Filter by ticker..." value="${{escapeHtml(positionTickerFilter)}}" oninput="filterPositionsByTicker(this.value)" aria-label="Filter positions by ticker" />`;
 
     // Use enriched positions from state.derived if available
@@ -2564,6 +2875,37 @@ function renderPositions() {{
         return;
     }}
 
+    // ─── BOOK TAB KPI STRIP — Autonomous Mode Portfolio Summary ──────────────
+    const activeForKpi = allPositions.filter(p => p.status === 'active');
+    const kpiNav = state.book.nav || state.book.initial_nav || 10000000;
+
+    // Counts
+    const kpiActiveCount = activeForKpi.length;
+    const kpiTrimmedCount = activeForKpi.filter(p => p.trim_status === 'half_trimmed').length;
+    const kpiThesisOverdue = activeForKpi.filter(p => (p.thesis_status || 'active') === 'review_overdue').length;
+    let kpiTrailProximity = 0;
+    for (const p of activeForKpi) {{
+        const prox = computeTrailStopProximity(p);
+        if (prox != null && prox <= 0.01) kpiTrailProximity++;
+    }}
+
+    // Metrics via computation functions
+    const kpiGrossExp = computeGrossExposure(activeForKpi);
+    const kpiNetExp = computeNetExposure(activeForKpi);
+    const kpiAvgPnl = computeAveragePairPnL(activeForKpi);
+    const kpiCapitalFreed = computeCapitalFreedByTrims(activeForKpi, kpiNav);
+
+    html += `<div class="kpi-strip" style="margin-bottom:16px;">`;
+    html += `<span class="kpi-strip-item"><span class="kpi-strip-label">Active</span><span class="kpi-strip-value">${{kpiActiveCount}}</span></span>`;
+    html += `<span class="kpi-strip-item"><span class="kpi-strip-label">Trimmed</span><span class="kpi-strip-value${{kpiTrimmedCount > 0 ? ' positive' : ''}}">${{kpiTrimmedCount}}</span></span>`;
+    html += `<span class="kpi-strip-item"><span class="kpi-strip-label">Thesis Overdue</span><span class="kpi-strip-value${{kpiThesisOverdue > 0 ? ' negative' : ''}}">${{kpiThesisOverdue}}</span></span>`;
+    html += `<span class="kpi-strip-item"><span class="kpi-strip-label">Trail ≤1%</span><span class="kpi-strip-value${{kpiTrailProximity > 0 ? ' negative' : ''}}">${{kpiTrailProximity}}</span></span>`;
+    html += `<span class="kpi-strip-item"><span class="kpi-strip-label">Gross Exp</span><span class="kpi-strip-value">${{(kpiGrossExp * 100).toFixed(1)}}%</span></span>`;
+    html += `<span class="kpi-strip-item"><span class="kpi-strip-label">Net Exp</span><span class="kpi-strip-value info">${{(kpiNetExp >= 0 ? '+' : '') + (kpiNetExp * 100).toFixed(1)}}%</span></span>`;
+    html += `<span class="kpi-strip-item"><span class="kpi-strip-label">Avg P&L</span><span class="kpi-strip-value ${{kpiAvgPnl >= 0 ? 'positive' : 'negative'}}">${{(kpiAvgPnl >= 0 ? '+' : '') + kpiAvgPnl.toFixed(2)}}%</span></span>`;
+    html += `<span class="kpi-strip-item"><span class="kpi-strip-label">Capital Freed</span><span class="kpi-strip-value${{kpiCapitalFreed > 0 ? ' positive' : ''}}">${{formatCurrency(kpiCapitalFreed)}}</span></span>`;
+    html += `</div>`;
+
     // Build sortable header helper
     function sortHeader(label, col, isNum) {{
         const activeClass = positionSortCol === col ? (positionSortDir === 'asc' ? ' sort-asc' : ' sort-desc') : '';
@@ -2571,20 +2913,18 @@ function renderPositions() {{
         return `<th class="sortable-header${{activeClass}}${{numClass}}" onclick="sortPositions('${{col}}')">${{label}}<span class="sort-arrow">&#9650;</span></th>`;
     }}
 
-    // Table start — ratio-driven columns per spec (Task 3)
+    // Table start — simplified 9-column layout
     html += `<div class="position-table-wrapper">`;
     html += `<table class="position-table"><thead><tr>`;
     html += sortHeader('Pair', 'pair', false);
     html += sortHeader('Dir', 'direction', false);
-    html += sortHeader('Entry Ratio', 'entry', true);
-    html += sortHeader('Current Ratio', 'current', true);
-    html += sortHeader('Peak', 'peak', true);
-    html += sortHeader('Pair P&L%', 'pnl', true);
-    html += sortHeader('Dist-Peak%', 'distpeak', true);
-    html += sortHeader('Trail%', 'trail', true);
+    html += sortHeader('P&L', 'pnl', true);
+    html += sortHeader('Size', 'size', true);
     html += sortHeader('Days', 'days', true);
-    html += sortHeader('Size%', 'size', true);
     html += sortHeader('Sector', 'sector', false);
+    html += sortHeader('Trim', 'trim', false);
+    html += sortHeader('Thesis', 'thesis', false);
+    html += sortHeader('Status', 'status', false);
     html += `</tr></thead><tbody>`;
 
     for (const p of positions) {{
@@ -2595,14 +2935,10 @@ function renderPositions() {{
         const sizePct = p.size_pct_nav || 0;
         const isExpanded = expandedPositions.has(ticker);
 
-        // Enriched pair-ratio fields
-        const entryRatio = p.entryRatio != null ? p.entryRatio.toFixed(4) : '—';
-        const currentRatio = p.currentRatio != null ? p.currentRatio.toFixed(4) : '—';
-        const peakRatio = p.peakRatio != null ? p.peakRatio.toFixed(4) : '—';
-        const pnlPct = p.pnlPct != null ? (p.pnlPct >= 0 ? '+' : '') + p.pnlPct.toFixed(2) + '%' : '—';
-        const trailPct = p.trailPct != null ? p.trailPct.toFixed(1) + '%' : '—';
-        const distFromPeak = p.distFromPeak != null ? p.distFromPeak.toFixed(2) + '%' : '—';
-        const pnlColor = p.pnlPct != null ? pnlState(p.pnlPct / 100) : 'neutral';
+        // P&L: use pnlPct (enriched ratio-based) or combined_pnl_pct (raw from book.json)
+        const pnlVal = p.pnlPct != null ? p.pnlPct : (p.combined_pnl_pct != null ? p.combined_pnl_pct * 100 : null);
+        const pnlDisplay = pnlVal != null ? (pnlVal >= 0 ? '+' : '') + pnlVal.toFixed(2) + '%' : '—';
+        const pnlColor = pnlVal != null ? pnlState(pnlVal / 100) : 'neutral';
 
         // Days held
         const entryDate = p.entry_date ? new Date(p.entry_date) : null;
@@ -2614,40 +2950,51 @@ function renderPositions() {{
         // Direction badge
         const dirBadge = `<span class="dir-badge ${{direction}}">${{direction.toUpperCase()}}</span>`;
 
-        // Trail proximity highlight: amber within 1% of stop, red within 0.5%
+        // Row highlight based on trail stop proximity
         let rowStyle = '';
-        if (p.trailPct != null && p.distFromPeak != null) {{
-            const distFromStop = Math.abs(p.trailPct) - Math.abs(p.distFromPeak);
-            if (distFromStop <= 0.5) rowStyle = 'background:rgba(255,23,68,0.10);';
-            else if (distFromStop <= 1.0) rowStyle = 'background:rgba(255,171,0,0.10);';
-        }}
-        if (p.highlight === 'red') rowStyle = 'background:rgba(255,23,68,0.10);';
-        else if (p.highlight === 'amber') rowStyle = 'background:rgba(255,171,0,0.10);';
+        const proximity = computeTrailStopProximity(p);
+        if (proximity != null && proximity <= 0.005) rowStyle = 'background:rgba(255,23,68,0.10);';
+        else if (proximity != null && proximity <= 0.01) rowStyle = 'background:rgba(255,171,0,0.10);';
 
-        // Dist-Peak color coding (negative distance = drawdown)
-        let distPeakColor = '';
-        if (p.distFromPeak != null) {{
-            if (Math.abs(p.distFromPeak) <= 0.5) distPeakColor = ' style="color:var(--pnl-negative);font-weight:700;"';
-            else if (Math.abs(p.distFromPeak) <= 1.0) distPeakColor = ' style="color:var(--warning-amber,#ffab00);font-weight:600;"';
+        // Trim status badge
+        const trimStatus = p.trim_status || 'untrimmed';
+
+        // Thesis status
+        const thesisStatus = p.thesis_status || 'active';
+        let thesisCell = '';
+        if (thesisStatus === 'review_overdue') {{
+            const daysOverdue = computeDaysOverdue(thesisStatus, p.last_review_date);
+            thesisCell = `<span class="thesis-warning">&#9888; overdue</span>`;
+        }} else {{
+            thesisCell = `<span style="font-size:0.82em;color:var(--text-muted);">active</span>`;
+        }}
+
+        // Status cell: compound indicator (trail stop proximity, sigma event, or OK)
+        let statusCell = '';
+        const sigmaEvent = p.sigma_event || null;
+        if (proximity != null && proximity <= 0.01) {{
+            statusCell = `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.78em;font-weight:600;color:var(--warning);">&#9679; Trail ${{(proximity * 100).toFixed(1)}}%</span>`;
+        }} else if (sigmaEvent && sigmaEvent.magnitude != null) {{
+            statusCell = `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.78em;font-weight:600;color:#ce93d8;">&#9679; ${{sigmaEvent.magnitude.toFixed(1)}}&sigma;</span>`;
+        }} else {{
+            statusCell = `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.78em;font-weight:600;color:var(--positive);">&#9679; OK</span>`;
         }}
 
         html += `<tr class="position-row" onclick="togglePositionDetail('${{ticker}}')" aria-expanded="${{isExpanded}}" title="Click to expand details" style="${{rowStyle}}">`;
         html += `<td style="font-weight:700;white-space:nowrap;">${{pairLabel}}</td>`;
         html += `<td>${{dirBadge}}</td>`;
-        html += `<td class="num-col">${{entryRatio}}</td>`;
-        html += `<td class="num-col">${{currentRatio}}</td>`;
-        html += `<td class="num-col">${{peakRatio}}</td>`;
-        html += `<td class="num-col ${{pnlColor}}" style="font-weight:700;">${{pnlPct}}</td>`;
-        html += `<td class="num-col"${{distPeakColor}}>${{distFromPeak}}</td>`;
-        html += `<td class="num-col">${{trailPct}}</td>`;
-        html += `<td class="num-col">${{daysHeld}}</td>`;
+        html += `<td class="num-col ${{pnlColor}}" style="font-weight:700;">${{pnlDisplay}}</td>`;
         html += `<td class="num-col">${{(sizePct * 100).toFixed(1)}}%</td>`;
+        html += `<td class="num-col">${{daysHeld}}</td>`;
         html += `<td style="font-size:0.85em;">${{sector}}</td>`;
+        html += `<td><span class="trim-badge ${{trimStatus}}">${{trimStatus.replace('_', ' ')}}</span></td>`;
+        html += `<td>${{thesisCell}}</td>`;
+        html += `<td>${{statusCell}}</td>`;
         html += `</tr>`;
 
         // Expandable detail row
         if (isExpanded) {{
-            html += `<tr class="position-detail-row"><td colspan="11">`;
+            html += `<tr class="position-detail-row"><td colspan="9">`;
             html += renderPositionDetailPanel(p);
             html += `</td></tr>`;
         }}
@@ -2663,29 +3010,29 @@ function renderPositions() {{
         const dir = (p.direction || '').toLowerCase();
         grossExposure += Math.abs(size);
         netExposure += dir === 'short' ? -Math.abs(size) : Math.abs(size);
-        if (p.pnlPct != null) {{
-            pnlSum += p.pnlPct;
+        const pnlVal = p.pnlPct != null ? p.pnlPct : (p.combined_pnl_pct != null ? p.combined_pnl_pct * 100 : null);
+        if (pnlVal != null) {{
+            pnlSum += pnlVal;
             pnlCount++;
         }}
     }}
     const avgPnl = pnlCount > 0 ? pnlSum / pnlCount : 0;
-    const avgPnlColor = avgPnl >= 0 ? 'var(--pnl-positive, #00e676)' : 'var(--pnl-negative, #ff1744)';
+    const avgPnlColor = avgPnl >= 0 ? 'var(--positive)' : 'var(--negative)';
+    const totalPnlBps = Math.round(avgPnl * 100);
 
-    html += `</tbody><tfoot><tr class="summary-row" style="border-top:2px solid var(--border-color, #333);background:rgba(255,255,255,0.03);font-weight:700;">`;
-    html += `<td style="font-weight:700;">Total</td>`;
-    html += `<td></td>`;
-    html += `<td></td>`;
-    html += `<td></td>`;
-    html += `<td></td>`;
-    html += `<td class="num-col" style="color:${{avgPnlColor}};font-weight:700;">${{(avgPnl >= 0 ? '+' : '') + avgPnl.toFixed(2)}}% avg</td>`;
-    html += `<td></td>`;
-    html += `<td></td>`;
-    html += `<td></td>`;
-    html += `<td class="num-col" style="font-weight:700;">G:${{(grossExposure * 100).toFixed(1)}}% N:${{(netExposure * 100).toFixed(1)}}%</td>`;
-    html += `<td></td>`;
-    html += `</tr></tfoot></table></div>`;
+    html += `</tbody></table></div>`;
 
-    // Equity Curve sub-section (moved from Overview per spec)
+    // Portfolio Summary Card — clean layout below the table
+    html += `<div style="display:flex;align-items:center;gap:24px;padding:14px 20px;margin-top:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;flex-wrap:wrap;">`;
+    html += `<div style="font-weight:700;font-size:0.9em;color:var(--text-primary);min-width:120px;">Portfolio Total</div>`;
+    html += `<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:0.75em;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Avg P&L</span><span style="font-size:1.1em;font-weight:800;color:${{avgPnlColor}};">${{(avgPnl >= 0 ? '+' : '') + avgPnl.toFixed(2)}}%</span></div>`;
+    html += `<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:0.75em;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Gross</span><span style="font-size:1.1em;font-weight:700;color:var(--text-primary);">${{(grossExposure * 100).toFixed(1)}}%</span></div>`;
+    html += `<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:0.75em;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Net</span><span style="font-size:1.1em;font-weight:700;color:var(--info-blue);">${{(netExposure >= 0 ? '+' : '') + (netExposure * 100).toFixed(1)}}%</span></div>`;
+    html += `<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:0.75em;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Positions</span><span style="font-size:1.1em;font-weight:700;color:var(--text-primary);">${{positions.length}}</span></div>`;
+    html += `<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:0.75em;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Cash</span><span style="font-size:1.1em;font-weight:700;color:var(--text-primary);">${{((state.book.cash_pct || 0) * 100).toFixed(0)}}%</span></div>`;
+    html += `</div>`;
+
+    // Equity Curve sub-section
     html += `<div class="section-title" style="margin-top:24px;">Equity Curve</div>`;
     html += renderEquityChart();
 
@@ -2798,6 +3145,45 @@ function renderPositionDetailPanel(p) {{
     // Agent votes
     html += votesHtml;
 
+    // ─── Autonomous Lifecycle Detail Section ─────────────────────────────────
+    html += `<div class="pdp-autonomous-section">`;
+    html += `<div class="pdp-label" style="margin-bottom:10px;">Autonomous Lifecycle</div>`;
+    html += `<div class="pdp-autonomous-grid">`;
+
+    // Trim Status
+    const detailTrimStatus = p.trim_status || 'untrimmed';
+    html += `<div class="pdp-section"><div class="pdp-label">Trim Status</div><div class="pdp-value"><span class="trim-badge ${{detailTrimStatus}}">${{detailTrimStatus.replace('_', ' ')}}</span></div></div>`;
+
+    // Trail Stop Level
+    const detailTrailStop = p.trail_stop_level;
+    if (detailTrailStop != null && p.current_price) {{
+        const proximity = computeTrailStopProximity(p);
+        const proximityPct = proximity != null ? (proximity * 100).toFixed(2) + '%' : '—';
+        html += `<div class="pdp-section"><div class="pdp-label">Trail Stop Level</div><div class="pdp-value">$${{detailTrailStop.toFixed(2)}} <span style="color:var(--text-muted);">(${{proximityPct}} away)</span></div></div>`;
+    }} else {{
+        html += `<div class="pdp-section"><div class="pdp-label">Trail Stop Level</div><div class="pdp-value" style="color:var(--text-muted);">Not set</div></div>`;
+    }}
+
+    // Thesis Status
+    const detailThesisStatus = p.thesis_status || 'active';
+    if (detailThesisStatus === 'review_overdue') {{
+        const daysOver = computeDaysOverdue(detailThesisStatus, p.last_review_date);
+        html += `<div class="pdp-section"><div class="pdp-label">Thesis Status</div><div class="pdp-value"><span class="thesis-warning">&#9888; Review Overdue (${{daysOver}} days)</span></div></div>`;
+    }} else {{
+        html += `<div class="pdp-section"><div class="pdp-label">Thesis Status</div><div class="pdp-value" style="color:var(--positive);">Active</div></div>`;
+    }}
+
+    // Sigma Event
+    const detailSigma = p.sigma_event || null;
+    if (detailSigma && detailSigma.magnitude != null) {{
+        html += `<div class="pdp-section"><div class="pdp-label">Sigma Event</div><div class="pdp-value"><span class="sigma-badge">&#9733; ${{detailSigma.magnitude.toFixed(2)}}&sigma;</span> <span style="color:var(--text-muted);">threshold: ${{detailSigma.threshold != null ? detailSigma.threshold.toFixed(2) : '—'}}</span></div></div>`;
+    }} else {{
+        html += `<div class="pdp-section"><div class="pdp-label">Sigma Event</div><div class="pdp-value" style="color:var(--text-muted);">None detected</div></div>`;
+    }}
+
+    html += `</div>`;  // pdp-autonomous-grid
+    html += `</div>`;  // pdp-autonomous-section
+
     html += `</div>`;  // position-detail-panel
     return html;
 }}
@@ -2805,7 +3191,7 @@ function renderPositionDetailPanel(p) {{
 function renderPositionTableSkeleton() {{
     let html = '<div class="section-title">Positions</div>';
     html += '<div class="position-table-wrapper"><table class="position-table"><thead><tr>';
-    const cols = ['Pair','Dir','Entry Ratio','Current Ratio','Peak','Pair P&L%','Dist-Peak%','Trail%','Days','Size%','Sector'];
+    const cols = ['Pair','Dir','P&L','Size','Days','Sector','Trim','Thesis','Status'];
     for (const col of cols) {{
         html += `<th>${{col}}</th>`;
     }}
@@ -3019,8 +3405,8 @@ function renderJournalDetailPanel(order, entry) {{
 
 function renderDebate() {{
     const panel = document.getElementById('panel-debate');
-    if (!state.debates.length) {{
-        panel.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128172;</div><div class="empty-text">No debate records yet.</div></div>';
+    if (!state.debates || !state.debates.length) {{
+        panel.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128172;</div><div class="empty-text">No debate recorded</div></div>';
         return;
     }}
 
@@ -3032,34 +3418,181 @@ function renderDebate() {{
         grouped[pid].push(d);
     }}
 
-    let html = '<div class="section-title">Agent Debate by Proposal</div>';
+    let html = '<div class="section-title">IC Debate — Decision Analysis</div>';
 
     for (const [pid, debates] of Object.entries(grouped)) {{
-        // Find the ticker from the proposal_id or from pending orders
-        const matchingOrder = (state.pending || []).find(o => o.proposal_id === pid);
-        const ticker = matchingOrder ? matchingOrder.ticker : pid.split('_').slice(-1)[0] || '—';
-        const direction = matchingOrder ? matchingOrder.direction : '';
-
-        html += `<div class="pending-card" style="margin-bottom:20px;">`;
-        html += `<div class="pending-header"><h3>${{escapeHtml(pid)}}</h3>${{direction ? `<span class="badge ${{direction==='long'?'badge-positive':'badge-negative'}}">${{direction.toUpperCase()}}</span>` : ''}}</div>`;
-
-        // Sort by round then by stance
+        // ─── Compute proposal summary metrics ─────────────────────────────────
         const sorted = [...debates].sort((a, b) => (a.round || 0) - (b.round || 0));
+        const rounds = [...new Set(sorted.map(d => d.round || 0))];
+        const roundsCount = rounds.length;
 
-        for (const d of sorted) {{
-            const stanceClass = d.stance==='support' ? 'badge-blue' : d.stance==='challenge' ? 'badge-negative' : d.stance==='defend' ? 'badge-neutral' : 'badge-neutral';
-            html += `<div class="debate-entry" style="margin-bottom:8px;">
-                <div class="debate-header">
-                    <span class="debate-agent">${{(d.agent_id||'').replace(/_/g,' ').replace(/\\b\\w/g,c=>c.toUpperCase())}}</span>
-                    <span class="badge ${{stanceClass}}">${{(d.stance||'').toUpperCase()}}</span>
-                    <span style="font-size:0.75em;color:var(--text-muted);margin-left:auto;">Round ${{d.round||''}}</span>
-                    ${{d.revised_conviction ? `<span style="margin-left:12px;font-size:0.8em;color:var(--text-muted);">Conv: <strong>${{d.revised_conviction}}/10</strong></span>` : ''}}
-                </div>
-                <div class="debate-body">${{escapeHtml(d.argument||'')}}</div>
-            </div>`;
+        // Final conviction: highest revised_conviction in last round, or average of last round
+        const lastRound = Math.max(...rounds);
+        const lastRoundArgs = sorted.filter(d => (d.round || 0) === lastRound);
+        const lastConvictions = lastRoundArgs.map(d => d.revised_conviction != null ? d.revised_conviction : d.conviction).filter(v => v != null);
+        const finalConviction = lastConvictions.length > 0
+            ? (lastConvictions.reduce((s, v) => s + v, 0) / lastConvictions.length).toFixed(1)
+            : '—';
+
+        // Majority stance: count support vs challenge
+        const supportCount = debates.filter(d => d.stance === 'support' || d.stance === 'defend').length;
+        const challengeCount = debates.filter(d => d.stance === 'challenge').length;
+        const majorityStance = supportCount >= challengeCount ? 'support' : 'challenge';
+        const majorityLabel = supportCount >= challengeCount ? 'Support' : 'Challenge';
+
+        // Outcome: check if proposal_id matches a position in book (booked), else conviction-based
+        const bookPositions = (state.book && state.book.positions) || [];
+        const isBooked = bookPositions.some(p => p.proposal_id === pid);
+        let outcome = 'pending';
+        let outcomeLabel = 'Pending';
+        let outcomeBadgeClass = 'badge-neutral';
+        if (isBooked) {{
+            outcome = 'booked';
+            outcomeLabel = 'Booked';
+            outcomeBadgeClass = 'badge-positive';
+        }} else if (finalConviction !== '—' && parseFloat(finalConviction) < 5) {{
+            outcome = 'rejected';
+            outcomeLabel = 'Rejected';
+            outcomeBadgeClass = 'badge-negative';
         }}
 
+        // Ticker: from book position or from proposal_id
+        const matchingPosition = bookPositions.find(p => p.proposal_id === pid);
+        const matchingOrder = (state.pending || []).find(o => o.proposal_id === pid);
+        const ticker = matchingPosition ? matchingPosition.ticker : (matchingOrder ? matchingOrder.ticker : pid.split('_').slice(-1)[0] || '—');
+
+        // Conviction trajectory using computeConvictionTrajectory
+        // Build a debate-like structure with rounds for the function
+        const roundsGrouped = {{}};
+        for (const d of sorted) {{
+            const r = d.round || 0;
+            if (!roundsGrouped[r]) roundsGrouped[r] = [];
+            roundsGrouped[r].push(d);
+        }}
+        const debateObj = {{
+            rounds: Object.entries(roundsGrouped).map(([r, args]) => ({{
+                round: parseInt(r),
+                arguments: args
+            }}))
+        }};
+        const trajectory = computeConvictionTrajectory(debateObj);
+
+        // ─── Render Summary Card ──────────────────────────────────────────────
+        const cardId = `debate-card-${{pid.replace(/[^a-zA-Z0-9]/g, '-')}}`;
+        html += `<div class="debate-proposal-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;">`;
+
+        // Header row: ticker + outcome badge
+        html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">`;
+        html += `<div style="display:flex;align-items:center;gap:10px;">`;
+        html += `<span style="font-size:1.1em;font-weight:700;color:var(--text-primary);">${{escapeHtml(ticker)}}</span>`;
+        html += `<span style="font-size:0.75em;color:var(--text-muted);">${{escapeHtml(pid)}}</span>`;
         html += `</div>`;
+        html += `<span class="badge ${{outcomeBadgeClass}}">${{outcomeLabel}}</span>`;
+        html += `</div>`;
+
+        // KPI row: final conviction, rounds, majority stance
+        html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px;">`;
+
+        // Final conviction
+        const convColor = finalConviction !== '—' && parseFloat(finalConviction) >= 7 ? 'var(--positive)' : finalConviction !== '—' && parseFloat(finalConviction) >= 5 ? 'var(--warning)' : 'var(--negative)';
+        html += `<div style="background:var(--bg-secondary);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:0.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Final Conviction</div>
+            <div style="font-size:1.4em;font-weight:700;color:${{convColor}};margin-top:4px;">${{finalConviction}}<span style="font-size:0.55em;color:var(--text-muted);">/10</span></div>
+        </div>`;
+
+        // Rounds count
+        html += `<div style="background:var(--bg-secondary);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:0.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Rounds</div>
+            <div style="font-size:1.4em;font-weight:700;color:var(--text-primary);margin-top:4px;">${{roundsCount}}</div>
+        </div>`;
+
+        // Majority stance
+        const stanceBadgeColor = majorityStance === 'support' ? 'var(--positive)' : 'var(--negative)';
+        html += `<div style="background:var(--bg-secondary);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:0.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Majority</div>
+            <div style="font-size:1.0em;font-weight:700;color:${{stanceBadgeColor}};margin-top:6px;">${{majorityLabel}}</div>
+            <div style="font-size:0.7em;color:var(--text-muted);margin-top:2px;">${{supportCount}}S / ${{challengeCount}}C</div>
+        </div>`;
+
+        // Outcome
+        html += `<div style="background:var(--bg-secondary);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:0.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Outcome</div>
+            <div style="font-size:1.0em;font-weight:700;color:${{outcome === 'booked' ? 'var(--positive)' : outcome === 'rejected' ? 'var(--negative)' : 'var(--text-secondary)'}};margin-top:6px;">${{outcomeLabel}}</div>
+        </div>`;
+
+        html += `</div>`;
+
+        // ─── Conviction Trajectory Sparkline ──────────────────────────────────
+        if (trajectory.length > 0) {{
+            html += `<div style="margin-bottom:14px;">`;
+            html += `<div style="font-size:0.75em;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Conviction Trajectory</div>`;
+            // Render a simple inline sparkline bar
+            html += `<div style="display:flex;align-items:flex-end;gap:3px;height:40px;">`;
+            const maxVal = Math.max(...trajectory, 10);
+            for (let i = 0; i < trajectory.length; i++) {{
+                const val = trajectory[i];
+                const heightPct = Math.max((val / maxVal) * 100, 5);
+                const barColor = val >= 7 ? 'var(--positive)' : val >= 5 ? 'var(--warning)' : 'var(--negative)';
+                html += `<div title="Round ${{i + 1}}: ${{val.toFixed(1)}}" style="flex:1;max-width:40px;height:${{heightPct}}%;background:${{barColor}};border-radius:3px 3px 0 0;min-height:3px;position:relative;cursor:help;transition:opacity 0.2s;">
+                    <span style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:0.65em;color:var(--text-muted);white-space:nowrap;">${{val.toFixed(1)}}</span>
+                </div>`;
+            }}
+            html += `</div>`;
+            // Labels below bars
+            html += `<div style="display:flex;gap:3px;margin-top:4px;">`;
+            for (let i = 0; i < trajectory.length; i++) {{
+                html += `<div style="flex:1;max-width:40px;text-align:center;font-size:0.6em;color:var(--text-muted);">R${{i + 1}}</div>`;
+            }}
+            html += `</div>`;
+            html += `</div>`;
+        }}
+
+        // ─── Link to Book (for booked proposals) ─────────────────────────────
+        if (isBooked) {{
+            html += `<div style="margin-bottom:14px;">`;
+            html += `<a href="#" onclick="event.preventDefault();switchTab('positions');" style="display:inline-flex;align-items:center;gap:6px;color:var(--steel-blue);font-size:0.85em;font-weight:600;text-decoration:none;padding:6px 12px;background:rgba(91,138,181,0.08);border:1px solid rgba(91,138,181,0.2);border-radius:6px;transition:var(--ease);" onmouseover="this.style.background='rgba(91,138,181,0.15)'" onmouseout="this.style.background='rgba(91,138,181,0.08)'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                View in Book
+            </a>`;
+            html += `</div>`;
+        }}
+
+        // ─── Expandable Argument History ──────────────────────────────────────
+        html += `<div style="border-top:1px solid var(--border);padding-top:12px;">`;
+        html += `<button onclick="const el=document.getElementById('${{cardId}}-args');el.style.display=el.style.display==='none'?'block':'none';this.querySelector('.expand-arrow').textContent=el.style.display==='none'?'\\u25B6':'\\u25BC';" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;color:var(--text-secondary);font-size:0.85em;font-weight:600;padding:4px 0;width:100%;text-align:left;" aria-expanded="false" aria-controls="${{cardId}}-args">
+            <span class="expand-arrow" style="font-size:0.7em;">&#9654;</span> Argument History (${{debates.length}} arguments)
+        </button>`;
+        html += `<div id="${{cardId}}-args" style="display:none;margin-top:12px;">`;
+
+        // Arguments grouped by round
+        for (const roundNum of rounds) {{
+            const roundArgs = sorted.filter(d => (d.round || 0) === roundNum);
+            html += `<div style="margin-bottom:12px;">`;
+            html += `<div style="font-size:0.75em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">Round ${{roundNum}}</div>`;
+
+            for (const d of roundArgs) {{
+                const stanceClass = d.stance === 'support' ? 'badge-blue' : d.stance === 'challenge' ? 'badge-negative' : d.stance === 'defend' ? 'badge-positive' : 'badge-neutral';
+                const agentName = (d.agent_id || '').replace(/_/g, ' ').replace(/\\b\\w/g, c => c.toUpperCase());
+                const convStart = d.conviction != null ? d.conviction : '—';
+                const convEnd = d.revised_conviction != null ? d.revised_conviction : convStart;
+                const trajText = convStart !== '—' ? `${{convStart}} → ${{convEnd}}` : '';
+
+                html += `<div class="debate-entry" style="margin-bottom:8px;padding:14px;">
+                    <div class="debate-header" style="margin-bottom:8px;">
+                        <span class="debate-agent">${{agentName}}</span>
+                        <span class="badge ${{stanceClass}}">${{(d.stance || '').toUpperCase()}}</span>
+                        ${{trajText ? `<span style="margin-left:auto;font-size:0.8em;color:var(--text-muted);">Conv: <strong>${{trajText}}</strong></span>` : ''}}
+                    </div>
+                    <div class="debate-body">${{escapeHtml(d.argument || '')}}</div>
+                </div>`;
+            }}
+
+            html += `</div>`;
+        }}
+
+        html += `</div></div>`;  // close expandable args
+
+        html += `</div>`;  // close proposal card
     }}
 
     panel.innerHTML = html;
@@ -3075,7 +3608,113 @@ function renderRisk() {{
 
     let html = '';
 
-    // ─── Factor Beta Table (Task 5.1) ─────────────────────────────────────────
+    // ─── Alert Summary Bar (Task 5.1) ─────────────────────────────────────────
+    const alerts = state.monitorAlerts || [];
+    if (alerts.length === 0) {{
+        html += `<div class="alert-summary-empty" style="display:flex;align-items:center;gap:10px;background:rgba(0,200,83,0.08);border:1px solid rgba(0,200,83,0.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+            <span style="width:10px;height:10px;border-radius:50%;background:var(--positive);display:inline-block;"></span>
+            <span style="color:var(--positive);font-weight:600;font-size:0.9em;">No active alerts</span>
+        </div>`;
+    }} else {{
+        const critical = alerts.filter(a => a.level === 'critical');
+        const warning = alerts.filter(a => a.level === 'warning');
+        const info = alerts.filter(a => a.level === 'info');
+
+        html += `<div class="alert-summary-bar" style="display:flex;align-items:center;gap:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:20px;flex-wrap:wrap;">
+            <span style="font-size:0.78em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;">Alerts</span>
+            <span class="badge badge-negative" style="font-size:0.82em;">\u26a0 Critical: ${{critical.length}}</span>
+            <span class="badge badge-warning" style="font-size:0.82em;">\u26a0 Warning: ${{warning.length}}</span>
+            <span class="badge badge-blue" style="font-size:0.82em;">\u2139 Info: ${{info.length}}</span>
+            <span style="margin-left:auto;font-size:0.78em;color:var(--text-muted);">Total: ${{alerts.length}}</span>
+        </div>`;
+
+        // ─── Critical Alert Cards ─────────────────────────────────────────────
+        if (critical.length > 0) {{
+            html += `<div class="section-title">Critical Alerts</div>`;
+            for (const alert of critical) {{
+                const ts = alert.timestamp ? new Date(alert.timestamp).toLocaleString() : '—';
+                html += `<div class="critical-alert-card" style="background:rgba(255,23,68,0.06);border:1px solid rgba(255,23,68,0.3);border-radius:10px;padding:16px;margin-bottom:12px;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                        <span style="color:var(--negative);font-weight:700;font-size:0.9em;">${{escapeHtml(alert.message)}}</span>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:0.82em;color:var(--text-secondary);margin-bottom:10px;">
+                        <span><strong>Ticker:</strong> ${{escapeHtml(alert.ticker || '—')}}</span>
+                        <span><strong>Category:</strong> ${{escapeHtml(alert.category || '—')}}</span>
+                        <span><strong>Time:</strong> ${{escapeHtml(ts)}}</span>
+                    </div>
+                    <div style="background:rgba(255,23,68,0.08);border-radius:6px;padding:10px 12px;font-size:0.85em;">
+                        <span style="font-weight:600;color:var(--negative);">Action:</span>
+                        <span style="color:var(--text-primary);margin-left:4px;">${{escapeHtml(alert.action || 'No action specified')}}</span>
+                    </div>
+                </div>`;
+            }}
+        }}
+    }}
+
+    // ─── Risk Heatmap Grid (Task 5.2) ─────────────────────────────────────────
+    html += `<div class="section-title">Risk Heatmap</div>`;
+    {{
+        const positions = (state.book.positions || []).filter(p => p.status === 'active');
+        const navHistory = state.history || [];
+
+        // Drawdown from peak
+        const drawdown = computeDrawdownFromPeak(navHistory);
+        const ddPct = (drawdown * 100).toFixed(2);
+        const ddColor = drawdown >= 0.05 ? 'red' : drawdown >= 0.02 ? 'amber' : 'green';
+
+        // Gross leverage
+        const grossLev = computeGrossExposure(positions);
+        const grossColor = grossLev >= 1.2 ? 'red' : grossLev >= 0.8 ? 'amber' : 'green';
+
+        // Net exposure
+        const netExp = computeNetExposure(positions);
+        const absNet = Math.abs(netExp);
+        const netColor = absNet >= 0.5 ? 'red' : absNet >= 0.3 ? 'amber' : 'green';
+
+        // Largest concentration
+        const maxConc = positions.reduce((mx, p) => Math.max(mx, Math.abs(p.size_pct_nav || 0)), 0);
+        const concColor = maxConc >= 0.25 ? 'red' : maxConc >= 0.15 ? 'amber' : 'green';
+
+        // Sector violations (sectors with > 3 names)
+        const sectorCounts = {{}};
+        for (const p of positions) {{
+            const sec = p.sector || 'Unknown';
+            sectorCounts[sec] = (sectorCounts[sec] || 0) + 1;
+        }}
+        const sectorViolations = Object.values(sectorCounts).filter(c => c > 3).length;
+        const secColor = sectorViolations > 0 ? 'red' : 'green';
+
+        function heatCellStyle(color) {{
+            if (color === 'red') return 'background:rgba(255,23,68,0.12);border:1px solid rgba(255,23,68,0.3);color:var(--negative);';
+            if (color === 'amber') return 'background:rgba(255,171,0,0.12);border:1px solid rgba(255,171,0,0.3);color:var(--warning);';
+            return 'background:rgba(0,200,83,0.08);border:1px solid rgba(0,200,83,0.25);color:var(--positive);';
+        }}
+
+        html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;">
+            <div style="border-radius:10px;padding:14px;text-align:center;${{heatCellStyle(ddColor)}}">
+                <div style="font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;opacity:0.8;">Drawdown</div>
+                <div style="font-size:1.3em;font-weight:700;">${{ddPct}}%</div>
+            </div>
+            <div style="border-radius:10px;padding:14px;text-align:center;${{heatCellStyle(grossColor)}}">
+                <div style="font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;opacity:0.8;">Gross Leverage</div>
+                <div style="font-size:1.3em;font-weight:700;">${{grossLev.toFixed(2)}}x</div>
+            </div>
+            <div style="border-radius:10px;padding:14px;text-align:center;${{heatCellStyle(netColor)}}">
+                <div style="font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;opacity:0.8;">Net Exposure</div>
+                <div style="font-size:1.3em;font-weight:700;">${{(netExp * 100).toFixed(1)}}%</div>
+            </div>
+            <div style="border-radius:10px;padding:14px;text-align:center;${{heatCellStyle(concColor)}}">
+                <div style="font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;opacity:0.8;">Largest Position</div>
+                <div style="font-size:1.3em;font-weight:700;">${{(maxConc * 100).toFixed(1)}}%</div>
+            </div>
+            <div style="border-radius:10px;padding:14px;text-align:center;${{heatCellStyle(secColor)}}">
+                <div style="font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;opacity:0.8;">Sector Violations</div>
+                <div style="font-size:1.3em;font-weight:700;">${{sectorViolations}}</div>
+            </div>
+        </div>`;
+    }}
+
+    // ─── Factor Exposure Traffic-Light Grid (Task 5.2) ────────────────────────
     html += `<div class="section-title">Factor Exposure (Book Betas)</div>`;
     const FACTOR_DISPLAY = {{
         'USD_DXY': 'USD / DXY', 'SPX': 'SPX', 'RATES_10Y': 'Rates / 10Y',
@@ -3089,7 +3728,7 @@ function renderRisk() {{
         for (const key of FACTOR_KEYS) {{
             const beta = state.factors.factors[key];
             const betaVal = beta != null ? beta.toFixed(2) : '—';
-            const cls = classifyBeta(beta);
+            const cls = classifyFactorBeta(beta);
             let statusBadge = '';
             if (cls === 'red') statusBadge = '<span class="badge badge-negative">BREACH</span>';
             else if (cls === 'amber') statusBadge = '<span class="badge badge-warning">WARNING</span>';
@@ -3104,7 +3743,60 @@ function renderRisk() {{
     }}
     html += `</tbody></table>`;
 
-    // ─── Concentration Limits Table (Task 5.2) ────────────────────────────────
+    // ─── Correlation Alerts (Task 5.2) ────────────────────────────────────────
+    html += `<div class="section-title">Correlation Alerts</div>`;
+    {{
+        const positions = (state.book.positions || []).filter(p => p.status === 'active');
+        const corrPairs = [];
+        // Check for correlation data embedded in positions or from risk assessments
+        for (const p of positions) {{
+            if (p.correlation != null && p.correlation > 0.5) {{
+                corrPairs.push({{ ticker: p.ticker, hedge: p.hedge_ticker, correlation: p.correlation }});
+            }}
+        }}
+        // Also check risk assessment data for correlation warnings
+        const riskAlerts = (state.monitorAlerts || []).filter(a => a.category === 'correlation');
+        for (const ra of riskAlerts) {{
+            if (!corrPairs.find(cp => cp.ticker === ra.ticker)) {{
+                corrPairs.push({{ ticker: ra.ticker, hedge: ra.hedge_ticker || '—', correlation: ra.value || 0.5 }});
+            }}
+        }}
+
+        if (corrPairs.length === 0) {{
+            html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;">No correlation data available</div>`;
+        }} else {{
+            html += `<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">`;
+            for (const pair of corrPairs) {{
+                html += `<div style="background:rgba(255,171,0,0.08);border:1px solid rgba(255,171,0,0.3);border-radius:8px;padding:10px 14px;font-size:0.85em;">
+                    <span style="font-weight:600;">${{escapeHtml(pair.ticker)}}</span>
+                    <span style="color:var(--text-muted);margin:0 4px;">\u2194</span>
+                    <span style="font-weight:600;">${{escapeHtml(pair.hedge)}}</span>
+                    <span class="badge badge-warning" style="margin-left:8px;">\u03C1 ${{typeof pair.correlation === 'number' ? pair.correlation.toFixed(2) : pair.correlation}}</span>
+                </div>`;
+            }}
+            html += `</div>`;
+        }}
+    }}
+
+    // ─── Trailing 20-Day Volatility (Task 5.2) ────────────────────────────────
+    html += `<div class="section-title">Trailing 20-Day Volatility</div>`;
+    {{
+        const positions = (state.book.positions || []).filter(p => p.status === 'active');
+        if (positions.length === 0) {{
+            html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No active positions for volatility analysis.</div>`;
+        }} else {{
+            html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Ticker</th><th style="text-align:right;">20d Vol</th></tr></thead><tbody>`;
+            for (const p of positions) {{
+                const vol = computeTrailing20dVol(p.price_history);
+                const volDisplay = vol != null ? (vol * 100).toFixed(2) + '%' : 'N/A';
+                const volStyle = vol == null ? 'color:var(--text-muted);' : vol > 0.03 ? 'color:var(--negative);font-weight:600;' : '';
+                html += `<tr><td style="font-weight:600;">${{escapeHtml(p.ticker)}}</td><td style="text-align:right;${{volStyle}}">${{volDisplay}}</td></tr>`;
+            }}
+            html += `</tbody></table>`;
+        }}
+    }}
+
+    // ─── Concentration Limits Table ───────────────────────────────────────────
     html += `<div class="section-title">Concentration Limits</div>`;
     const concentration = (state.derived && state.derived.concentration) ? state.derived.concentration : {{}};
     const sectorEntries = Object.entries(concentration);
@@ -3184,146 +3876,332 @@ function renderTechnical() {{
         return;
     }}
 
-    let html = '<div class="section-title">Technical Scores by Proposal</div>';
+    // Cross-reference with book positions for P&L annotation
+    const activePositions = (state.book && state.book.positions || []).filter(p => p.status === 'active');
+    const positionMap = {{}};
+    for (const p of activePositions) {{
+        if (p.ticker) positionMap[p.ticker.toUpperCase()] = p;
+    }}
 
-    for (const scoreData of validScores) {{
-        const score = scoreData.technical_score || 0;
-        const scorePct = score * 10;
-        const pid = scoreData.proposal_id || '—';
-        // Try to find the ticker from the proposal_id or from the score data
-        const ticker = scoreData.ticker || pid.replace(/^(fund_|macro_|tech_)/, '').split('_')[0].toUpperCase() || '—';
+    // Normalize scores to a unified structure
+    // Maps technical_score (0-10) to composite_score (0-100)
+    // Maps trend_alignment to trend_direction, momentum_regime to momentum classification
+    function normalizeTrendDirection(alignment) {{
+        if (!alignment) return 'sideways';
+        const a = alignment.toLowerCase();
+        if (a === 'aligned' || a === 'bullish' || a === 'up') return 'up';
+        if (a === 'opposed' || a === 'bearish' || a === 'down') return 'down';
+        return 'sideways';
+    }}
 
-        let signalsHtml = '';
-        for (const s of (scoreData.active_signals || [])) {{
-            const name = (s.signal||'').replace(/_/g,' ').replace(/\\b\\w/g,c=>c.toUpperCase());
-            const val = s.value ? ` (${{s.value}})` : '';
-            const note = s.note ? ` — ${{s.note}}` : '';
-            signalsHtml += `<div class="signal-chip"><span class="signal-dot ${{s.strength||'moderate'}}"></span>${{name}}${{val}}</div>`;
+    function normalizeMomentum(regime) {{
+        if (!regime) return 'weak';
+        const r = regime.toLowerCase();
+        if (r.includes('strong')) return 'strong';
+        if (r.includes('moderate') || r.includes('consolidation') || r.includes('inflection')) return 'moderate';
+        return 'weak';
+    }}
+
+    function deriveSector(scoreData) {{
+        // Try explicit sector field first
+        if (scoreData.sector) return scoreData.sector;
+        // Derive from proposal_id pattern: tech_fund_SECTOR_... or tech_macro_SECTOR_...
+        const pid = scoreData.proposal_id || '';
+        const parts = pid.replace(/^tech_/, '').split('_');
+        if (parts.length >= 2) {{
+            const sectorRaw = parts[1] || '';
+            // Map known sector abbreviations
+            const sectorMap = {{
+                'consdisc': 'Consumer Discretionary',
+                'consstaples': 'Consumer Staples',
+                'commsvcs': 'Communication Services',
+                'energy': 'Energy',
+                'tech': 'Technology',
+                'healthcare': 'Healthcare',
+                'financials': 'Financials',
+                'industrials': 'Industrials',
+                'materials': 'Materials',
+                'utilities': 'Utilities',
+                'realestate': 'Real Estate',
+                'commodities': 'Commodities',
+                'asia': 'Asia',
+                'westerneurope': 'Western Europe',
+            }};
+            return sectorMap[sectorRaw.toLowerCase()] || sectorRaw.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase()).trim() || 'Other';
+        }}
+        return 'Other';
+    }}
+
+    function deriveTicker(scoreData) {{
+        if (scoreData.ticker) return scoreData.ticker.toUpperCase();
+        const pid = scoreData.proposal_id || '';
+        // Try to extract ticker: look for known patterns like _nflx_ or _vlo_
+        const parts = pid.split('_');
+        // Find the last alphabetical part that looks like a ticker (2-5 chars, not a date)
+        for (let i = parts.length - 1; i >= 0; i--) {{
+            const p = parts[i];
+            if (/^[a-zA-Z]{{1,5}}$/.test(p) && !/^(fund|macro|tech|short|long)$/.test(p.toLowerCase())) {{
+                return p.toUpperCase();
+            }}
+        }}
+        // Fallback: use proposal_id sector part
+        return pid.replace(/^(tech_)?(fund_|macro_)?/, '').split('_')[0].toUpperCase() || '—';
+    }}
+
+    // Build normalized score objects
+    const normalizedScores = validScores.map(s => {{
+        const compositeScore = (s.composite_score != null) ? s.composite_score : (s.technical_score || 0) * 10;
+        const ticker = deriveTicker(s);
+        const sector = deriveSector(s);
+        const trendDirection = s.trend_direction || normalizeTrendDirection(s.trend_alignment);
+        const momentum = s.momentum || normalizeMomentum(s.momentum_regime);
+        const position = positionMap[ticker] || null;
+        const pnl = position ? position.combined_pnl_pct : null;
+        const hasPosition = position !== null;
+        const isWeakening = compositeScore < 40 && hasPosition;
+
+        return {{
+            ticker,
+            compositeScore,
+            trendDirection,
+            momentum,
+            sector,
+            pnl,
+            hasPosition,
+            isWeakening,
+            raw: s,
+        }};
+    }});
+
+    // Sort by composite score descending
+    normalizedScores.sort((a, b) => b.compositeScore - a.compositeScore);
+
+    // Group by sector
+    const sectorGroups = {{}};
+    for (const s of normalizedScores) {{
+        if (!sectorGroups[s.sector]) sectorGroups[s.sector] = [];
+        sectorGroups[s.sector].push(s);
+    }}
+
+    // Compute sector averages and sort sectors by average score descending
+    const sectorEntries = Object.entries(sectorGroups).map(([name, items]) => {{
+        const avg = items.reduce((sum, i) => sum + i.compositeScore, 0) / items.length;
+        return {{ name, items, avg }};
+    }});
+    sectorEntries.sort((a, b) => b.avg - a.avg);
+
+    // Score color coding
+    function scoreColor(score) {{
+        if (score > 60) return 'var(--positive)';
+        if (score >= 40) return 'var(--warning)';
+        return 'var(--negative)';
+    }}
+
+    function scoreBadgeClass(score) {{
+        if (score > 60) return 'badge-positive';
+        if (score >= 40) return 'badge-warning';
+        return 'badge-negative';
+    }}
+
+    // Trend arrow
+    function trendArrow(dir) {{
+        switch (dir) {{
+            case 'up': return '<span style="color:var(--positive);font-weight:700;">&#9650; Up</span>';
+            case 'down': return '<span style="color:var(--negative);font-weight:700;">&#9660; Down</span>';
+            default: return '<span style="color:var(--text-muted);font-weight:700;">&#9654; Sideways</span>';
+        }}
+    }}
+
+    // Momentum badge
+    function momentumBadge(m) {{
+        const colors = {{ strong: 'var(--positive)', moderate: 'var(--warning)', weak: 'var(--negative)' }};
+        const col = colors[m] || 'var(--text-muted)';
+        return `<span style="color:${{col}};font-weight:600;text-transform:capitalize;">${{m}}</span>`;
+    }}
+
+    // Build HTML
+    let html = '<div class="section-title">Technical Signal Rankings</div>';
+
+    // Summary KPIs
+    const totalScores = normalizedScores.length;
+    const avgScore = totalScores > 0 ? (normalizedScores.reduce((s, i) => s + i.compositeScore, 0) / totalScores).toFixed(0) : 0;
+    const weakening = normalizedScores.filter(s => s.isWeakening).length;
+    const strongSignals = normalizedScores.filter(s => s.compositeScore > 60).length;
+
+    html += `<div class="metrics-grid" style="margin-bottom:24px;">
+        <div class="metric-card" style="padding:14px;"><div class="metric-label">Total Signals</div><div class="metric-value">${{totalScores}}</div></div>
+        <div class="metric-card" style="padding:14px;"><div class="metric-label">Avg Score</div><div class="metric-value" style="color:${{scoreColor(Number(avgScore))}}">${{avgScore}}</div></div>
+        <div class="metric-card" style="padding:14px;"><div class="metric-label">Strong (&gt;60)</div><div class="metric-value positive">${{strongSignals}}</div></div>
+        <div class="metric-card" style="padding:14px;"><div class="metric-label">Weakening Positions</div><div class="metric-value ${{weakening > 0 ? 'negative' : ''}}">${{weakening}}</div></div>
+    </div>`;
+
+    // Render each sector group
+    for (const sector of sectorEntries) {{
+        html += `<div style="margin-bottom:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:8px 12px;background:var(--bg-secondary);border-radius:8px;border-left:3px solid ${{scoreColor(sector.avg)}};">
+                <span style="font-weight:700;font-size:0.92em;color:var(--text-primary);">${{escapeHtml(sector.name)}}</span>
+                <span style="font-size:0.82em;color:var(--text-muted);">Avg Score: <strong style="color:${{scoreColor(sector.avg)}}">${{sector.avg.toFixed(0)}}</strong></span>
+            </div>
+            <div class="sector-table-wrapper"><table class="data-table" style="width:100%;">
+                <thead><tr>
+                    <th style="text-align:left;">Ticker</th>
+                    <th style="text-align:center;">Score</th>
+                    <th style="text-align:center;">Trend</th>
+                    <th style="text-align:center;">Momentum</th>
+                    <th style="text-align:center;">P&amp;L</th>
+                    <th style="text-align:center;">Status</th>
+                </tr></thead>
+                <tbody>`;
+
+        for (const item of sector.items) {{
+            const pnlDisplay = item.pnl != null
+                ? `<span class="${{item.pnl >= 0 ? 'positive' : 'negative'}}" style="font-weight:600;">${{(item.pnl >= 0 ? '+' : '') + (item.pnl * 100).toFixed(1)}}%</span>`
+                : '<span style="color:var(--text-muted);">—</span>';
+
+            const warningFlag = item.isWeakening
+                ? `<span class="badge badge-negative" style="font-size:0.72em;padding:2px 8px;" title="Score < 40 on active position">&#9888; Weakening</span>`
+                : (item.hasPosition
+                    ? `<span class="badge badge-positive" style="font-size:0.72em;padding:2px 8px;">In Book</span>`
+                    : '');
+
+            html += `<tr style="${{item.isWeakening ? 'background:rgba(255,23,68,0.05);' : ''}}">
+                <td style="font-weight:700;">${{escapeHtml(item.ticker)}}</td>
+                <td style="text-align:center;">
+                    <span class="badge ${{scoreBadgeClass(item.compositeScore)}}" style="font-size:0.82em;min-width:36px;display:inline-block;text-align:center;">${{item.compositeScore}}</span>
+                </td>
+                <td style="text-align:center;">${{trendArrow(item.trendDirection)}}</td>
+                <td style="text-align:center;">${{momentumBadge(item.momentum)}}</td>
+                <td style="text-align:center;">${{pnlDisplay}}</td>
+                <td style="text-align:center;">${{warningFlag}}</td>
+            </tr>`;
         }}
 
-        let levelsHtml = '';
-        const supports = scoreData.support_levels || [];
-        const resistances = scoreData.resistance_levels || [];
-        for (const r of resistances) levelsHtml += `<div class="factor-item" style="border-color:rgba(255,23,68,0.3);"><div class="factor-name">Resistance</div><div class="factor-value negative">${{typeof r === 'number' ? '$'+r.toFixed(2) : r}}</div></div>`;
-        for (const s of supports) levelsHtml += `<div class="factor-item" style="border-color:rgba(0,200,83,0.3);"><div class="factor-name">Support</div><div class="factor-value positive">${{typeof s === 'number' ? '$'+s.toFixed(2) : s}}</div></div>`;
-
-        html += `
-        <div class="pending-card" style="margin-bottom:20px;">
-            <div class="pending-header"><h3>${{escapeHtml(pid)}}</h3><span class="badge ${{score>=7?'badge-positive':score>=5?'badge-warning':'badge-negative'}}">Score: ${{score}}/10</span></div>
-            <div style="margin:16px 0;">
-                <div style="display:flex;justify-content:space-between;font-size:0.78em;color:var(--text-muted);margin-bottom:4px;"><span>Bearish</span><span>Neutral</span><span>Bullish</span></div>
-                <div style="width:100%;height:12px;background:var(--bg-secondary);border-radius:6px;overflow:hidden;">
-                    <div style="width:${{scorePct}}%;height:100%;background:linear-gradient(90deg,var(--negative),var(--warning),var(--positive));border-radius:6px;transition:width 0.8s ease;"></div>
-                </div>
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-card" style="padding:14px;"><div class="metric-label">Trend</div><div class="metric-value" style="font-size:1em;text-transform:capitalize;">${{scoreData.trend_alignment||'—'}}</div></div>
-                <div class="metric-card" style="padding:14px;"><div class="metric-label">Momentum</div><div class="metric-value" style="font-size:1em;text-transform:capitalize;">${{(scoreData.momentum_regime||'—').replace(/_/g,' ')}}</div></div>
-                <div class="metric-card" style="padding:14px;"><div class="metric-label">Timing</div><div class="metric-value" style="font-size:1em;text-transform:capitalize;">${{scoreData.timing_recommendation||'—'}}</div></div>
-                <div class="metric-card" style="padding:14px;"><div class="metric-label">Volume</div><div class="metric-value ${{scoreData.volume_confirmation?'positive':'negative'}}" style="font-size:1em;">${{scoreData.volume_confirmation?'Confirmed':'No'}}</div></div>
-            </div>
-            ${{scoreData.timing_rationale ? `<div style="margin-top:12px;font-size:0.88em;color:var(--text-secondary);line-height:1.6;"><strong>Rationale:</strong> ${{escapeHtml(scoreData.timing_rationale)}}</div>` : ''}}
-            ${{signalsHtml ? `<div style="margin-top:12px;"><div style="font-size:0.72em;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Signals</div><div class="signal-list">${{signalsHtml}}</div></div>` : ''}}
-            ${{levelsHtml ? `<div style="margin-top:12px;"><div style="font-size:0.72em;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Key Levels</div><div class="factor-grid">${{levelsHtml}}</div></div>` : ''}}
-            <div class="metrics-grid" style="margin-top:12px;">
-                <div class="metric-card" style="padding:14px;"><div class="metric-label">Entry</div><div class="metric-value" style="font-size:1.1em;">${{scoreData.suggested_entry ? '$'+scoreData.suggested_entry.toFixed(2) : '—'}}</div></div>
-                <div class="metric-card" style="padding:14px;"><div class="metric-label">Stop</div><div class="metric-value negative" style="font-size:1.1em;">${{scoreData.suggested_stop_loss ? '$'+scoreData.suggested_stop_loss.toFixed(2) : '—'}}</div></div>
-                <div class="metric-card" style="padding:14px;"><div class="metric-label">Target</div><div class="metric-value positive" style="font-size:1.1em;">${{scoreData.suggested_take_profit ? '$'+scoreData.suggested_take_profit.toFixed(2) : '—'}}</div></div>
-            </div>
-        </div>`;
+        html += `</tbody></table></div></div>`;
     }}
 
     panel.innerHTML = html;
 }}
 
-// ─── CALENDAR TAB (Task 8.1) ────────────────────────────────────────────────
-function renderCalendar() {{
-    const panel = document.getElementById('panel-calendar');
-    if (!panel) return;
+let runLogPage = 0;
+const RUN_LOG_PAGE_SIZE = 20;
 
-    if (!state.calendar || state.calendar.empty) {{
-        panel.innerHTML = `<div class="empty-state">
-            <div class="empty-icon">&#128197;</div>
-            <div class="empty-text">No calendar data available</div>
-        </div>`;
-        return;
-    }}
+function getFilteredRunLogs() {{
+    // Filter out telegram_delivery and price_poll — show only pipeline cycles
+    return (state.logs || []).filter(log => {{
+        const ct = (log.cycle_type || '').toLowerCase();
+        return ct !== 'telegram_delivery' && ct !== 'price_poll';
+    }});
+}}
 
-    const cal = state.calendar;
-    let html = '';
+function toggleRunLogCycle(el) {{
+    el.closest('.runlog-cycle').classList.toggle('expanded');
+}}
 
-    // Macro releases
-    html += `<div class="section-title">Macro Releases</div>`;
-    if (cal.macro && cal.macro.length > 0) {{
-        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Day</th><th>Time</th><th>Currency</th><th>Release</th><th>Consensus</th></tr></thead><tbody>`;
-        for (const e of cal.macro) {{
-            html += `<tr><td>${{escapeHtml(e.day || e.date || '—')}}</td><td>${{escapeHtml(e.time || '—')}}</td><td style="font-weight:600;">${{escapeHtml(e.currency || '—')}}</td><td>${{escapeHtml(e.release || e.event || '—')}}</td><td>${{escapeHtml(e.consensus || '—')}}</td></tr>`;
-        }}
-        html += `</tbody></table>`;
-    }} else {{
-        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No macro releases scheduled.</div>`;
-    }}
-
-    // CB Decisions
-    html += `<div class="section-title">Central Bank Decisions</div>`;
-    if (cal.cb && cal.cb.length > 0) {{
-        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Date</th><th>Currency</th><th>Expected Action</th></tr></thead><tbody>`;
-        for (const e of cal.cb) {{
-            html += `<tr><td>${{escapeHtml(e.date || '—')}}</td><td style="font-weight:600;">${{escapeHtml(e.currency || '—')}}</td><td>${{escapeHtml(e.action || '—')}}</td></tr>`;
-        }}
-        html += `</tbody></table>`;
-    }} else {{
-        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No CB decisions scheduled.</div>`;
-    }}
-
-    // Earnings
-    html += `<div class="section-title">Earnings</div>`;
-    if (cal.earnings && cal.earnings.length > 0) {{
-        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Date</th><th>Ticker</th><th>Timing</th></tr></thead><tbody>`;
-        for (const e of cal.earnings) {{
-            html += `<tr><td>${{escapeHtml(e.date || '—')}}</td><td style="font-weight:700;">${{escapeHtml(e.ticker || '—')}}</td><td>${{escapeHtml(e.timing || '—')}}</td></tr>`;
-        }}
-        html += `</tbody></table>`;
-    }} else {{
-        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No earnings events scheduled.</div>`;
-    }}
-
-    // Holidays
-    html += `<div class="section-title">Market Holidays</div>`;
-    if (cal.holidays && cal.holidays.length > 0) {{
-        html += `<table class="data-table" style="margin-bottom:24px;"><thead><tr><th>Date</th><th>Holiday</th><th>Type</th></tr></thead><tbody>`;
-        for (const e of cal.holidays) {{
-            html += `<tr><td>${{escapeHtml(e.date || '—')}}</td><td>${{escapeHtml(e.name || '—')}}</td><td>${{escapeHtml(e.type || '—')}}</td></tr>`;
-        }}
-        html += `</tbody></table>`;
-    }} else {{
-        html += `<div style="color:var(--text-muted);font-size:0.88em;margin-bottom:24px;">No holidays scheduled.</div>`;
-    }}
-
-    panel.innerHTML = html;
+function loadMoreRunLogs() {{
+    runLogPage++;
+    renderTimeline();
 }}
 
 function renderTimeline() {{
     const panel = document.getElementById('panel-timeline');
-    if (!state.logs.length) {{
-        panel.innerHTML = '<div class="empty-state"><div class="empty-icon">&#9200;</div><div class="empty-text">No cycle logs yet.</div></div>';
+    const allLogs = getFilteredRunLogs();
+
+    if (!allLogs.length) {{
+        panel.innerHTML = '<div class="empty-state"><div class="empty-icon">&#9200;</div><div class="empty-text">No pipeline cycle logs yet.</div></div>';
         return;
     }}
-    let html = '<div class="section-title">Cycle History</div><div class="timeline">';
-    for (const log of [...state.logs].reverse()) {{
-        let ts = formatTimestampET(log.timestamp);
-        html += `<div class="tl-item">
-            <div class="tl-time">${{ts}}</div>
-            <div class="tl-content">Cycle completed</div>
-            <div class="tl-stats">
-                <div class="tl-stat">Proposals: <strong>${{log.proposals_generated||0}}</strong></div>
-                <div class="tl-stat">Orders: <strong>${{log.orders_executed||0}}</strong></div>
-                <div class="tl-stat">Positions: <strong>${{log.book_positions||0}}</strong></div>
-                <div class="tl-stat">NAV: <strong>${{formatCurrency(log.nav)}}</strong></div>
-            </div>
-        </div>`;
+
+    // Sort by timestamp descending (most recent first)
+    const sorted = [...allLogs].sort((a, b) => {{
+        const ta = a.timestamp || '';
+        const tb = b.timestamp || '';
+        return tb.localeCompare(ta);
+    }});
+
+    const visibleCount = (runLogPage + 1) * RUN_LOG_PAGE_SIZE;
+    const visible = sorted.slice(0, visibleCount);
+    const hasMore = sorted.length > visibleCount;
+
+    let html = '<div class="runlog-header"><div class="section-title">Pipeline Execution Log</div><div style="font-size:0.78em;color:var(--text-muted);">' + sorted.length + ' cycles total</div></div>';
+
+    for (const log of visible) {{
+        const ts = formatTimestampET(log.timestamp);
+        const cycleType = log.cycle_type || 'full_desk_run';
+        const proposalsEval = log.proposals_evaluated || log.proposals_generated || 0;
+        const orders = log.orders || [];
+        const ordersExecuted = log.orders_executed || (log.metrics && log.metrics.orders_executed) || 0;
+        const passed = orders.filter(o => o.gate_result === 'passed').length || ordersExecuted;
+        const rejected = orders.filter(o => o.gate_result === 'failed').length;
+        const cbActive = log.circuit_breaker_active || false;
+        const drawdown = log.drawdown_at_time;
+        const isSkipped = log.status === 'skipped';
+        const error = log.error || '';
+
+        html += `<div class="runlog-cycle">`;
+        html += `<div class="runlog-cycle-header" onclick="toggleRunLogCycle(this)" aria-expanded="false" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){{event.preventDefault();toggleRunLogCycle(this);}}">`;
+        html += `<div class="runlog-cycle-left">`;
+        html += `<span class="runlog-ts">${{ts}}</span>`;
+        html += `<span class="runlog-type">${{cycleType.replace(/_/g, ' ')}}</span>`;
+        if (cbActive) {{
+            html += `<span class="runlog-cb-badge">&#9888; CB Active${{drawdown != null ? ' (' + (drawdown * 100).toFixed(2) + '% DD)' : ''}}</span>`;
+        }}
+        html += `</div>`;
+        html += `<div class="runlog-cycle-right">`;
+        html += `<span class="runlog-stat">Proposals: <strong>${{proposalsEval}}</strong></span>`;
+        if (passed > 0) html += `<span class="runlog-stat passed">Passed: <strong>${{passed}}</strong></span>`;
+        if (rejected > 0) html += `<span class="runlog-stat rejected">Rejected: <strong>${{rejected}}</strong></span>`;
+        html += `<span class="runlog-expand-icon">&#9660;</span>`;
+        html += `</div>`;
+        html += `</div>`;
+
+        if (isSkipped) {{
+            html += `<div class="runlog-skipped">&#8635; Cycle skipped (overlap guard)</div>`;
+        }}
+        if (error) {{
+            html += `<div class="runlog-error">&#9888; ${{error}}</div>`;
+        }}
+
+        // Per-order breakdown
+        if (orders.length > 0) {{
+            html += `<div class="runlog-orders">`;
+            html += `<div class="runlog-order runlog-order-header">`;
+            html += `<div>Ticker</div><div>Conviction</div><div>Risk</div><div>PM Exec</div><div>Gate</div>`;
+            html += `</div>`;
+            for (const order of orders) {{
+                const riskClass = (order.risk_decision || '').toLowerCase() === 'approved' ? 'approved' : 'rejected';
+                const pmClass = order.pm_execute ? 'yes' : 'no';
+                const gateClass = order.gate_result === 'passed' ? 'passed' : 'failed';
+                const gateLabel = order.gate_result === 'passed' ? '&#10003; Passed' : '&#10007; ' + (order.failing_gate || 'failed');
+                const isCBHeld = order.failing_gate === 'circuit_breaker';
+
+                html += `<div class="runlog-order">`;
+                html += `<div class="runlog-ticker">${{order.ticker || '—'}}</div>`;
+                html += `<div class="runlog-conviction">${{order.conviction != null ? order.conviction.toFixed(1) : '—'}}</div>`;
+                html += `<div class="runlog-risk ${{riskClass}}">${{order.risk_decision || '—'}}</div>`;
+                html += `<div class="runlog-pm ${{pmClass}}">${{order.pm_execute ? 'Yes' : 'No'}}</div>`;
+                html += `<div class="runlog-gate ${{gateClass}}">${{gateLabel}}</div>`;
+                html += `</div>`;
+
+                if (isCBHeld) {{
+                    html += `<div class="runlog-cb-held">`;
+                    html += `<span class="runlog-cb-held-icon">&#128721;</span>`;
+                    html += `<span>Circuit Breaker Held${{drawdown != null ? ' — Drawdown: ' + (drawdown * 100).toFixed(2) + '%' : ''}}</span>`;
+                    html += `</div>`;
+                }}
+            }}
+            html += `</div>`;
+        }} else {{
+            // Fallback for older log entries without orders array
+            html += `<div class="runlog-orders"><div style="font-size:0.8em;color:var(--text-muted);padding:8px 0;">No per-order breakdown available for this cycle.</div></div>`;
+        }}
+
+        html += `</div>`;
     }}
-    html += '</div>';
+
+    if (hasMore) {{
+        html += `<button class="runlog-load-more" onclick="loadMoreRunLogs()" aria-label="Load more cycles">Load More (${{sorted.length - visibleCount}} remaining)</button>`;
+    }}
+
     panel.innerHTML = html;
 }}
 
@@ -3794,6 +4672,98 @@ function parseTrailPct(stopLossMethod) {{
     return match ? parseFloat(match[1]) : null;
 }}
 
+// ─── AUTONOMOUS MODE COMPUTATION FUNCTIONS ───────────────────────────────────
+
+function computeGrossExposure(positions) {{
+    return (positions || []).reduce((sum, p) => sum + Math.abs(p.size_pct_nav || 0), 0);
+}}
+
+function computeNetExposure(positions) {{
+    return (positions || []).reduce((sum, p) => {{
+        const size = Math.abs(p.size_pct_nav || 0);
+        const dir = (p.direction || 'long').toLowerCase();
+        return sum + (dir === 'short' ? -size : size);
+    }}, 0);
+}}
+
+function computeAveragePairPnL(positions) {{
+    const valid = (positions || []).filter(p => p.combined_pnl_pct != null);
+    if (valid.length === 0) return 0;
+    const total = valid.reduce((sum, p) => sum + p.combined_pnl_pct, 0);
+    return total / valid.length;
+}}
+
+function computeCapitalFreedByTrims(positions, nav) {{
+    if (!nav || nav <= 0) return 0;
+    return (positions || [])
+        .filter(p => p.trim_status === 'half_trimmed')
+        .reduce((sum, p) => sum + Math.abs(p.size_pct_nav || 0) * nav * 0.5, 0);
+}}
+
+function computeTrailStopProximity(position) {{
+    if (!position || position.trail_stop_level == null || !position.current_price) return null;
+    const dir = (position.direction || 'long').toLowerCase();
+    if (dir === 'long') {{
+        return (position.current_price - position.trail_stop_level) / position.current_price;
+    }} else {{
+        return (position.trail_stop_level - position.current_price) / position.current_price;
+    }}
+}}
+
+function computeTrailing20dVol(priceHistory) {{
+    if (!priceHistory || priceHistory.length < 2) return null;
+    const values = priceHistory.slice(-20).map(h => h.daily_change_pct);
+    if (values.length < 2) return null;
+    const n = values.length;
+    const mean = values.reduce((s, v) => s + v, 0) / n;
+    const variance = values.reduce((s, v) => s + (v - mean) * (v - mean), 0) / (n - 1);
+    return Math.sqrt(variance);
+}}
+
+function computeDrawdownFromPeak(navHistory) {{
+    if (!navHistory || navHistory.length === 0) return 0;
+    let peak = -Infinity;
+    let maxDrawdown = 0;
+    for (const entry of navHistory) {{
+        const nav = typeof entry === 'number' ? entry : (entry.nav || entry.value || 0);
+        if (nav > peak) peak = nav;
+        if (peak > 0) {{
+            const dd = (peak - nav) / peak;
+            if (dd > maxDrawdown) maxDrawdown = dd;
+        }}
+    }}
+    return maxDrawdown;
+}}
+
+function classifyFactorBeta(beta) {{
+    if (beta == null) return "green";
+    const abs = Math.abs(beta);
+    if (abs >= 0.6) return "red";
+    if (abs >= 0.4) return "amber";
+    return "green";
+}}
+
+function computeDaysOverdue(thesisStatus, lastReviewDate) {{
+    if (!thesisStatus || thesisStatus !== 'review_overdue' || !lastReviewDate) return 0;
+    const now = new Date();
+    const last = new Date(lastReviewDate);
+    if (isNaN(last.getTime())) return 0;
+    const diffMs = now.getTime() - last.getTime();
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+}}
+
+function computeConvictionTrajectory(debate) {{
+    if (!debate || !debate.rounds || debate.rounds.length === 0) return [];
+    const sorted = [...debate.rounds].sort((a, b) => a.round - b.round);
+    return sorted.map(round => {{
+        const convictions = (round.arguments || []).map(arg => arg.revised_conviction != null ? arg.revised_conviction : arg.conviction);
+        if (convictions.length === 0) return null;
+        return convictions.reduce((s, v) => s + v, 0) / convictions.length;
+    }}).filter(v => v != null);
+}}
+
+// ─── END AUTONOMOUS MODE COMPUTATION FUNCTIONS ───────────────────────────────
+
 function computeDerivedMetrics(state) {{
     const positions = (state.book.positions || []).filter(p => p.status === 'active').map(pos => {{
         const entryRatio = (pos.entry_price && pos.hedge_entry_price && pos.hedge_entry_price > 0)
@@ -4135,18 +5105,6 @@ function formatChatResponse(text) {{
 
 function escapeHtml(s) {{ if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }}
 
-function updatePendingBadge() {{
-    const el = document.getElementById('pending-count');
-    const mobEl = document.getElementById('mob-pending-count');
-    if (state.pending.length > 0) {{
-        if (el) {{ el.style.display = 'inline'; el.textContent = state.pending.length; }}
-        if (mobEl) {{ mobEl.style.display = 'flex'; mobEl.textContent = state.pending.length; }}
-    }} else {{
-        if (el) el.style.display = 'none';
-        if (mobEl) mobEl.style.display = 'none';
-    }}
-}}
-
 function showToast(msg, type) {{
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
@@ -4158,13 +5116,11 @@ function showToast(msg, type) {{
 
 const TITLES = {{
     overview: 'Jimothy Capital',
-    pending: 'Trade Recommendations',
     positions: 'Portfolio Book',
     journal: 'Trade Blotter',
     debate: 'Investment Committee',
     risk: 'Risk Management',
     technical: 'Technical Analysis',
-    calendar: 'Market Calendar',
     timeline: 'Run Log',
     chat: 'Desk Assistant',
 }};

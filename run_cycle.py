@@ -32,6 +32,8 @@ import json
 import os
 import subprocess
 import sys
+import time
+import traceback
 from datetime import datetime
 from pathlib import Path
 
@@ -47,6 +49,23 @@ LOG_DIR = MEMOS_DIR / "logs"
 sys.path.insert(0, str(PROJECT_ROOT))
 from src.data_platform.env_loader import load_secrets
 load_secrets()
+
+# Structured cycle logging
+from src.data_platform.cycle_logger import log_cycle_start, log_phase_complete, log_cycle_complete
+
+
+def atomic_write_book(book_path: Path, data: dict) -> None:
+    """Write book.json atomically: write to .tmp, then os.replace.
+
+    This ensures book.json always contains either the complete previous state
+    or the complete new state — never a partial write.
+
+    Requirements: 6.2
+    """
+    tmp_path = book_path.with_suffix('.tmp')
+    tmp_path.write_text(json.dumps(data, indent=2))
+    os.replace(str(tmp_path), str(book_path))
+
 
 # POC Universe tickers
 POC_TICKERS = [
@@ -159,13 +178,13 @@ def ensure_dirs() -> None:
     for subdir in ["proposals", "debate", "scores", "risk", "orders", "state", "logs"]:
         (MEMOS_DIR / subdir).mkdir(parents=True, exist_ok=True)
     if not STATE_FILE.exists():
-        STATE_FILE.write_text(json.dumps({
+        atomic_write_book(STATE_FILE, {
             "nav": 10_000_000,
             "initial_nav": 10_000_000,
             "cash_pct": 1.0,
             "positions": [],
             "trade_journal": [],
-        }, indent=2))
+        })
 
 
 def run_cli(command: str) -> dict | None:
@@ -801,36 +820,195 @@ Instructions:
     return orders
 
 def phase_8_update_book(orders: list[dict]) -> None:
-    """Phase 8: Log results. Orders stay as PENDING for human approval via dashboard."""
-    log("═══ PHASE 8: ORDERS READY FOR REVIEW ═══")
+    """Phase 8: Autonomous auto-booking.
+
+    For each order that clears all gates:
+      1. Validate gates (conviction ≥ 5, risk approved, PM execute)
+      2. Check circuit breaker (intraday drawdown ≤ -2%)
+      3. Compute slippage-adjusted entry price
+      4. Add position to book
+      5. Reduce cash by 2x size (both legs)
+      6. Log full provenance to trade journal
+    """
+    from src.trading.slippage import compute_fill_price
+    from src.trading.gate_validator import validate_gates
+    from src.trading.circuit_breaker import is_circuit_breaker_active
+
+    log("═══ PHASE 8: AUTONOMOUS AUTO-BOOKING ═══")
 
     if not orders:
         log("  No orders generated this cycle.")
         print("\n" + "═" * 60)
         print("          CYCLE COMPLETE — NO NEW ORDERS")
         print("═" * 60)
+        _write_cycle_log(orders)
         return
 
-    print("\n" + "═" * 60)
-    print("          CYCLE COMPLETE — PENDING ORDERS")
-    print("═" * 60)
-    print(f"  {len(orders)} order(s) awaiting human approval on the dashboard.\n")
+    # Load book state
+    book = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {
+        "nav": 10_000_000,
+        "initial_nav": 10_000_000,
+        "cash_pct": 1.0,
+        "positions": [],
+        "trade_journal": [],
+    }
+    session_open_nav = book.get("session_open_nav", book.get("nav", 0))
+
+    # Check circuit breaker state
+    cb_state = is_circuit_breaker_active(book["nav"], session_open_nav)
+    if cb_state.active:
+        log(f"  ⚠ Circuit breaker ACTIVE (drawdown: {cb_state.current_drawdown*100:.2f}%)")
+        # Send Telegram alert for circuit breaker activation (Requirements 13.1, 13.4)
+        try:
+            from src.telegram_bot import send_message as _cb_send
+            _cb_send(
+                f"Circuit breaker ACTIVE — drawdown {cb_state.current_drawdown*100:.2f}% from session open. "
+                f"New trade entries blocked.",
+                severity="critical",
+            )
+        except Exception:
+            pass
+
+    # Initialize price service for fetching last observed prices
+    sys.path.insert(0, str(SRC_DIR))
+    from data_platform.prices import PriceService
+    price_service = PriceService()
+
+    booked_count = 0
+    rejected_count = 0
+    held_count = 0
 
     for order in orders:
-        if order.get("execute"):
-            t = order.get("ticker", "?")
-            h = order.get("hedge_ticker", "?")
-            d = order.get("direction", "?").upper()
-            s = order.get("size_pct_nav", 0)
-            c = order.get("conviction", 0)
-            print(f"  {t:6s} {d:5s} vs {h:5s} | {s*100:.1f}% NAV | Conv {c}/10")
-            print(f"         {order.get('pm_rationale', '')[:70]}")
-            print()
+        proposal_id = order.get("proposal_id", "unknown")
 
-    print("  → Open http://127.0.0.1:8080/ to Approve or Reject")
+        # 1. Gate validation
+        gate_result = validate_gates(
+            conviction=order.get("conviction", 0),
+            risk_decision=order.get("risk_decision", {}).get("decision", "")
+                if isinstance(order.get("risk_decision"), dict)
+                else str(order.get("risk_decision", "")),
+            pm_execute=order.get("execute", False),
+        )
+
+        if not gate_result.passed:
+            # Log rejection with specific failing gate
+            book.setdefault("trade_journal", []).append({
+                "action": "auto_rejected",
+                "proposal_id": proposal_id,
+                "failing_gate": gate_result.failing_gate,
+                "timestamp": datetime.now().isoformat(),
+            })
+            rejected_count += 1
+            log(f"  ✗ REJECTED {proposal_id}: gate={gate_result.failing_gate}")
+            continue
+
+        # 2. Circuit breaker check
+        if cb_state.active:
+            order["status"] = "circuit_breaker_held"
+            # Persist held order
+            held_path = (MEMOS_DIR / "orders" / f"{order.get('order_id', proposal_id)}_held.json")
+            held_path.write_text(json.dumps(order, indent=2))
+            book.setdefault("trade_journal", []).append({
+                "action": "circuit_breaker_held",
+                "proposal_id": proposal_id,
+                "drawdown": cb_state.current_drawdown,
+                "timestamp": datetime.now().isoformat(),
+            })
+            held_count += 1
+            log(f"  ⊘ HELD {proposal_id}: circuit breaker active (drawdown {cb_state.current_drawdown*100:.2f}%)")
+            continue
+
+        # 3. Compute slippage-adjusted fill prices
+        ticker = order.get("ticker", "")
+        hedge_ticker = order.get("hedge_ticker", "")
+        direction = order.get("direction", "long")
+        hedge_direction = order.get("hedge_direction", "short")
+
+        last_price = price_service.get_latest_close(ticker)
+        hedge_last_price = price_service.get_latest_close(hedge_ticker) if hedge_ticker else None
+
+        if last_price is None:
+            log(f"  ⚠ Skipping {proposal_id}: no price data for {ticker}", "WARN")
+            book.setdefault("trade_journal", []).append({
+                "action": "auto_rejected",
+                "proposal_id": proposal_id,
+                "failing_gate": "price_unavailable",
+                "timestamp": datetime.now().isoformat(),
+            })
+            rejected_count += 1
+            continue
+
+        entry_price = compute_fill_price(last_price, direction, "entry")
+        hedge_entry_price = (
+            compute_fill_price(hedge_last_price, hedge_direction, "entry")
+            if hedge_last_price is not None else None
+        )
+
+        # 4. Build position and add to book
+        size_pct_nav = order.get("size_pct_nav", 0.03)
+        position = {
+            "ticker": ticker,
+            "direction": direction,
+            "hedge_ticker": hedge_ticker,
+            "hedge_direction": hedge_direction,
+            "size_pct_nav": size_pct_nav,
+            "conviction": order.get("conviction", 7),
+            "entry_price": entry_price,
+            "hedge_entry_price": hedge_entry_price,
+            "entry_date": datetime.now().strftime("%Y-%m-%d"),
+            "status": "active",
+            "trim_status": "untrimmed",
+            "trail_stop_level": None,
+            "thesis_status": "active",
+            "stop_loss_method": order.get("stop_loss_method", "trailing 2.5% from peak"),
+            "take_profit": order.get("take_profit", "5% triggers review"),
+            "expected_holding_period": order.get("expected_holding_period", "60 days"),
+            "proposal_id": proposal_id,
+            "price_history": [],
+        }
+
+        book.setdefault("positions", []).append(position)
+
+        # 5. Reduce cash by 2x size (both legs of pair trade)
+        book["cash_pct"] = book.get("cash_pct", 1.0) - (size_pct_nav * 2)
+
+        # 6. Log full provenance to trade journal
+        book.setdefault("trade_journal", []).append({
+            "action": "auto_booked",
+            "proposal_id": proposal_id,
+            "ticker": ticker,
+            "direction": direction,
+            "entry_price": entry_price,
+            "hedge_entry_price": hedge_entry_price,
+            "size_pct_nav": size_pct_nav,
+            "conviction": order.get("conviction"),
+            "debate_results": order.get("_debates"),
+            "tech_score": order.get("_tech_score"),
+            "risk_decision": order.get("risk_decision"),
+            "pm_rationale": order.get("pm_rationale"),
+            "timestamp": datetime.now().isoformat(),
+        })
+
+        booked_count += 1
+        log(f"  ✓ BOOKED {ticker} {direction.upper()} vs {hedge_ticker} | "
+            f"{size_pct_nav*100:.1f}% NAV | fill={entry_price:.4f}")
+
+    # Save book atomically (write to .tmp, then rename)
+    atomic_write_book(STATE_FILE, book)
+
+    # Print summary
+    print("\n" + "═" * 60)
+    print("          CYCLE COMPLETE — AUTO-BOOKED")
+    print("═" * 60)
+    print(f"  Booked: {booked_count}  |  Rejected: {rejected_count}  |  Held: {held_count}")
+    print(f"  Cash remaining: {book.get('cash_pct', 0)*100:.1f}%")
     print("═" * 60)
 
-    # Write cycle log
+    _write_cycle_log(orders)
+
+
+def _write_cycle_log(orders: list[dict]) -> None:
+    """Write a cycle summary log entry."""
     book = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {}
     cycle_log = {
         "timestamp": datetime.now().isoformat(),
@@ -848,6 +1026,9 @@ def phase_8_update_book(orders: list[dict]) -> None:
 # ===========================================================================
 
 def main():
+    from src.trading.overlap_guard import pipeline_lock
+    from src.telegram_bot import send_message
+
     parser = argparse.ArgumentParser(description="Agentic Trading POC — Run one pipeline cycle")
     parser.add_argument("--phase", type=int, help="Run only a specific phase (1-8)")
     parser.add_argument("--skip-data", action="store_true", help="Skip price data refresh")
@@ -862,6 +1043,88 @@ def main():
     # Parse agent filter (comma-separated string → list, or None if empty)
     agent_filter = [a.strip() for a in args.agents.split(",") if a.strip()] or None
 
+    # Start structured logging
+    cycle_id = log_cycle_start(trigger_source="launchd")
+    cycle_start_time = time.time()
+
+    try:
+        # Acquire pipeline lock to prevent concurrent executions
+        with pipeline_lock():
+            _run_cycle(args, dry_run, agent_filter, cycle_id)
+
+        # Success path
+        total_duration = time.time() - cycle_start_time
+        # Count proposals and trades from memos
+        proposals_count = len(list((MEMOS_DIR / "proposals").glob("*.json")))
+        orders_count = len(list((MEMOS_DIR / "orders").glob("*.json")))
+        log_cycle_complete(cycle_id, total_duration, proposals_count, orders_count, exit_code=0)
+        sys.exit(0)
+
+    except RuntimeError as e:
+        if "cycle_skipped_overlap" in str(e):
+            log("Pipeline cycle SKIPPED — another cycle is already running.", "WARN")
+            # Log the overlap event
+            overlap_log = {
+                "event": "cycle_skipped_overlap",
+                "timestamp": datetime.now().isoformat(),
+            }
+            log_file = LOG_DIR / f"overlap_{timestamp()}.json"
+            log_file.parent.mkdir(parents=True, exist_ok=True)
+            log_file.write_text(json.dumps(overlap_log, indent=2))
+            log_phase_complete(cycle_id, "overlap_guard", 0, "skipped")
+            log_cycle_complete(cycle_id, 0, 0, 0, exit_code=0)
+            sys.exit(0)
+        else:
+            # Non-overlap RuntimeError — treat as failure
+            total_duration = time.time() - cycle_start_time
+            _handle_pipeline_failure(cycle_id, total_duration, "runtime_error", e, send_message)
+            sys.exit(1)
+
+    except Exception as e:
+        # Top-level catch-all: log traceback, send Telegram alert, exit 1
+        total_duration = time.time() - cycle_start_time
+        _handle_pipeline_failure(cycle_id, total_duration, "unknown", e, send_message)
+        sys.exit(1)
+
+
+def _handle_pipeline_failure(
+    cycle_id: str,
+    total_duration: float,
+    failed_phase: str,
+    error: Exception,
+    send_message_fn,
+) -> None:
+    """Handle pipeline failure: log traceback, send Telegram alert, finalize cycle log.
+
+    Requirements: 6.1, 6.3
+    """
+    # Log full traceback to memos/logs/
+    tb_text = traceback.format_exc()
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    traceback_file = LOG_DIR / f"traceback_{timestamp()}.log"
+    traceback_file.write_text(tb_text)
+    log(f"Traceback saved to {traceback_file.name}", "ERROR")
+
+    # Send Telegram failure alert
+    error_msg = (
+        f"Pipeline cycle {cycle_id} failed in phase '{failed_phase}': {error}\n"
+        f"Duration: {total_duration:.1f}s"
+    )
+    try:
+        send_message_fn(error_msg, severity="critical")
+    except Exception as tg_err:
+        log(f"Failed to send Telegram alert: {tg_err}", "ERROR")
+
+    # Finalize cycle log with failure
+    log_phase_complete(cycle_id, failed_phase, total_duration, "failure")
+    log_cycle_complete(cycle_id, total_duration, 0, 0, exit_code=1)
+
+
+def _run_cycle(args, dry_run: bool, agent_filter: list[str] | None, cycle_id: str) -> None:
+    """Execute the pipeline cycle (called within pipeline_lock context).
+
+    Logs each phase completion with timing via the structured cycle logger.
+    """
     log("╔══════════════════════════════════════════════╗")
     log("║   AGENTIC TRADING POC — PIPELINE CYCLE      ║")
     log(f"║   {datetime.now().strftime('%Y-%m-%d %H:%M:%S ET')}               ║")
@@ -869,46 +1132,78 @@ def main():
 
     if args.phase:
         # Run only the specified phase
+        phase_start = time.time()
         if args.phase == 1:
             phase_1_data_refresh()
+            log_phase_complete(cycle_id, "data_refresh", time.time() - phase_start, "success")
         elif args.phase == 2:
             phase_2_blind_proposals(dry_run, agent_filter)
+            log_phase_complete(cycle_id, "proposals", time.time() - phase_start, "success")
         elif args.phase == 3:
             phase_3_debate([], dry_run)
+            log_phase_complete(cycle_id, "debate", time.time() - phase_start, "success")
         elif args.phase == 5:
             survivors = []  # would need to load from memos
             phase_5_technical_scoring(survivors, dry_run)
+            log_phase_complete(cycle_id, "technical_scoring", time.time() - phase_start, "success")
         elif args.phase == 6:
             phase_6_risk_gate([], dry_run)
+            log_phase_complete(cycle_id, "risk_gate", time.time() - phase_start, "success")
         elif args.phase == 7:
             phase_7_pm_decision([], dry_run)
+            log_phase_complete(cycle_id, "pm_decision", time.time() - phase_start, "success")
         elif args.phase == 8:
             phase_8_update_book([])
+            log_phase_complete(cycle_id, "book_update", time.time() - phase_start, "success")
         return
 
-    # Full cycle
+    # Full cycle with phase-by-phase logging
+    phase_start = time.time()
     if not args.skip_data:
         phase_1_data_refresh()
+        log_phase_complete(cycle_id, "data_refresh", time.time() - phase_start, "success")
 
+    phase_start = time.time()
     proposals = phase_2_blind_proposals(dry_run, agent_filter)
+    log_phase_complete(cycle_id, "proposals", time.time() - phase_start, "success")
+
+    phase_start = time.time()
     debated = phase_3_debate(proposals, dry_run)
+    log_phase_complete(cycle_id, "debate", time.time() - phase_start, "success")
+
+    phase_start = time.time()
     survivors = phase_4_conviction_check(debated)
+    log_phase_complete(cycle_id, "conviction_check", time.time() - phase_start, "success")
 
     if not survivors:
         log("No proposals survived debate. Cycle complete — no action.")
+        phase_start = time.time()
         phase_8_update_book([])
+        log_phase_complete(cycle_id, "book_update", time.time() - phase_start, "success")
         return
 
+    phase_start = time.time()
     phase_5_technical_scoring(survivors, dry_run)
+    log_phase_complete(cycle_id, "technical_scoring", time.time() - phase_start, "success")
+
+    phase_start = time.time()
     approved = phase_6_risk_gate(survivors, dry_run)
+    log_phase_complete(cycle_id, "risk_gate", time.time() - phase_start, "success")
 
     if not approved:
         log("No proposals approved by risk. Cycle complete — no action.")
+        phase_start = time.time()
         phase_8_update_book([])
+        log_phase_complete(cycle_id, "book_update", time.time() - phase_start, "success")
         return
 
+    phase_start = time.time()
     orders = phase_7_pm_decision(approved, dry_run)
+    log_phase_complete(cycle_id, "pm_decision", time.time() - phase_start, "success")
+
+    phase_start = time.time()
     phase_8_update_book(orders)
+    log_phase_complete(cycle_id, "book_update", time.time() - phase_start, "success")
 
     log("Cycle complete.")
 

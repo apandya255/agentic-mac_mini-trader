@@ -1,0 +1,4 @@
+# file: /Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/src/trading/position_states.py
+# hypothesis_version: 6.165.10
+
+['fully_exited', 'half_trimmed', 'trim_status', 'untrimmed']

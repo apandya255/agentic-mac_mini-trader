@@ -1,0 +1,577 @@
+{
+  "pbtResults": {
+    "2.2 Write property test for gate validator": {
+      "status": "passed",
+      "lastRunTimestamp": 1787499080864
+    },
+    "2.1 Write property test for slippage model": {
+      "status": "passed",
+      "lastRunTimestamp": 1787499082510
+    },
+    "2.4 Write property test for position state machine": {
+      "status": "passed",
+      "lastRunTimestamp": 1787499093614
+    },
+    "2.3 Write property test for circuit breaker": {
+      "status": "passed",
+      "lastRunTimestamp": 1787499102269
+    },
+    "2.5 Write property test for sigma event detector": {
+      "status": "passed",
+      "lastRunTimestamp": 1787499131273
+    },
+    "7.2 Write property test for read-only API enforcement": {
+      "status": "passed",
+      "lastRunTimestamp": 1787499941001
+    },
+    "4.2 Write property test for cash accounting": {
+      "status": "passed",
+      "lastRunTimestamp": 1787499991538
+    },
+    "5.5 Write property tests for take-profit and trail stop": {
+      "status": "passed",
+      "lastRunTimestamp": 1787499994406
+    },
+    "5.6 Write property tests for thesis-break and stop-loss": {
+      "status": "passed",
+      "lastRunTimestamp": 1787500003169
+    },
+    "4.3 Write property test for provenance logging": {
+      "status": "passed",
+      "lastRunTimestamp": 1787500003441
+    },
+    "9.3 Write property test for overlap guard": {
+      "status": "passed",
+      "lastRunTimestamp": 1787500132602
+    }
+  },
+  "executionHistory": {
+    "1.1 Implement slippage model (`src/trading/slippage.py`)": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609180
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498616458
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498986189
+      }
+    ],
+    "1.2 Implement gate validator (`src/trading/gate_validator.py`)": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609222
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498617258
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498986995
+      }
+    ],
+    "1.3 Implement circuit breaker (`src/trading/circuit_breaker.py`)": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609248
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498618146
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498987969
+      }
+    ],
+    "1.4 Implement position state machine (`src/trading/position_states.py`)": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609272
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498619042
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498988818
+      }
+    ],
+    "1.5 Implement sigma event detector (`src/trading/sigma_detector.py`)": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609295
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498619883
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498989653
+      }
+    ],
+    "1.6 Implement overlap guard (`src/trading/overlap_guard.py`)": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609314
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498620759
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498990527
+      }
+    ],
+    "2.1 Write property test for slippage model": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609331
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498994202
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499143593
+      }
+    ],
+    "2.2 Write property test for gate validator": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609348
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498994961
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499144319
+      }
+    ],
+    "2.3 Write property test for circuit breaker": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609374
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498995872
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499145076
+      }
+    ],
+    "2.4 Write property test for position state machine": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609405
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498996637
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499146004
+      }
+    ],
+    "2.5 Write property test for sigma event detector": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609426
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498997444
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499146770
+      }
+    ],
+    "3. Checkpoint — Core modules": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609447
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499151058
+      }
+    ],
+    "4.1 Replace Phase 8 with auto-booking logic": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609464
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499154985
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499666913
+      }
+    ],
+    "4.2 Write property test for cash accounting": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609486
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499853367
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500031422
+      }
+    ],
+    "4.3 Write property test for provenance logging": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609505
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499854200
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500032229
+      }
+    ],
+    "5.1 Implement take-profit trim and trail stop logic": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609528
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499155849
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499666085
+      }
+    ],
+    "5.2 Implement thesis-break detection": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609547
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499156621
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499669277
+      }
+    ],
+    "5.3 Implement sigma event detection in monitor loop": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609564
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499157400
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499667653
+      }
+    ],
+    "5.4 Integrate enhanced stop-loss with slippage-adjusted exits": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609588
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499158253
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499668517
+      }
+    ],
+    "5.5 Write property tests for take-profit and trail stop": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609610
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499854985
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500033067
+      }
+    ],
+    "5.6 Write property tests for thesis-break and stop-loss": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609629
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499855802
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500033969
+      }
+    ],
+    "6. Checkpoint — Pipeline and monitor logic": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609647
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500149035
+      }
+    ],
+    "7.1 Disable write endpoints with HTTP 403": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609671
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499672585
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499844758
+      }
+    ],
+    "7.2 Write property test for read-only API enforcement": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609691
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499856660
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500030601
+      }
+    ],
+    "8.1 Update dashboard HTML for autonomous mode": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609713
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499673349
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499845532
+      }
+    ],
+    "9.1 Create pipeline slot plists": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609731
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499674078
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499846336
+      }
+    ],
+    "9.2 Create monitor and session reset plists": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609755
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499674914
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499847502
+      }
+    ],
+    "9.3 Write property test for overlap guard": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609777
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499857410
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500145517
+      }
+    ],
+    "10. Final checkpoint — Full integration": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498609797
+      },
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500152290
+      }
+    ],
+    "1. Create core trading utility modules": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787498990559
+      }
+    ],
+    "2. Write property tests for core modules": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499146809
+      }
+    ],
+    "8. Modify `dashboard.py` for autonomous mode UI": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787499845572
+      }
+    ],
+    "7. Modify `serve.py` for read-only mode": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500030630
+      }
+    ],
+    "4. Modify `run_cycle.py` for autonomous Phase 8 booking": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500032255
+      }
+    ],
+    "5. Modify `monitor.py` for automated exit logic": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500033998
+      }
+    ],
+    "9. Create launchd scheduler plists": [
+      {
+        "executionId": "842d73dd-c31a-4591-801e-b57bb0bf1233",
+        "chatSessionId": "sess_979780cd-8e77-445a-9168-3fcfa51a5bd9",
+        "timestamp": 1787500145541
+      }
+    ]
+  }
+}

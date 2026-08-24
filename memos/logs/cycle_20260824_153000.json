@@ -1,0 +1,22 @@
+{
+  "cycle_id": "2026-08-24T15:30:00",
+  "trigger_source": "launchd",
+  "phases": [
+    {
+      "name": "data_refresh",
+      "duration_s": 0.38,
+      "outcome": "success"
+    },
+    {
+      "name": "unknown",
+      "duration_s": 0.38,
+      "outcome": "failure"
+    }
+  ],
+  "summary": {
+    "total_duration_s": 0.38,
+    "proposals_generated": 0,
+    "trades_booked": 0,
+    "exit_code": 1
+  }
+}

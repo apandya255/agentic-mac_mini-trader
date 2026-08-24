@@ -13,8 +13,9 @@ import warnings
 warnings.filterwarnings('ignore')
 
 import json
+import logging
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -26,6 +27,7 @@ BOOK_PATH = BASE_DIR / "memos" / "state" / "book.json"
 HISTORY_PATH = BASE_DIR / "memos" / "state" / "pnl_history.json"
 
 price_service = PriceService()
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -40,6 +42,21 @@ def main():
         print("No active positions — nothing to mark.")
         record_snapshot(book)
         return
+
+    # Backfill: ensure complete price history for each active position
+    for pos in active_positions:
+        ticker = pos.get("ticker")
+        entry_date_str = pos.get("entry_date")
+        if not ticker or not entry_date_str:
+            continue
+        try:
+            entry_dt = date.fromisoformat(entry_date_str)
+            result = price_service.backfill_position(ticker, entry_dt)
+            if result["days_backfilled"] > 0:
+                logger.info("Backfill: %s filled %d days, %d gaps remaining",
+                           ticker, result["days_backfilled"], result["gaps_remaining"])
+        except Exception as e:
+            logger.warning("Backfill failed for %s: %s", ticker, e)
 
     print(f"Marking {len(active_positions)} active position(s) to market...\n")
 

@@ -1,0 +1,31 @@
+{
+  "proposal_id": "fund_energy_20260823_1032",
+  "agent_id": "fund_energy",
+  "ticker": "DVN",
+  "direction": "long",
+  "hedge_ticker": "RSPG",
+  "hedge_direction": "short",
+  "thesis_summary": "Long DVN / short RSPG as a pair-ratio mean-reversion: DVN vs equal-weight energy sits at the 0.8th percentile of its 52-week range (z=-2.01) after a -10.97% 3M and -17.25% 63d relative-strength washout, while technicals show stabilization (golden cross, above 200d, rising OBV, neutral RSI) rather than continued deterioration. The pair has de-rated to levels that historically snap back toward the mid-range absent a structural break, and no company-specific bad-news catalyst is visible in the feed.",
+  "thesis_detail": "Screening evidence (all as of tool output dated 2026-07-28 for ratio series, current session for the rest). Ratio: DVN/RSPG at 0.4129, percentile 0.008 of the 52-week range (high 0.4722, low 0.4084), z-score -2.011 \u2014 the most extreme dislocation in the coverage; the next closest long-side candidate, COP, is at only the 14th percentile. Returns: DVN 1M +0.95%, 3M -10.97%, 6M +11.67%, 1Y +32.72% \u2014 the 3M leg is a sharp sector-relative de-rating, and 63d relative strength vs XLE of -0.1725 confirms it is idiosyncratic underperformance, not sector beta. Technicals: overall score 6, neutral bias; golden cross intact, price above the 200d SMA (41.25) but below 20d (42.91) and 50d (44.06) \u2014 a de-rated stock holding its long-term trend; RSI-14 at 44.9 (neutral, no oversold bounce needed to be right); OBV trend rising on only 0.53x 20d average volume \u2014 quiet accumulation, not distribution; MACD histogram positive (+0.13); BB position 0.45 near mid-band. ATR 3.03% gives room for the stop. Contrast with the short side of the screen: refiners MPC/PSX/VLO sit at the 98.0/98.8/96.8th ratio percentiles with z-scores +2.92/+3.68/+2.76 after +79.5%/+48.9%/+65.0% 6M runs \u2014 crowded, but PSX technicals score 9 with ADX 31 (strong trend), so the pair short is the worse trade; the cleaner expression is the washed-out E&P. Valuations endpoint returned HTTP 429 across all names this session, so no fresh EV/EBITDA or P/FCF is cited \u2014 the thesis is ratio-positioning plus technical stabilization, and the valuation leg must be verified at the risk gate before sizing. News feed returned zero headlines for DVN \u2014 no visible company-specific break, which supports the dislocation-is-positioning-not-fundamental read. Sector view is neutral (XLE/RSP ratio percentile 56.3, z +0.20), so the call is intra-sector relative value, not a commodity bet \u2014 per mandate, the oil-price view belongs to the Commodities seat; this trade only needs DVN to stop underperforming its own sector.",
+  "variant_perception": "Consensus positioning has capitulated DVN vs the sector \u2014 a -17.25% 63d relative-strength hole with zero company-specific headlines is ownership rotation, not information. The market is pricing DVN as the structurally impaired Permian name while the tape shows a golden cross, price holding the 200d, and rising OBV on half-normal volume. The variant view: the de-rating is complete and the ratio mean-reverts toward the lower-middle of its range even if the sector goes nowhere. Where I could be wrong: if the 3M slide reflects informed selling ahead of a capex/production-guide cut (next earnings), the ratio low at 0.4084 breaks and there is no floor \u2014 that is exactly the stop.",
+  "catalyst": "Next quarterly earnings print and Permian capex/production guidance update (within ~4-8 weeks); any re-affirmation of capital discipline or buyback pace forces a re-rating of the pair. Absent that, continued stabilization above the 200d SMA draws CTA/mean-reversion flow back into the laggard E&P.",
+  "catalyst_timeline": "2-8 weeks",
+  "current_price": 41.25,
+  "target_price": 44.5,
+  "entry_ratio": 0.4129,
+  "target_ratio": 0.442,
+  "stop_ratio": 0.406,
+  "ratio_percentile": 0.8,
+  "conviction": 6,
+  "key_risks": [
+    "The 3M -11% slide is informed selling ahead of a guidance cut at the next print \u2014 stop sits just below the 52w ratio low (0.4084) to cut on confirmation",
+    "Valuations endpoint was rate-limited (429) this session \u2014 EV/EBITDA and P/FCF vs peers unverified; if DVN is de-rated on fundamentals (rising costs, falling inventory quality) rather than positioning, the mean-reversion premise fails",
+    "Sector-wide oil beta: a sharp WTI break would hit high-beta DVN harder than RSPG even in the pair, widening the ratio against the trade before the thesis is tested"
+  ],
+  "sector_view": "neutral",
+  "relevant_peers": [
+    "COP",
+    "EOG",
+    "OXY"
+  ]
+}

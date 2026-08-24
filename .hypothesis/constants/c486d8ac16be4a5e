@@ -1,0 +1,4 @@
+# file: /Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/src/telegram_bot.py
+# hypothesis_version: 6.165.10
+
+[200, 4000, '%Y%m%dT%H%M%S', 'CRITICAL:', 'Content-Type', 'First attempt failed', 'INFO:', 'Markdown', 'POST', 'Retry also failed', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'WARNING:', 'application/json', 'attempt', 'chat_id', 'critical', 'cycle_type', 'delivered', 'error', 'failure', 'heartbeat', 'info', 'logs', 'memos', 'message', 'message_preview', 'parse_mode', 'retry', 'severity', 'status', 'success', 'telegram_delivery', 'text', 'timestamp', 'trigger_source', 'utf-8', 'warning']

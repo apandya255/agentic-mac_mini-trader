@@ -104,6 +104,32 @@ def _log_delivery(
         print(f"[TELEGRAM] LOG WRITE FAILED: {entry}")
 
 
+def _persist_undelivered(message: str, severity: str, error: str) -> None:
+    """Write undelivered message to memos/logs/undelivered_alerts.json."""
+    undelivered_path = LOGS_DIR / "undelivered_alerts.json"
+
+    # Load existing entries
+    entries = []
+    if undelivered_path.exists():
+        try:
+            entries = json.loads(undelivered_path.read_text())
+        except (json.JSONDecodeError, OSError):
+            entries = []
+
+    # Append new entry
+    entries.append({
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "severity": severity.lower(),
+        "message": message,
+        "error": error,
+        "delivered": False,
+    })
+
+    # Write back
+    undelivered_path.parent.mkdir(parents=True, exist_ok=True)
+    undelivered_path.write_text(json.dumps(entries, indent=2))
+
+
 def _post_message(token: str, chat_id: str, text: str) -> bool:
     """Send a single message chunk via the Telegram Bot API.
 
@@ -190,26 +216,37 @@ def split_message(text: str, max_length: int = MAX_MESSAGE_LENGTH) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
-def send_message(text: str) -> bool:
+def send_message(text: str, severity: str = "info") -> bool:
     """Send a message to the configured Telegram chat.
 
     Handles:
+    - Severity prefixing ("CRITICAL:", "WARNING:", "INFO:")
     - 4000-char limit by splitting on newline boundaries
     - Retry-once on delivery failure before marking failed
     - Structured logging for all delivery attempts
+    - Persistence of undelivered messages for later review
 
     Args:
         text: The message to send (can exceed 4000 chars).
+        severity: One of "critical", "warning", or "info" (default "info").
+            Controls the prefix applied to the message.
 
     Returns:
         True if all chunks delivered successfully, False if any failed
         after retry.
     """
+    # Apply severity prefix if not already present
+    prefix_map = {"critical": "CRITICAL:", "warning": "WARNING:", "info": "INFO:"}
+    prefix = prefix_map.get(severity.lower(), "INFO:")
+    if not text.startswith(prefix):
+        text = f"{prefix} {text}"
+
     try:
         token, chat_id = _get_config()
     except RuntimeError as e:
         print(f"[TELEGRAM] Config error: {e}")
         _log_delivery("failure", text, attempt=1, error=str(e))
+        _persist_undelivered(text, severity, str(e))
         return False
 
     chunks = split_message(text)
@@ -232,6 +269,7 @@ def send_message(text: str) -> bool:
                 _log_delivery("success", preview, attempt=2)
             else:
                 _log_delivery("failure", preview, attempt=2, error="Retry also failed")
+                _persist_undelivered(chunk, severity, "Retry also failed")
                 print(f"[TELEGRAM] Chunk {i+1}/{len(chunks)} FAILED after retry")
                 all_success = False
 

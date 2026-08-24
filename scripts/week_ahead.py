@@ -434,7 +434,7 @@ def deliver_summary(summary: str, monday: date) -> bool:
     full_message = header + summary
 
     try:
-        success = send_message(full_message)
+        success = send_message(full_message, severity="info")
         if success:
             logger.info("Week-ahead summary delivered via Telegram.")
         else:
@@ -518,7 +518,7 @@ def main():
             f"LLM access. desk/calendar.md updated with placeholder. "
             f"Manual review recommended."
         )
-        send_message(placeholder_summary)
+        send_message(placeholder_summary, severity="info")
 
         log_cycle(
             cycle_type="week_ahead",

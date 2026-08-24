@@ -51,7 +51,9 @@ from src.data_platform.book_ops import (
 from src.data_platform.cycle_logger import log_cycle
 from src.data_platform.market_calendar import (
     ET,
+    is_equity_stale_check_suppressed,
     is_fx_session_active,
+    is_fx_stale_check_suppressed,
     is_market_open,
     next_market_open,
 )
@@ -296,12 +298,15 @@ def validate_quotes(
     tickers: list[str],
     price_service: PriceService,
     now_et: datetime | None = None,
+    fx_tickers: list[str] | None = None,
 ) -> dict[str, float]:
     """
     Validate fetched quotes for staleness and garbage data.
 
     For each ticker:
     1. Check quote age — reject if > 4 hours old during market hours (STALE)
+       - Equity tickers: only flag when equity market is open (Req 3.1)
+       - FX tickers: only flag when FX session is active (Req 3.2)
     2. Check for garbage spikes — reject if single-tick move > 3% with
        prior tick < 1 hour old AND the move persists on re-fetch (GARBAGE)
 
@@ -314,18 +319,25 @@ def validate_quotes(
         tickers: List of ticker symbols to validate.
         price_service: PriceService instance for fetching/re-fetching quotes.
         now_et: Current datetime in ET (injectable for testing). Defaults to now.
+        fx_tickers: Optional list of FX ticker symbols (for staleness gating).
 
     Returns:
         Dict of valid tickers → latest close prices (only fresh, non-garbage quotes).
 
-    Requirements: 22.3, 22.4, 22.5
+    Requirements: 22.3, 22.4, 22.5, 3.1, 3.2
     """
     global _outage_alert_sent, _last_good_time
 
     if now_et is None:
         now_et = datetime.now(ET)
 
-    market_open = is_market_open(now_et)
+    if fx_tickers is None:
+        fx_tickers = []
+
+    fx_ticker_set = set(fx_tickers)
+    equity_stale_suppressed = is_equity_stale_check_suppressed(now_et)
+    fx_stale_suppressed = is_fx_stale_check_suppressed(now_et)
+
     valid_prices: dict[str, float] = {}
     stale_count = 0
     garbage_count = 0
@@ -341,8 +353,15 @@ def validate_quotes(
         latest_close = latest["close"]
         latest_date = latest["date"]
 
-        # --- Staleness check (only during market hours) ---
-        if market_open and _is_quote_stale(latest_date, now_et):
+        # --- Staleness check (gated by market calendar — Req 3.1, 3.2) ---
+        if ticker in fx_ticker_set:
+            # FX ticker: only flag stale when FX session is active
+            should_check_stale = not fx_stale_suppressed
+        else:
+            # Equity ticker: only flag stale when equity market is open
+            should_check_stale = not equity_stale_suppressed
+
+        if should_check_stale and _is_quote_stale(latest_date, now_et):
             logger.debug(f"STALE quote rejected: {ticker} date={latest_date}")
             stale_count += 1
             continue
@@ -393,6 +412,7 @@ def validate_quotes(
         valid_prices[ticker] = latest_close
 
     # --- Data feed outage detection ---
+    market_open = is_market_open(now_et)
     if tickers and stale_count == len(tickers) and market_open:
         # All tickers are stale → data feed outage
         if not _outage_alert_sent:
@@ -407,7 +427,7 @@ def validate_quotes(
             )
             logger.error(outage_msg)
             try:
-                send_telegram(outage_msg)
+                send_telegram(outage_msg, severity="critical")
             except Exception as e:
                 logger.error(f"Telegram outage alert failed: {e}")
             _outage_alert_sent = True
@@ -545,7 +565,7 @@ def handle_two_sigma_interrupts(book: dict, price_service) -> None:
                     f"{move_pct:+.2f}% (2σ = {threshold_pct:.2f}%). "
                     f"Cause: {cause}"
                 )
-                send_telegram(alert_msg)
+                send_telegram(alert_msg, severity="warning")
                 logger.info(f"Two-Sigma Interrupt: {ticker} {move_pct:+.2f}%")
 
                 # Mark as fired today
@@ -880,7 +900,7 @@ def handle_cb_decisions(book: dict) -> None:
                 f"Please verify manually."
             )
             try:
-                send_telegram(alert_msg)
+                send_telegram(alert_msg, severity="info")
             except Exception as e:
                 logger.error(f"Telegram CB alert failed for {cb}: {e}")
 
@@ -912,7 +932,7 @@ def handle_cb_decisions(book: dict) -> None:
         )
 
         try:
-            send_telegram(alert_msg)
+            send_telegram(alert_msg, severity="warning")
         except Exception as e:
             logger.error(f"Telegram CB alert failed for {cb}: {e}")
 
@@ -1245,7 +1265,7 @@ def _send_trail_breach_alert(position: dict, details: dict) -> None:
     )
 
     try:
-        send_telegram(message)
+        send_telegram(message, severity="critical")
         logger.info(f"Telegram trail breach alert sent for {ticker}/{hedge_ticker}.")
     except Exception as e:
         logger.error(f"Failed to send Telegram alert: {e}")
@@ -1389,7 +1409,7 @@ def handle_target_touches(book: dict) -> dict:
             f"Action: Take profit or extend runner?"
         )
         try:
-            send_telegram(alert_msg)
+            send_telegram(alert_msg, severity="info")
         except Exception as e:
             logger.error(f"Telegram target touch alert failed for {ticker}: {e}")
 
@@ -1462,7 +1482,7 @@ def handle_near_trail_warnings(book: dict) -> dict:
             f"only {trail_remaining:.2f}% remaining before auto-exit."
         )
         try:
-            send_telegram(warning_msg)
+            send_telegram(warning_msg, severity="warning")
         except Exception as e:
             logger.error(f"Telegram near-trail warning failed for {ticker}: {e}")
 
@@ -1483,7 +1503,13 @@ def main():
     - Updates book.json with mark-to-market P&L
     - Handles errors gracefully (log and continue)
     - Exits at 16:05 ET for equity poller
+    - Exits immediately on non-trading days (Requirement 3.3)
     """
+    # --- Market calendar gate: exit cleanly on non-trading days (Req 3.3) ---
+    if is_equity_stale_check_suppressed() and not is_fx_session_active():
+        logger.info("market_closed: skipping equity poll")
+        sys.exit(0)
+
     logger.info(
         f"Price poller starting. Interval: {POLL_INTERVAL_MINUTES} min. "
         f"Ticker override: {'yes' if PRICE_POLLER_TICKERS else 'no (book + benchmarks)'}."
@@ -1554,8 +1580,11 @@ def main():
             time.sleep(POLL_INTERVAL_MINUTES * 60)
             continue
 
-        # --- Validate quotes (Requirement 22.3, 22.4, 22.5) ---
-        valid_prices = validate_quotes(tickers_to_poll, price_service)
+        # --- Validate quotes (Requirement 22.3, 22.4, 22.5, 3.1, 3.2) ---
+        fx_ticker_list = get_fx_tickers(book)
+        valid_prices = validate_quotes(
+            tickers_to_poll, price_service, fx_tickers=fx_ticker_list
+        )
 
         if not valid_prices:
             # No valid quotes this cycle — skip mark-to-market

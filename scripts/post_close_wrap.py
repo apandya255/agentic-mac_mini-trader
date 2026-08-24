@@ -387,7 +387,7 @@ def _deliver_wrap(wrap_text: str) -> bool:
     # Telegram delivery
     telegram_success = False
     try:
-        telegram_success = send_message(wrap_text)
+        telegram_success = send_message(wrap_text, severity="info")
         if telegram_success:
             logger.info("Wrap delivered via Telegram.")
         else:

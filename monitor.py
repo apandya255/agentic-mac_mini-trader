@@ -23,12 +23,18 @@ warnings.filterwarnings('ignore')
 
 import argparse
 import json
+import re
 import sys
 from datetime import datetime, date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from data_platform.prices import PriceService
+from trading.slippage import compute_fill_price
+from trading.position_states import transition
+from trading.sigma_detector import detect_sigma_event, compute_trailing_stddev
+from trading.circuit_breaker import compute_progressive_deleverage
+from trading.factor_beta import compute_factor_betas, get_alert_level, save_factors, load_factors
 
 # Paths
 BASE_DIR = Path(__file__).parent
@@ -47,6 +53,7 @@ FACTOR_BETA_WARN = 0.5          # warn when approaching
 MAX_CORRELATION = 0.7           # max inter-position correlation
 CORRELATION_WARN = 0.5          # warn threshold
 MAX_HOLDING_DAYS = 60           # flag positions held > 60 days without review
+FACTOR_TICKERS = {"market": "SPY", "energy": "XLE", "tech": "XLK", "healthcare": "XLV"}
 
 price_service = PriceService()
 
@@ -185,6 +192,27 @@ def check_drawdown(book: dict, history: list) -> list:
             message=f"Drawdown warning: {drawdown*100:.2f}% from peak NAV of ${peak_nav:,.0f}",
             action="Review all positions, tighten stops",
         ))
+
+    # Session-based progressive deleverage (intraday drawdown from session open)
+    session_open_nav = book.get("session_open_nav")
+    if session_open_nav and session_open_nav > 0:
+        deleverage_level = compute_progressive_deleverage(nav, session_open_nav)
+        if deleverage_level == "emergency":
+            alerts.append(Alert(
+                level="critical",
+                category="drawdown",
+                ticker="PORTFOLIO",
+                message=f"EMERGENCY: Intraday drawdown {((nav - session_open_nav) / session_open_nav)*100:.2f}% from session open — close all positions",
+                action="IMMEDIATE: Close all positions and halt trading",
+            ))
+        elif deleverage_level == "deleverage":
+            alerts.append(Alert(
+                level="critical",
+                category="drawdown",
+                ticker="PORTFOLIO",
+                message=f"DELEVERAGE: Intraday drawdown {((nav - session_open_nav) / session_open_nav)*100:.2f}% from session open",
+                action="Close most-losing position, reduce gross exposure",
+            ))
 
     return alerts
 
@@ -381,12 +409,692 @@ def check_take_profit(book: dict) -> list:
     return alerts
 
 
+def check_factor_betas(book: dict) -> list:
+    """Check factor betas for all active positions and emit alerts."""
+    alerts = []
+    factors_data = load_factors()
+
+    for pos in book.get("positions", []):
+        if pos.get("status") != "active":
+            continue
+        ticker = pos.get("ticker", "?")
+
+        results = compute_factor_betas(ticker, price_service, FACTOR_TICKERS)
+
+        for result in results:
+            # Update factors state
+            factors_data.setdefault(ticker, {})[result.factor_name] = {
+                "beta": result.beta,
+                "r_squared": result.r_squared,
+                "days_used": result.trading_days_used,
+                "computed": result.computed_date,
+            }
+
+            # Check alert thresholds
+            alert_level = get_alert_level(result.beta)
+            if alert_level == "critical":
+                alerts.append(Alert(
+                    level="critical",
+                    category="factor",
+                    ticker=ticker,
+                    message=f"FACTOR BETA CRITICAL: {ticker} has {result.factor_name} beta = {result.beta:.3f} (limit: \u00b1{FACTOR_BETA_LIMIT})",
+                    action="Recommend position reduction to lower factor exposure",
+                ))
+            elif alert_level == "warning":
+                alerts.append(Alert(
+                    level="warning",
+                    category="factor",
+                    ticker=ticker,
+                    message=f"Factor beta warning: {ticker} has {result.factor_name} beta = {result.beta:.3f} (approaching \u00b1{FACTOR_BETA_LIMIT} limit)",
+                    action="Monitor \u2014 consider reducing if beta continues to rise",
+                ))
+
+    save_factors(factors_data)
+    return alerts
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# TAKE-PROFIT TRIM & TRAIL STOP LOGIC
+# ──────────────────────────────────────────────────────────────────────────────
+
+def parse_take_profit_level(take_profit_str: str) -> float:
+    """Parse take profit percentage from string like '5% triggers review'.
+
+    Extracts the first numeric percentage found in the string and returns
+    it as a decimal fraction (e.g., '5%' → 0.05).
+
+    Returns 0.05 (5%) as default if no percentage is found.
+    """
+    if not take_profit_str:
+        return 0.05
+    match = re.search(r'(\d+(?:\.\d+)?)%', take_profit_str)
+    if match:
+        return float(match.group(1)) / 100
+    return 0.05
+
+
+def should_trim(position: dict) -> bool:
+    """Check if a position should be trimmed (at take-profit, still untrimmed).
+
+    Returns True if:
+      - trim_status == "untrimmed"
+      - combined_pnl_pct >= take_profit level parsed from position's take_profit field
+    """
+    if position.get("trim_status", "untrimmed") != "untrimmed":
+        return False
+    combined_pnl = position.get("combined_pnl_pct")
+    if combined_pnl is None:
+        return False
+    take_profit = parse_take_profit_level(position.get("take_profit", "5%"))
+    return combined_pnl >= take_profit
+
+
+def compute_trail_stop_level(entry_price: float, peak_price: float, direction: str, method: str = "2.5%") -> float:
+    """Compute trail stop level based on method.
+
+    For method="2.5%" (default):
+      Long:  trail = peak_price * (1 - 0.025)  — 2.5% trailing from peak
+      Short: trail = peak_price * (1 + 0.025)  — 2.5% trailing from peak
+
+    For method="50%" (legacy):
+      Long:  trail = entry_price + 0.5 * (peak_price - entry_price)  — 50% of gain
+      Short: trail = entry_price - 0.5 * (entry_price - peak_price)  — 50% of gain
+
+    Requirements: 7.1, 7.2, 7.4
+    """
+    if method == "2.5%":
+        if direction == "long":
+            return peak_price * (1 - 0.025)
+        else:  # short
+            return peak_price * (1 + 0.025)
+    else:  # "50%" legacy method
+        if direction == "long":
+            return entry_price + 0.5 * (peak_price - entry_price)
+        else:  # short
+            return entry_price - 0.5 * (entry_price - peak_price)
+
+
+def ratchet_trail_stop(new_level: float, existing_level: float | None, direction: str) -> float:
+    """Enforce monotonic ratchet: trail stop never moves against position.
+
+    For long positions: trail stop only moves up (keep higher value).
+    For short positions: trail stop only moves down (keep lower value).
+
+    Requirements: 7.3
+    """
+    if existing_level is None:
+        return new_level
+    if direction == "long":
+        return max(new_level, existing_level)
+    else:  # short
+        return min(new_level, existing_level)
+
+
+def should_trail_stop_close(position: dict) -> bool:
+    """Check if a trailed position should be fully closed.
+
+    Returns True if:
+      - trail_stop_level is set AND
+      - Either:
+        - trim_status == "half_trimmed", OR
+        - trail_activated == True
+      - For long: current_price <= trail_stop_level
+      - For short: current_price >= trail_stop_level
+
+    Requirements: 7.1, 7.2, 7.3
+    """
+    trail_level = position.get("trail_stop_level")
+    if trail_level is None:
+        return False
+
+    # Trail stop close triggers for half_trimmed positions OR trail_activated positions
+    is_half_trimmed = position.get("trim_status") == "half_trimmed"
+    is_trail_activated = position.get("trail_activated", False)
+
+    if not is_half_trimmed and not is_trail_activated:
+        return False
+
+    current_price = position.get("current_price", 0)
+    direction = position.get("direction", "long")
+
+    if direction == "long":
+        return current_price <= trail_level
+    else:  # short
+        return current_price >= trail_level
+
+
+def execute_trim(position: dict, book: dict) -> None:
+    """Execute a 50% take-profit trim on a position.
+
+    - Halves size_pct_nav
+    - Sets trim_status to "half_trimmed" via state machine
+    - Computes and sets trail_stop_level using position's stop_loss_method
+    - Records the partial exit in the trade journal with slippage-adjusted price
+
+    Requirements: 7.1, 7.4
+    """
+    ticker = position.get("ticker", "?")
+    direction = position.get("direction", "long")
+    current_price = position.get("current_price")
+    entry_price = position.get("entry_price", 0)
+
+    # Compute slippage-adjusted exit price for the trimmed half
+    exit_price = compute_fill_price(current_price, direction, "exit")
+
+    # Halve position size
+    original_size = position.get("size_pct_nav", 0)
+    position["size_pct_nav"] = original_size / 2
+
+    # Transition state machine: untrimmed → half_trimmed
+    transition(position, "half_trimmed")
+
+    # Determine trail stop method from position's stop_loss_method
+    stop_method = position.get("stop_loss_method", "")
+    if "2.5%" in stop_method:
+        method = "2.5%"
+    else:
+        method = "2.5%"  # Default to 2.5% trailing from peak
+
+    # Use current_price as peak_price at trim time (it's the highest so far)
+    peak_price = position.get("peak_price", current_price)
+    trail_level = compute_trail_stop_level(entry_price, peak_price, direction, method)
+
+    # Apply ratchet enforcement
+    trail_level = ratchet_trail_stop(trail_level, position.get("trail_stop_level"), direction)
+    position["trail_stop_level"] = trail_level
+
+    # Mark trail as activated
+    position["trail_activated"] = True
+    position["peak_price"] = peak_price
+
+    # Restore cash for the trimmed half (one leg of pair trade trimmed)
+    book["cash_pct"] += original_size  # half of 2x size = original size_pct_nav
+
+    # Log to trade journal
+    book.setdefault("trade_journal", []).append({
+        "action": "trim",
+        "ticker": ticker,
+        "direction": direction,
+        "exit_price": exit_price,
+        "size_trimmed_pct_nav": original_size / 2,
+        "remaining_size_pct_nav": position["size_pct_nav"],
+        "trail_stop_level": trail_level,
+        "realized_pnl_pct": position.get("combined_pnl_pct", 0),
+        "reason": "take_profit_trim",
+        "timestamp": datetime.now().isoformat(),
+    })
+
+    print(f"  ✂ TRIMMED 50%: {ticker} at {position.get('combined_pnl_pct', 0)*100:+.2f}% — trail stop set at ${trail_level:.2f}")
+
+
+def execute_trail_stop_close(position: dict, book: dict) -> None:
+    """Fully close a half-trimmed position that hit its trail stop.
+
+    - Sets status to "closed"
+    - Transitions trim_status to "fully_exited"
+    - Records exit with slippage-adjusted price and exit_reason="trail_stop_auto"
+    """
+    ticker = position.get("ticker", "?")
+    direction = position.get("direction", "long")
+    current_price = position.get("current_price")
+
+    # Compute slippage-adjusted exit price
+    exit_price = compute_fill_price(current_price, direction, "exit")
+
+    # Close the position
+    position["status"] = "closed"
+    position["exit_price"] = exit_price
+    position["exit_date"] = date.today().isoformat()
+    position["exit_reason"] = "trail_stop_auto"
+    position["realized_pnl_pct"] = position.get("combined_pnl_pct", 0)
+
+    # Transition state machine: half_trimmed → fully_exited
+    transition(position, "fully_exited")
+
+    # Restore remaining cash (remaining half of 2x size)
+    book["cash_pct"] += position.get("size_pct_nav", 0) * 2
+
+    # Log to trade journal
+    book.setdefault("trade_journal", []).append({
+        "action": "close",
+        "ticker": ticker,
+        "direction": direction,
+        "exit_price": exit_price,
+        "realized_pnl_pct": position.get("combined_pnl_pct", 0),
+        "reason": "trail_stop_auto",
+        "exit_reason": "trail_stop_auto",
+        "timestamp": datetime.now().isoformat(),
+    })
+
+    print(f"  ✗ TRAIL STOP CLOSED: {ticker} at ${exit_price:.2f} — trail stop breached")
+
+
+def process_take_profit_and_trail_stops(book: dict) -> tuple[int, int]:
+    """Process take-profit trims and trail stop closes for all active positions.
+
+    Also handles trail activation: when P&L first exceeds 0%, activates trailing
+    stop and begins tracking peak price.
+
+    Returns (trim_count, trail_close_count).
+
+    Requirements: 7.1, 7.2, 7.3
+    """
+    trim_count = 0
+    trail_close_count = 0
+
+    for pos in book.get("positions", []):
+        if pos.get("status") != "active":
+            continue
+
+        # --- Trail activation logic (Requirement 7.1) ---
+        # Activate trail stop when P&L first exceeds 0%
+        combined_pnl = pos.get("combined_pnl_pct")
+        direction = pos.get("direction", "long")
+        current_price = pos.get("current_price", 0)
+        entry_price = pos.get("entry_price", 0)
+
+        if combined_pnl is not None and not pos.get("trail_activated", False):
+            if combined_pnl > 0:
+                # First time P&L exceeds 0% — activate trail
+                pos["trail_activated"] = True
+                pos["peak_price"] = current_price
+
+                # Compute initial trail stop level
+                stop_method = pos.get("stop_loss_method", "")
+                method = "2.5%" if "2.5%" in stop_method or "50%" not in stop_method else "50%"
+                new_level = compute_trail_stop_level(entry_price, current_price, direction, method)
+                pos["trail_stop_level"] = ratchet_trail_stop(new_level, pos.get("trail_stop_level"), direction)
+
+        elif pos.get("trail_activated", False):
+            # Trail is active — update peak price and ratchet trail stop
+            if direction == "long":
+                pos["peak_price"] = max(pos.get("peak_price", 0), current_price)
+            else:  # short
+                pos["peak_price"] = min(pos.get("peak_price", float('inf')), current_price)
+
+            peak_price = pos["peak_price"]
+            stop_method = pos.get("stop_loss_method", "")
+            method = "2.5%" if "2.5%" in stop_method or "50%" not in stop_method else "50%"
+            new_level = compute_trail_stop_level(entry_price, peak_price, direction, method)
+            pos["trail_stop_level"] = ratchet_trail_stop(new_level, pos.get("trail_stop_level"), direction)
+
+        # Check for trail stop close first (half_trimmed or trail_activated positions)
+        if should_trail_stop_close(pos):
+            execute_trail_stop_close(pos, book)
+            trail_close_count += 1
+            continue
+
+        # Check for take-profit trim (untrimmed positions)
+        if should_trim(pos):
+            execute_trim(pos, book)
+            trim_count += 1
+
+    return trim_count, trail_close_count
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# THESIS-BREAK DETECTION
+# ──────────────────────────────────────────────────────────────────────────────
+
+def parse_holding_period(holding_period_str: str) -> int:
+    """
+    Parse expected holding period from a string and return the number of days.
+
+    Handles formats like:
+      - "30 days" → 30
+      - "2-3 weeks" → 21 (uses upper bound)
+      - "4 weeks" → 28
+      - "1 month" → 30
+      - "2 months" → 60
+      - "20 trading days" → 20
+
+    Defaults to 60 if unparseable.
+    """
+    if not holding_period_str:
+        return 60
+
+    s = holding_period_str.lower().strip()
+
+    # Try "X days" or "X trading days"
+    m = re.search(r'(\d+)\s*(?:trading\s*)?days?', s)
+    if m:
+        return int(m.group(1))
+
+    # Try range with weeks: "2-3 weeks" → use upper bound × 7
+    m = re.search(r'(\d+)\s*-\s*(\d+)\s*weeks?', s)
+    if m:
+        return int(m.group(2)) * 7
+
+    # Try "X weeks"
+    m = re.search(r'(\d+)\s*weeks?', s)
+    if m:
+        return int(m.group(1)) * 7
+
+    # Try range with months: "1-2 months" → use upper bound × 30
+    m = re.search(r'(\d+)\s*-\s*(\d+)\s*months?', s)
+    if m:
+        return int(m.group(2)) * 30
+
+    # Try "X months"
+    m = re.search(r'(\d+)\s*months?', s)
+    if m:
+        return int(m.group(1)) * 30
+
+    return 60
+
+
+def check_thesis_break(position: dict, today: date) -> str | None:
+    """
+    Evaluate thesis-break conditions for a position.
+
+    Checks TWO trigger paths:
+    1. Holding period exceeded (original logic)
+    2. review_date exceeded and thesis_status != "reviewed" (new, Requirements 9.1)
+
+    Returns:
+        "flag_overdue" — holding period or review_date exceeded, should set thesis_status="review_overdue"
+        "close" — overdue + negative P&L + overdue > 5 days → close position
+        None — no action needed
+
+    Requirements: 5.1, 5.2, 5.3, 9.1, 9.2, 9.3
+    """
+    thesis_status = position.get("thesis_status", "active")
+
+    # --- Trigger path 2: review_date field check (Requirements 9.1) ---
+    review_date_str = position.get("review_date")
+    if review_date_str:
+        try:
+            review_date = date.fromisoformat(review_date_str)
+            if today > review_date and thesis_status != "reviewed" and thesis_status != "review_overdue":
+                return "flag_overdue"
+        except (ValueError, TypeError):
+            pass
+
+    # --- Trigger path 1: holding period exceeded (original logic) ---
+    entry_date_str = position.get("entry_date")
+    if not entry_date_str:
+        return None
+
+    try:
+        entry_date = date.fromisoformat(entry_date_str)
+    except (ValueError, TypeError):
+        return None
+
+    # Compute days held
+    days_held = (today - entry_date).days
+
+    # Parse expected holding period
+    expected_days = parse_holding_period(
+        position.get("expected_holding_period", "60 days")
+    )
+
+    # Not yet overdue (holding period check)
+    if days_held <= expected_days:
+        # Even if holding period is fine, check if already review_overdue for close logic
+        if thesis_status == "review_overdue":
+            return _check_close_conditions(position, today)
+        return None
+
+    # Overdue — check current thesis status
+    if thesis_status != "review_overdue":
+        return "flag_overdue"
+
+    # Already flagged as review_overdue — check close conditions
+    return _check_close_conditions(position, today)
+
+
+def _check_close_conditions(position: dict, today: date) -> str | None:
+    """Check if a review_overdue position should be auto-closed.
+
+    Returns "close" if overdue > 5 days with negative P&L, else None.
+    """
+    overdue_since_str = position.get("overdue_since")
+    if not overdue_since_str:
+        return None
+
+    try:
+        overdue_date = date.fromisoformat(overdue_since_str)
+    except (ValueError, TypeError):
+        return None
+
+    days_overdue = (today - overdue_date).days
+    combined_pnl = position.get("combined_pnl_pct", 0)
+
+    if combined_pnl < 0 and days_overdue > 5:
+        return "close"
+
+    return None
+
+
+def check_thesis_overdue(book: dict) -> list:
+    """
+    Emit WARNING alerts for all active positions with thesis_status == "review_overdue".
+
+    This ensures overdue positions appear in EVERY monitoring report until manually
+    updated (Requirement 9.3).
+
+    Returns list of Alert objects for overdue positions.
+    """
+    alerts = []
+    today = date.today()
+
+    for pos in book.get("positions", []):
+        if pos.get("status") != "active":
+            continue
+        if pos.get("thesis_status") != "review_overdue":
+            continue
+
+        ticker = pos.get("ticker", "?")
+        overdue_since = pos.get("overdue_since", "unknown")
+
+        # Compute days overdue
+        try:
+            overdue_date = date.fromisoformat(overdue_since)
+            days = (today - overdue_date).days
+        except (ValueError, TypeError):
+            days = 0
+
+        alerts.append(Alert(
+            level="warning",
+            category="holding",
+            ticker=ticker,
+            message=f"Review overdue: {ticker} — flagged since {overdue_since}, {days} days overdue",
+            action="Manually update thesis_status to 'reviewed' after completing review.",
+        ))
+
+    return alerts
+
+
+def process_thesis_breaks(book: dict, no_close: bool = False) -> tuple[list, int]:
+    """
+    Run thesis-break detection on all active positions.
+
+    Returns a tuple of (alerts, closed_count).
+
+    Requirements: 9.1, 9.2, 9.3
+    """
+    alerts = []
+    closed_count = 0
+    today = date.today()
+
+    for pos in book.get("positions", []):
+        if pos.get("status") != "active":
+            continue
+
+        ticker = pos.get("ticker", "?")
+        result = check_thesis_break(pos, today)
+
+        if result == "flag_overdue":
+            pos["thesis_status"] = "review_overdue"
+            pos["overdue_since"] = today.isoformat()
+
+            # Compute days_overdue from review_date if available (Requirement 9.2)
+            review_date_str = pos.get("review_date")
+            if review_date_str:
+                try:
+                    review_date = date.fromisoformat(review_date_str)
+                    days_overdue = (today - review_date).days
+                    alert_msg = f"THESIS OVERDUE: {ticker} — review_date {review_date_str} exceeded by {days_overdue} days"
+                except (ValueError, TypeError):
+                    alert_msg = f"THESIS OVERDUE: {ticker} held beyond expected holding period — flagged for review"
+            else:
+                alert_msg = f"THESIS OVERDUE: {ticker} held beyond expected holding period — flagged for review"
+
+            alerts.append(Alert(
+                level="warning",
+                category="holding",
+                ticker=ticker,
+                message=alert_msg,
+                action="Review thesis validity. Auto-close in 5 days if P&L remains negative.",
+            ))
+
+            # Telegram dispatch handled centrally in main() (Requirement 9.2)
+
+        elif result == "close" and not no_close:
+            # Get slippage-adjusted exit price
+            current_price = pos.get("current_price")
+            direction = pos.get("direction", "long")
+
+            if current_price is not None:
+                exit_price = compute_fill_price(current_price, direction, "exit")
+            else:
+                exit_price = current_price
+
+            combined_pnl = pos.get("combined_pnl_pct", 0)
+
+            # Close the position
+            pos["status"] = "closed"
+            pos["exit_price"] = exit_price
+            pos["exit_date"] = today.isoformat()
+            pos["exit_reason"] = "thesis_break_auto"
+            pos["realized_pnl_pct"] = combined_pnl
+
+            # Transition trim status to fully_exited
+            try:
+                transition(pos, "fully_exited")
+            except ValueError:
+                pos["trim_status"] = "fully_exited"
+
+            # Restore cash
+            book["cash_pct"] = book.get("cash_pct", 0) + pos.get("size_pct_nav", 0) * 2
+
+            # Build thesis summary for journal logging
+            thesis_summary = (
+                f"Original thesis: {pos.get('proposal_id', 'unknown')}. "
+                f"Expected holding: {pos.get('expected_holding_period', 'unknown')}. "
+                f"Held {(today - date.fromisoformat(pos.get('entry_date', '2000-01-01'))).days} days. "
+                f"P&L at close: {combined_pnl*100:+.2f}%."
+            )
+
+            # Log to trade journal
+            book.setdefault("trade_journal", []).append({
+                "action": "close",
+                "ticker": ticker,
+                "exit_price": exit_price,
+                "realized_pnl_pct": combined_pnl,
+                "exit_reason": "thesis_break_auto",
+                "thesis_summary": thesis_summary,
+                "timestamp": datetime.now().isoformat(),
+            })
+
+            alerts.append(Alert(
+                level="critical",
+                category="thesis_break",
+                ticker=ticker,
+                message=f"THESIS BREAK CLOSE: {ticker} auto-closed — overdue with negative P&L ({combined_pnl*100:+.2f}%)",
+                action=f"Position closed. {thesis_summary}",
+            ))
+
+            closed_count += 1
+            print(f"  ✗ THESIS-BREAK CLOSE: {ticker} at {combined_pnl*100:+.2f}% (overdue + negative P&L)")
+
+    return alerts, closed_count
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# SIGMA EVENT DETECTION
+# ──────────────────────────────────────────────────────────────────────────────
+
+def check_sigma_events(book: dict) -> tuple[list, list]:
+    """
+    Detect sigma events (outsized moves) on active positions.
+
+    For each active position with at least 20 days of price_history, compute
+    the trailing 20-day standard deviation of daily changes and check if the
+    most recent daily change exceeds 2σ.
+
+    Returns:
+        Tuple of (alerts, sigma_tickers) where sigma_tickers is a list of
+        tickers that triggered a sigma event and need immediate stop-loss
+        and take-profit re-evaluation.
+
+    Requirements: 6.1, 6.2, 6.3
+    """
+    alerts = []
+    sigma_tickers = []
+
+    for pos in book.get("positions", []):
+        if pos.get("status") != "active":
+            continue
+
+        ticker = pos.get("ticker", "?")
+        price_history = pos.get("price_history", [])
+
+        # Need at least 20 days of history for meaningful stddev
+        if len(price_history) < 20:
+            continue
+
+        # Extract daily_change_pct values from price_history
+        daily_changes = [
+            h.get("daily_change_pct", 0.0)
+            for h in price_history
+            if h.get("daily_change_pct") is not None
+        ]
+
+        if len(daily_changes) < 20:
+            continue
+
+        # Today's change is the most recent entry
+        todays_change = daily_changes[-1]
+        # Trailing changes exclude today (use previous entries for stddev computation)
+        trailing_changes = daily_changes[:-1]
+
+        # Detect sigma event
+        event = detect_sigma_event(todays_change, trailing_changes, threshold_sigmas=2.0)
+
+        if event is not None:
+            magnitude = event["magnitude"]
+            threshold = event["threshold_2sigma"]
+            alerts.append(Alert(
+                level="critical",
+                category="sigma_event",
+                ticker=ticker,
+                message=f"SIGMA EVENT: {ticker} moved {magnitude*100:+.2f}% "
+                        f"(2σ threshold: ±{threshold*100:.2f}%)",
+                action="Immediate stop-loss and take-profit re-evaluation triggered",
+            ))
+            sigma_tickers.append(ticker)
+
+    return alerts, sigma_tickers
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # AUTO-CLOSE
 # ──────────────────────────────────────────────────────────────────────────────
 
 def auto_close_stopped_positions(book: dict, alerts: list) -> int:
-    """Close positions that have breached their hard stop."""
+    """Close positions that have breached their hard stop.
+
+    Uses slippage-adjusted exit prices, transitions trim_status to
+    'fully_exited', restores cash_pct by 2 × size_pct_nav, logs to
+    the trade journal with exit_reason="stop_breach", and appends a
+    critical alert.
+
+    If the ticker's price data is unavailable (fetch_failed), the stop
+    execution is skipped and a WARNING alert is emitted instead.
+
+    Requirements: 8.1, 8.2, 8.3, 8.4
+    """
     closed_count = 0
 
     for pos in book.get("positions", []):
@@ -396,31 +1104,73 @@ def auto_close_stopped_positions(book: dict, alerts: list) -> int:
             continue
 
         ticker = pos.get("ticker", "?")
+
+        # Guard: skip stop execution if price data is unavailable (Requirement 8.4)
+        fetch_status = price_service.get_fetch_status(ticker)
+        if fetch_status == "fetch_failed":
+            alerts.append(Alert(
+                level="warning",
+                category="stop",
+                ticker=ticker,
+                message=f"STOP SKIPPED: {ticker} — price data unavailable (fetch_failed), cannot evaluate stop",
+                action="Wait for next poll cycle when price data is available",
+            ))
+            # Clear the stop_triggered flag so it can be re-evaluated next cycle
+            pos["stop_triggered"] = False
+            print(f"  ⚠ STOP SKIPPED: {ticker} — price data unavailable (fetch_failed)")
+            continue
+
         current_price = pos.get("current_price")
         combined_pnl = pos.get("combined_pnl_pct", 0)
+        direction = pos.get("direction", "long")
+        size_pct_nav = pos.get("size_pct_nav", 0)
+
+        # Compute slippage-adjusted exit price
+        if current_price is not None:
+            exit_price = compute_fill_price(current_price, direction, "exit")
+        else:
+            exit_price = current_price
 
         # Mark as closed
         pos["status"] = "closed"
-        pos["exit_price"] = current_price
+        pos["exit_price"] = exit_price
         pos["exit_date"] = date.today().isoformat()
-        pos["exit_reason"] = "stop_loss_auto"
+        pos["exit_reason"] = "stop_breach"
         pos["realized_pnl_pct"] = combined_pnl
 
-        # Restore cash
-        book["cash_pct"] += pos.get("size_pct_nav", 0) * 2
+        # Transition trim_status to fully_exited via state machine
+        try:
+            transition(pos, "fully_exited")
+        except ValueError:
+            # If already fully_exited or invalid state, just set it directly
+            pos["trim_status"] = "fully_exited"
 
-        # Journal entry
+        # Restore cash: 2 × size_pct_nav for both legs
+        book["cash_pct"] = book.get("cash_pct", 0) + size_pct_nav * 2
+
+        # Journal entry with slippage-adjusted exit price (Requirement 8.2)
         book.setdefault("trade_journal", []).append({
             "action": "close",
             "ticker": ticker,
-            "exit_price": current_price,
+            "exit_price": exit_price,
             "realized_pnl_pct": combined_pnl,
-            "reason": "stop_loss_auto",
+            "exit_reason": "stop_breach",
             "timestamp": datetime.now().isoformat(),
         })
 
+        # Append critical alert for stop-loss closure (Requirement 8.3)
+        loss_amount = combined_pnl * size_pct_nav * book.get("nav", 0)
+        exit_price_str = f"${exit_price:,.2f}" if exit_price is not None else "N/A"
+        alerts.append(Alert(
+            level="critical",
+            category="stop",
+            ticker=ticker,
+            message=f"STOP-LOSS CLOSED: {ticker} exited at {exit_price_str} (slippage-adjusted), realized P&L {combined_pnl*100:+.2f}%",
+            action=f"Position fully closed. Loss: ${abs(loss_amount):,.0f}",
+        ))
+
         closed_count += 1
-        print(f"  ✗ AUTO-CLOSED: {ticker} at {combined_pnl*100:+.2f}% (stop triggered)")
+        print(f"  ✗ AUTO-CLOSED: {ticker} at {combined_pnl*100:+.2f}% exit_price={exit_price_str} (slippage-adjusted)")
 
     return closed_count
 
@@ -457,18 +1207,86 @@ def main():
     all_alerts.extend(check_correlation(book))
     all_alerts.extend(check_holding_period(book))
     all_alerts.extend(check_take_profit(book))
+    all_alerts.extend(check_factor_betas(book))
+
+    # Sigma event detection
+    sigma_alerts, sigma_tickers = check_sigma_events(book)
+    all_alerts.extend(sigma_alerts)
+
+    # Trigger immediate stop-loss and take-profit re-evaluation on sigma event positions
+    if sigma_tickers and not args.no_close:
+        for pos in book.get("positions", []):
+            if pos.get("status") != "active":
+                continue
+            if pos.get("ticker") not in sigma_tickers:
+                continue
+
+            ticker = pos.get("ticker", "?")
+
+            # Re-evaluate stop-loss for sigma event positions
+            combined_pnl = pos.get("combined_pnl_pct")
+            if combined_pnl is not None:
+                stop_level = STOP_LOSS_HARD
+                stop_method = pos.get("stop_loss_method", "")
+                if "2.5%" in stop_method:
+                    stop_level = -0.025
+                elif "2%" in stop_method:
+                    stop_level = -0.02
+                elif "3%" in stop_method:
+                    stop_level = -0.03
+
+                if combined_pnl <= stop_level:
+                    pos["stop_triggered"] = True
+
+            # Re-evaluate take-profit trim for sigma event positions
+            if should_trim(pos):
+                execute_trim(pos, book)
+            elif should_trail_stop_close(pos):
+                execute_trail_stop_close(pos, book)
 
     # Auto-close stopped positions unless --no-close
     closed_count = 0
     if not args.no_close:
         closed_count = auto_close_stopped_positions(book, all_alerts)
 
-    # Save updated book
-    if closed_count > 0:
+    # Process take-profit trims and trail stop closes for all active positions
+    trim_count = 0
+    trail_close_count = 0
+    if not args.no_close:
+        trim_count, trail_close_count = process_take_profit_and_trail_stops(book)
+        closed_count += trail_close_count
+
+    # Thesis-break detection and auto-close
+    thesis_alerts, thesis_closed = process_thesis_breaks(book, no_close=args.no_close)
+    all_alerts.extend(thesis_alerts)
+    closed_count += thesis_closed
+
+    # Thesis overdue persistent alerts (Requirement 9.3)
+    # Surfaces all review_overdue positions in EVERY monitoring report
+    overdue_alerts = check_thesis_overdue(book)
+    all_alerts.extend(overdue_alerts)
+
+    # Save updated book (if positions were closed, trimmed, or flagged)
+    if closed_count > 0 or trim_count > 0 or thesis_alerts or sigma_tickers or overdue_alerts:
         save_book(book)
 
     # Save alerts
     save_alerts(all_alerts)
+
+    # Dispatch critical and warning alerts via Telegram (Requirements 13.1, 13.4)
+    try:
+        from telegram_bot import send_message as tg_send
+        for alert in all_alerts:
+            if alert.level in ("critical", "warning"):
+                tg_msg = f"{alert.message}"
+                if alert.action:
+                    tg_msg += f"\nAction: {alert.action}"
+                try:
+                    tg_send(tg_msg, severity=alert.level)
+                except Exception:
+                    pass
+    except ImportError:
+        pass
 
     # Print summary
     critical = [a for a in all_alerts if a.level == "critical"]

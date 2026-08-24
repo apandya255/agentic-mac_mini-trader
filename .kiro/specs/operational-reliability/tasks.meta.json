@@ -1,0 +1,701 @@
+{
+  "pbtResults": {
+    "1.7 Write property test for Alpha Vantage rate limiting": {
+      "status": "passed",
+      "lastRunTimestamp": 1787506708696
+    },
+    "1.5 Write property tests for retry backoff and staleness suppression": {
+      "status": "passed",
+      "lastRunTimestamp": 1787506726372
+    },
+    "3.2 Write property test for trail stop monotonic ratchet": {
+      "status": "passed",
+      "lastRunTimestamp": 1787507298917
+    },
+    "3.6 Write property test for factor beta alert thresholds": {
+      "status": "passed",
+      "lastRunTimestamp": 1787507307954
+    },
+    "3.8 Write property test for drawdown progressive thresholds": {
+      "status": "passed",
+      "lastRunTimestamp": 1787507322182
+    },
+    "7.2 Write property test for Telegram severity prefix invariant": {
+      "status": "passed",
+      "lastRunTimestamp": 1787507789705
+    },
+    "5.2 Write property test for pipeline cycle logging completeness": {
+      "status": "passed",
+      "lastRunTimestamp": 1787507791895
+    },
+    "3.10 Write property test for thesis review overdue detection": {
+      "status": "passed",
+      "lastRunTimestamp": 1787507898878
+    },
+    "3.4 Write property test for hard stop state transition validity": {
+      "status": "passed",
+      "lastRunTimestamp": 1787507921414
+    },
+    "5.4 Write property test for atomic book write integrity": {
+      "status": "passed",
+      "lastRunTimestamp": 1787508710830
+    },
+    "5.5 Write property test for overlap guard mutual exclusion": {
+      "status": "passed",
+      "lastRunTimestamp": 1787508712896
+    }
+  },
+  "executionHistory": {
+    "1.1 Implement exponential backoff retry in PriceService": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226729
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506348097
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506599529
+      }
+    ],
+    "1.2 Add Alpha Vantage fallback fetcher": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226763
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506348910
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506600264
+      }
+    ],
+    "1.3 Add `source` column to price_history SQLite table": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226787
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506244191
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506343717
+      }
+    ],
+    "1.4 Create market calendar module": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226813
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506245164
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506344478
+      }
+    ],
+    "1.5 Write property tests for retry backoff and staleness suppression": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226841
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506604029
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506788558
+      }
+    ],
+    "1.6 Implement backfill coordinator in PriceService": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226870
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506604764
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506789400
+      }
+    ],
+    "1.7 Write property test for Alpha Vantage rate limiting": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226888
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506605631
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506790302
+      }
+    ],
+    "2. Checkpoint — Ensure all price infrastructure tests pass": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226911
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506797787
+      }
+    ],
+    "3.1 Refine trail stop computation in monitor.py": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226937
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506814669
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507221353
+      }
+    ],
+    "3.2 Write property test for trail stop monotonic ratchet": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226955
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507235157
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507710337
+      }
+    ],
+    "3.3 Enhance hard stop enforcement": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506226980
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507235947
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507711095
+      }
+    ],
+    "3.4 Write property test for hard stop state transition validity": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227002
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507806848
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508298384
+      }
+    ],
+    "3.5 Create factor beta computation module": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227021
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506815698
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507222224
+      }
+    ],
+    "3.6 Write property test for factor beta alert thresholds": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227042
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507236773
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507712062
+      }
+    ],
+    "3.7 Add progressive deleverage to circuit breaker": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227061
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506816707
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507223039
+      }
+    ],
+    "3.8 Write property test for drawdown progressive thresholds": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227079
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507237556
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507713010
+      }
+    ],
+    "3.9 Enhance thesis review enforcement in monitor.py": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227103
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507238391
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507713776
+      }
+    ],
+    "3.10 Write property test for thesis review overdue detection": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227120
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507807538
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508299101
+      }
+    ],
+    "4. Checkpoint — Ensure all risk monitoring tests pass": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227144
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508894996
+      }
+    ],
+    "5.1 Create structured cycle logger module": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227177
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506817741
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507223738
+      }
+    ],
+    "5.2 Write property test for pipeline cycle logging completeness": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227195
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507717332
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507801982
+      }
+    ],
+    "5.3 Integrate structured logging and atomic writes into run_cycle.py": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227214
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507808332
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508300175
+      }
+    ],
+    "5.4 Write property test for atomic book write integrity": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227237
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508529194
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508887997
+      }
+    ],
+    "5.5 Write property test for overlap guard mutual exclusion": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227262
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508529932
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508888738
+      }
+    ],
+    "6. Checkpoint — Ensure all pipeline hardening tests pass": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227286
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508895854
+      }
+    ],
+    "7.1 Add severity prefix and undelivered persistence to telegram_bot.py": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227308
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506819125
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507224773
+      }
+    ],
+    "7.2 Write property test for Telegram severity prefix invariant": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227330
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507718284
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507802827
+      }
+    ],
+    "7.3 Update all Telegram callers to pass severity": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227353
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507809164
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508301057
+      }
+    ],
+    "8.1 Update serve.py and Cloudflare tunnel plists for auto-restart": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227375
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787507810033
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508302338
+      }
+    ],
+    "8.2 Add service restart logging": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227397
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508306227
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508524080
+      }
+    ],
+    "8.3 Enhance session-open NAV reset with error handling": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227419
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508307054
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508525046
+      }
+    ],
+    "8.4 Update install_scheduler.sh for new plist features": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227438
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508530709
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508889863
+      }
+    ],
+    "9.1 Integrate retry/fallback and staleness gating into price_poller.py": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227461
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508899360
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787509113590
+      }
+    ],
+    "9.2 Integrate backfill coordinator into mark_to_market.py": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227486
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508900255
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787509114216
+      }
+    ],
+    "9.3 Integrate factor betas into monitor.py": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227512
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508901063
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787509115072
+      }
+    ],
+    "9.4 Wire progressive deleverage alerts into monitor.py main loop": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227531
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508901920
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787509115976
+      }
+    ],
+    "10. Final Checkpoint — Full integration test pass": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506227554
+      },
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787509119532
+      }
+    ],
+    "1. Price Infrastructure — Retry, Fallback, and Calendar": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787506790332
+      }
+    ],
+    "3. Risk Monitoring — Trail Stops, Factor Betas, Drawdown": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508299124
+      }
+    ],
+    "7. Telegram Alert Pipeline Enhancements": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508301084
+      }
+    ],
+    "5. Pipeline Hardening — Logging, Atomic Writes, Recovery": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508888763
+      }
+    ],
+    "8. System Service Resilience — Launchd Plist Updates": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787508889897
+      }
+    ],
+    "9. Integration Wiring": [
+      {
+        "executionId": "9c82aed9-0912-4019-a840-f0105215fe60",
+        "chatSessionId": "sess_3da27857-16e0-4a21-997c-1be5d2a67a85",
+        "timestamp": 1787509116008
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+# file: /Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/dashboard.py
+# hypothesis_version: 6.165.10
+
+[1.0, 10000000, '\n</body>\n</html>', '*.json', '--no-open', 'Skip opening browser', '__main__', 'book', 'book.json', 'cash_pct', 'cycle_*.json', 'dashboard.html', 'debate', 'debates', 'history', 'ignore', 'index.html', 'initial_nav', 'logs', 'memos', 'nav', 'open', 'orders', 'pnl_history.json', 'positions', 'proposals', 'risk', 'risks', 'scores', 'src', 'state', 'store_true', 'trade_journal', 'w']
