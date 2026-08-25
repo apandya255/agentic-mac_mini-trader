@@ -221,18 +221,12 @@ def _get_latest_two_quotes(ticker: str, price_service: PriceService) -> list[dic
 
 def _is_quote_stale(quote_date_str: str, now_et: datetime) -> bool:
     """
-    Check if a quote is stale (older than STALE_THRESHOLD_HOURS during market hours).
+    Check if a quote is stale (older than threshold during market hours).
 
-    A quote is stale if:
-    - The instrument's market is open (we're during market hours)
-    - The quote timestamp is more than 4 hours old
-
-    Args:
-        quote_date_str: ISO date string of the quote (e.g., "2025-07-15")
-        now_et: Current datetime in ET
-
-    Returns:
-        True if the quote is considered stale.
+    Uses a relaxed threshold (20 hours) during the first 45 minutes after
+    market open (09:30-10:15 ET) to account for yfinance's delay in
+    providing fresh intraday data. After 10:15 ET, uses the standard
+    4-hour threshold.
     """
     try:
         quote_date = date.fromisoformat(quote_date_str)
@@ -240,12 +234,20 @@ def _is_quote_stale(quote_date_str: str, now_et: datetime) -> bool:
         return True  # Unparseable dates treated as stale
 
     # Assume the quote was taken at market close (16:00 ET) on its date
-    # This is conservative: EOD data from yfinance has date but not time
     quote_time = ET.localize(
         datetime.combine(quote_date, dt_time(16, 0))
     )
 
     age = now_et - quote_time
+
+    # Grace period: first 45 minutes after open (09:30-10:15 ET)
+    # yfinance often hasn't updated from yesterday's EOD yet
+    current_time = now_et.time()
+    if dt_time(9, 30) <= current_time <= dt_time(10, 15):
+        # Relaxed threshold: 20 hours covers overnight gap
+        return age > timedelta(hours=20)
+
+    # Standard threshold after 10:15 ET
     return age > timedelta(hours=STALE_THRESHOLD_HOURS)
 
 
