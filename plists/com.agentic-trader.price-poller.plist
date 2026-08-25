@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.agentic-trader.monitor</string>
+    <string>com.agentic-trader.price-poller</string>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
@@ -13,22 +13,22 @@
     </dict>
     <key>ProgramArguments</key>
     <array>
+        <string>/usr/bin/caffeinate</string>
+        <string>-i</string>
         <string>/Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/.venv/bin/python3</string>
-        <string>monitor.py</string>
+        <string>scripts/price_poller.py</string>
     </array>
     <key>WorkingDirectory</key>
     <string>/Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader</string>
-    <key>StartInterval</key>
-    <integer>300</integer>
+    <key>RunAtLoad</key>
+    <true/>
     <key>KeepAlive</key>
     <true/>
     <key>ThrottleInterval</key>
-    <integer>300</integer>
+    <integer>30</integer>
     <key>StandardOutPath</key>
-    <string>/Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/memos/logs/launchd_monitor.log</string>
+    <string>/Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/memos/logs/price_poller_stdout.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/memos/logs/launchd_monitor_err.log</string>
-    <key>RunAtLoad</key>
-    <true/>
+    <string>/Users/clawbot/Desktop/agentic trading/agentic-mac_mini-trader/memos/logs/price_poller_stderr.log</string>
 </dict>
 </plist>

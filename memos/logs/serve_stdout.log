@@ -1,0 +1,1342 @@
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off
+
+  Agentic Trading Dashboard
+  ─────────────────────────
+  Running on: http://127.0.0.1:8080
+  Dashboard:  http://127.0.0.1:8080/
+  API docs:   GET /api/book, /api/pending, /api/history, /api/mark
+              POST /api/accept/<id>, /api/deny/<id>, /api/close/<ticker>
+  Press Ctrl+C to quit
+
+ * Serving Flask app 'serve'
+ * Debug mode: off

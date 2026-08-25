@@ -6,7 +6,7 @@
     <string>com.agentic-trader.cloudflared</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/local/bin/cloudflared</string>
+        <string>/opt/homebrew/bin/cloudflared</string>
         <string>tunnel</string>
         <string>run</string>
     </array>

@@ -2,13 +2,17 @@
 # install_scheduler.sh — Install/update all launchd plists for the Agentic Trading platform
 # Requirements: 4.1, 4.2
 #
-# Installs 6 core plists from the project's plists/ directory:
-#   1. com.agentic-trader.pipeline-0940 — Pipeline at 09:40 ET Mon-Fri
-#   2. com.agentic-trader.pipeline-1130 — Pipeline at 11:30 ET Mon-Fri
-#   3. com.agentic-trader.pipeline-1330 — Pipeline at 13:30 ET Mon-Fri
-#   4. com.agentic-trader.pipeline-1530 — Pipeline at 15:30 ET Mon-Fri
-#   5. com.agentic-trader.monitor       — Monitor with KeepAlive + ThrottleInterval=300
-#   6. com.agentic-trader.session-reset  — Session reset at 09:30 ET weekdays
+# Installs 10 plists from the project's plists/ directory:
+#   1. com.agentic-trader.setenv         — Set PATH/HOME for launchd environment on login
+#   2. com.agentic-trader.pipeline-0940  — Pipeline at 09:40 ET Mon-Fri
+#   3. com.agentic-trader.pipeline-1130  — Pipeline at 11:30 ET Mon-Fri
+#   4. com.agentic-trader.pipeline-1330  — Pipeline at 13:30 ET Mon-Fri
+#   5. com.agentic-trader.pipeline-1530  — Pipeline at 15:30 ET Mon-Fri
+#   6. com.agentic-trader.monitor        — Monitor with KeepAlive + ThrottleInterval=300
+#   7. com.agentic-trader.session-reset  — Session reset at 09:30 ET weekdays
+#   8. com.agentic-trader.price-poller   — Continuous price poller during market hours (KeepAlive)
+#   9. com.agentic-trader.cloudflared    — Cloudflare tunnel (KeepAlive)
+#  10. com.agentic-trader.serve          — Flask web server (KeepAlive)
 
 set -euo pipefail
 
@@ -16,14 +20,18 @@ PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PLIST_DIR="${PROJECT_DIR}/plists"
 LAUNCH_AGENTS_DIR="${HOME}/Library/LaunchAgents"
 
-# The 6 core plists to install
+# The 10 plists to install (setenv first to ensure PATH is set before others)
 PLISTS=(
+    "com.agentic-trader.setenv"
     "com.agentic-trader.pipeline-0940"
     "com.agentic-trader.pipeline-1130"
     "com.agentic-trader.pipeline-1330"
     "com.agentic-trader.pipeline-1530"
     "com.agentic-trader.monitor"
     "com.agentic-trader.session-reset"
+    "com.agentic-trader.price-poller"
+    "com.agentic-trader.cloudflared"
+    "com.agentic-trader.serve"
 )
 
 echo "=== Agentic Trading Scheduler Installer ==="
@@ -104,9 +112,13 @@ echo ""
 echo "All ${#PLISTS[@]} plists installed and loaded successfully."
 echo ""
 echo "Schedule summary:"
+echo "  Env setup:       PATH and HOME set for launchd (RunAtLoad)"
 echo "  Pipeline cycles: 09:40, 11:30, 13:30, 15:30 ET (Mon-Fri)"
 echo "  Monitor:         every 300s (KeepAlive + ThrottleInterval)"
 echo "  Session reset:   09:30 ET (Mon-Fri)"
+echo "  Price poller:    continuous during market hours (KeepAlive + caffeinate)"
+echo "  Cloudflared:     Cloudflare tunnel (KeepAlive)"
+echo "  Serve:           Flask web server (KeepAlive)"
 echo ""
 echo "To verify: launchctl list | grep agentic-trader"
 echo "To uninstall: bash ${PROJECT_DIR}/scripts/uninstall_scheduler.sh"
